@@ -35,11 +35,11 @@ public class ActivityControllerTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ActivityControllerTest.class);
     private static final String ACTIVITY_INFO_ATTRIBUTE = "activityInfo";
-    private static final String USERNAME = "username";
     private static final long ACTIVITY_ID = 1;
-    private static final String ERROR_ATTRIBUTE = "error";
     private static final String UPDATE_URL = "/activity/update";
     private static final String CREATE_URL = "/activity/create";
+    private static final String ERROR_ATTRIBUTE = "error";
+    private static final String DESC_PARAM = "description";
     private static final ActivityDetailDTO EXPECTED_ACTIVITY_DETAIL_DTO = new ActivityDetailDTO(ACTIVITY_ID, "name", "des", 5, 1L);
     private static final CustomUserDetails EXPECTED_CUSTOM_USER_DETAIL = new CustomUserDetails(1L, new UserProfileDTO(1L, "display"), "username", "pass", Collections.emptyList());
 
@@ -111,7 +111,7 @@ public class ActivityControllerTest {
             mockMvc.perform(post(UPDATE_URL)
                     .param("id", ACTIVITY_ID + "")
                     .param("name", EXPECTED_ACTIVITY_DETAIL_DTO.getName())
-                    .param("description", EXPECTED_ACTIVITY_DETAIL_DTO.getDescription()))
+                    .param(DESC_PARAM, EXPECTED_ACTIVITY_DETAIL_DTO.getDescription()))
                     .andDo(MockMvcResultHandlers.print())
                     .andExpect(status().is3xxRedirection())
                     .andExpect(view().name("redirect:/activity/" + EXPECTED_ACTIVITY_DETAIL_DTO.getId()))
@@ -131,7 +131,7 @@ public class ActivityControllerTest {
             mockMvc.perform(post(UPDATE_URL)
                     .param("id", ACTIVITY_ID + "")
                     .param("name", EXPECTED_ACTIVITY_DETAIL_DTO.getName())
-                    .param("description", EXPECTED_ACTIVITY_DETAIL_DTO.getDescription()))
+                    .param(DESC_PARAM, EXPECTED_ACTIVITY_DETAIL_DTO.getDescription()))
                     .andDo(MockMvcResultHandlers.print())
                     .andExpect(status().is3xxRedirection())
                     .andExpect(flash().attribute(ERROR_ATTRIBUTE, "This name already exists"))
@@ -151,7 +151,7 @@ public class ActivityControllerTest {
             mockMvc.perform(post(UPDATE_URL)
                     .param("id", ACTIVITY_ID + "")
                     .param("name", EXPECTED_ACTIVITY_DETAIL_DTO.getName())
-                    .param("description", EXPECTED_ACTIVITY_DETAIL_DTO.getDescription()))
+                    .param(DESC_PARAM, EXPECTED_ACTIVITY_DETAIL_DTO.getDescription()))
                     .andDo(MockMvcResultHandlers.print())
                     .andExpect(status().is3xxRedirection())
                     .andExpect(flash().attribute(ERROR_ATTRIBUTE, "Can't update Activity. Try again!"))
@@ -187,7 +187,7 @@ public class ActivityControllerTest {
             mockMvc.perform(post(CREATE_URL)
                     .param("id", ACTIVITY_ID + "")
                     .param("name", EXPECTED_ACTIVITY_DETAIL_DTO.getName())
-                    .param("description", EXPECTED_ACTIVITY_DETAIL_DTO.getDescription()))
+                    .param(DESC_PARAM, EXPECTED_ACTIVITY_DETAIL_DTO.getDescription()))
                     .andDo(MockMvcResultHandlers.print())
                     .andExpect(status().is3xxRedirection())
                     .andExpect(view().name("redirect:/"))
@@ -208,7 +208,7 @@ public class ActivityControllerTest {
             mockMvc.perform(post(CREATE_URL)
                     .param("id", ACTIVITY_ID + "")
                     .param("name", EXPECTED_ACTIVITY_DETAIL_DTO.getName())
-                    .param("description", EXPECTED_ACTIVITY_DETAIL_DTO.getDescription()))
+                    .param(DESC_PARAM, EXPECTED_ACTIVITY_DETAIL_DTO.getDescription()))
                     .andDo(MockMvcResultHandlers.print())
                     .andExpect(status().is3xxRedirection())
                     .andExpect(flash().attribute(ERROR_ATTRIBUTE, "This name already exists"))
@@ -228,7 +228,7 @@ public class ActivityControllerTest {
             mockMvc.perform(post(CREATE_URL)
                     .param("id", ACTIVITY_ID + "")
                     .param("name", EXPECTED_ACTIVITY_DETAIL_DTO.getName())
-                    .param("description", EXPECTED_ACTIVITY_DETAIL_DTO.getDescription()))
+                    .param(DESC_PARAM, EXPECTED_ACTIVITY_DETAIL_DTO.getDescription()))
                     .andDo(MockMvcResultHandlers.print())
                     .andExpect(status().is3xxRedirection())
                     .andExpect(flash().attribute(ERROR_ATTRIBUTE, "Can't create Activity. Try again!"))

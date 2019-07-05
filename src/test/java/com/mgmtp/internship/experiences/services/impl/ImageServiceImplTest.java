@@ -1,8 +1,8 @@
 package com.mgmtp.internship.experiences.services.impl;
 
+import com.mgmtp.internship.experiences.dto.ImageDTO;
 import com.mgmtp.internship.experiences.repositories.ImageRepository;
 import com.mgmtp.internship.experiences.repositories.UserRepository;
-import com.mgmtp.internship.experiences.dto.ImageDTO;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,6 +11,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -22,6 +24,7 @@ import java.io.InputStream;
 @RunWith(MockitoJUnitRunner.class)
 public class ImageServiceImplTest {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(ImageServiceImplTest.class);
     private static final byte[] IMAGE_DATA = {1, 2, 3};
     private static final long USER_ID = 1;
 
@@ -119,7 +122,7 @@ public class ImageServiceImplTest {
         try {
             ImageIO.write(image, "jpeg", outputStream);
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error(e.getMessage());
         }
         return new ByteArrayInputStream(outputStream.toByteArray());
     }
@@ -146,12 +149,13 @@ public class ImageServiceImplTest {
 
     @Test
     public void shouldReturnFalseIfAddImageFaile() {
-        long activityId = 1;
+        long activityId = 1L;
+
         Mockito.when(imageRepository.updateActivityImage(activityId, new byte[]{(byte) 0xe0, 0x4f})).thenReturn(null);
 
         Long actualResult = imageService.updateActivityImage(activityId, new byte[]{(byte) 0xe0, 0x4f});
 
-        Assert.assertEquals(actualResult, null);
+        Assert.assertNull(actualResult);
     }
 
 }

@@ -75,7 +75,7 @@ public class ImageRestController extends BaseRestController {
 
     @PostMapping("/activity/{activity_id}")
     @ResponseBody
-    public Object addImage(@PathVariable("activity_id") long activityId, @RequestParam("image_file") MultipartFile photo) throws IOException, ApiException {
+    public Object addImage(@PathVariable("activity_id") long activityId, @RequestParam("image_file") MultipartFile photo) throws IOException {
         byte[] imageData = photo.getBytes();
         Long imageId = imageService.updateActivityImage(activityId, imageData);
         if (imageId == null) {

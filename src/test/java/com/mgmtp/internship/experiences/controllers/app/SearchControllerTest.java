@@ -9,6 +9,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -27,8 +29,10 @@ public class SearchControllerTest {
     private static final String URL = "/search/";
     private static final String URL_VIEW = "search";
     private static final String KEY_SEARCH = "abc";
-    private static  List<ActivityDTO> EXPECTED_ACTIVITY_DTO = Collections.singletonList(new ActivityDTO(1L, "name", null));
-    private static MockMvc mockMvc;
+    private static final List<ActivityDTO> EXPECTED_ACTIVITY_DTO = Collections.singletonList(new ActivityDTO(1L, "name", null));
+    private static final Logger LOGGER = LoggerFactory.getLogger(SearchControllerTest.class);
+
+    private MockMvc mockMvc;
     @Mock
     private ActivityServiceImpl activityService;
     @InjectMocks
@@ -50,7 +54,7 @@ public class SearchControllerTest {
                     .andExpect(MockMvcResultMatchers.model().attribute("activities", EXPECTED_ACTIVITY_DTO))
                     .andExpect(MockMvcResultMatchers.view().name(URL_VIEW));
         } catch (Exception e) {
-
+            LOGGER.error(e.getMessage());
         }
     }
 
@@ -65,7 +69,7 @@ public class SearchControllerTest {
                     .andExpect(MockMvcResultMatchers.model().attribute("activities", null))
                     .andExpect(MockMvcResultMatchers.view().name(URL_VIEW));
         } catch (Exception e) {
-
+            LOGGER.error(e.getMessage());
         }
     }
 

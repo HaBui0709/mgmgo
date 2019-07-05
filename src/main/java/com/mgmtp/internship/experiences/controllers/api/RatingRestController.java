@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+
 /**
  * Rating rest controller.
  *
@@ -19,6 +20,7 @@ import javax.validation.constraints.Min;
 @RestController
 @RequestMapping("/rating")
 public class RatingRestController extends BaseRestController {
+
     @Autowired
     private RatingService ratingService;
 
@@ -28,8 +30,8 @@ public class RatingRestController extends BaseRestController {
     @GetMapping("/activity/{activityId}")
     public Object getRate(@PathVariable("activityId") long activityId) {
         CustomUserDetails user = userService.getCurrentUser();
-        if (user == null){
-            throw new ApiException(HttpStatus.UNAUTHORIZED,"Please login to perform this operation.");
+        if (user == null) {
+            throw new ApiException(HttpStatus.UNAUTHORIZED, "Please login to perform this operation.");
         }
         JSONObject result = new JSONObject();
         result.put("rating", ratingService.getRateByUserId(activityId, user.getId()));
@@ -43,14 +45,14 @@ public class RatingRestController extends BaseRestController {
                                  @Max(value = 5, message = "Rating has to be less than or equal to 5 ")
                                          int rating) {
         CustomUserDetails user = userService.getCurrentUser();
-        if (user == null){
-            throw new ApiException(HttpStatus.UNAUTHORIZED,"Please login to perform this operation.");
+        if (user == null) {
+            throw new ApiException(HttpStatus.UNAUTHORIZED, "Please login to perform this operation.");
         }
         if (ratingService.editRateByUserId(activityId, user.getId(), rating) == 1) {
             JSONObject result = new JSONObject();
             result.put("rating", ratingService.getRate(activityId));
             return result;
         }
-        throw new  ApiException(HttpStatus.BAD_REQUEST,"Something went wrong! Please try again.");
+        throw new ApiException(HttpStatus.BAD_REQUEST, "Something went wrong! Please try again.");
     }
 }

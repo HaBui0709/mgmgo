@@ -9,6 +9,8 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -28,13 +30,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class UserProfileControllerTest {
 
     private static final String PROFILE_URL = "/profile";
-    private static final CustomUserDetails CUSTOM_USER_DETAILS = new CustomUserDetails(1L, new UserProfileDTO(1L, "display"), "username", "pass", Collections.emptyList());
     private static final UserProfileDTO USER_PROFILE_DTO = new UserProfileDTO(1L, "display name");
     private static final String USER_PROFILE_MODEL_TAG = "userProfile";
     private static final String USERNAME_MODEL_TAG = "username";
     private static final String DISPLAY_NAME_FIELD = "displayName";
     private static final String IMAGE_ID_FIELD = "imageId";
     private static final String EXPECTED_VIEW_NAME = "user/profile";
+    private static final CustomUserDetails CUSTOM_USER_DETAILS = new CustomUserDetails(1L, new UserProfileDTO(1L, "display"), "name", "pass", Collections.emptyList());
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserProfileControllerTest.class);
 
 
     private MockMvc mockMvc;
@@ -60,6 +63,7 @@ public class UserProfileControllerTest {
                     .andExpect(model().attribute(USERNAME_MODEL_TAG, CUSTOM_USER_DETAILS.getUsername()))
                     .andExpect(view().name(EXPECTED_VIEW_NAME));
         } catch (Exception e) {
+            LOGGER.error(e.getMessage());
         }
     }
 
@@ -72,6 +76,7 @@ public class UserProfileControllerTest {
                     .andExpect(status().is3xxRedirection())
                     .andExpect(redirectedUrl("/login"));
         } catch (Exception e) {
+            LOGGER.error(e.getMessage());
         }
     }
 
@@ -86,6 +91,7 @@ public class UserProfileControllerTest {
                     .andExpect(status().is3xxRedirection())
                     .andExpect(redirectedUrl("/login"));
         } catch (Exception e) {
+            LOGGER.error(e.getMessage());
         }
     }
 
@@ -105,6 +111,7 @@ public class UserProfileControllerTest {
                     .andExpect(model().attribute(USERNAME_MODEL_TAG, CUSTOM_USER_DETAILS.getUsername()))
                     .andExpect(view().name(EXPECTED_VIEW_NAME));
         } catch (Exception e) {
+            LOGGER.error(e.getMessage());
         }
     }
 
@@ -124,6 +131,7 @@ public class UserProfileControllerTest {
                     .andExpect(model().attribute(USERNAME_MODEL_TAG, CUSTOM_USER_DETAILS.getUsername()))
                     .andExpect(view().name(EXPECTED_VIEW_NAME));
         } catch (Exception e) {
+            LOGGER.error(e.getMessage());
         }
     }
 
@@ -143,6 +151,7 @@ public class UserProfileControllerTest {
                     .andExpect(model().attribute(USERNAME_MODEL_TAG, CUSTOM_USER_DETAILS.getUsername()))
                     .andExpect(view().name(EXPECTED_VIEW_NAME));
         } catch (Exception e) {
+            LOGGER.error(e.getMessage());
         }
     }
 }
