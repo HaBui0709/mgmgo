@@ -1,6 +1,6 @@
 package com.mgmtp.internship.experiences.services.impl;
 
-import com.mgmtp.internship.experiences.config.security.CustomUserDetails;
+import com.mgmtp.internship.experiences.config.security.CustomLdapUserDetails;
 import com.mgmtp.internship.experiences.dto.UserProfileDTO;
 import com.mgmtp.internship.experiences.repositories.UserRepository;
 import org.junit.Assert;
@@ -13,8 +13,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-
-import java.util.Collections;
+import org.springframework.security.ldap.userdetails.LdapUserDetails;
 
 import static org.mockito.Mockito.*;
 
@@ -27,8 +26,11 @@ import static org.mockito.Mockito.*;
 public class UserServiceImplTest {
 
     private static final long USER_ID = 1L;
-    private static final UserProfileDTO USER_PROFILE_DTO = new UserProfileDTO(1L, "display name");
-    private static final CustomUserDetails EXPECTED_USER = new CustomUserDetails(1L, new UserProfileDTO(1L, "display"), "username", "pass", Collections.emptyList());
+    private static final long IMAGE_ID = 1l;
+    private static final String DISPLAY_NAME = "name";
+    private static final UserProfileDTO USER_PROFILE_DTO = new UserProfileDTO(IMAGE_ID, DISPLAY_NAME);
+    private static final LdapUserDetails LDAP_USER_DETAILS = mock(LdapUserDetails.class);
+    private static final CustomLdapUserDetails EXPECTED_USER = new CustomLdapUserDetails(USER_ID, USER_PROFILE_DTO, LDAP_USER_DETAILS);
 
     @Mock
     private UserRepository userRepository;
@@ -45,20 +47,20 @@ public class UserServiceImplTest {
         SecurityContextHolder.setContext(securityContext);
         when(authentication.getPrincipal()).thenReturn(EXPECTED_USER);
 
-        CustomUserDetails actualUser = userService.getCurrentUser();
+        CustomLdapUserDetails actualUser = userService.getCurrentUser();
 
         Assert.assertEquals(EXPECTED_USER, actualUser);
     }
 
     @Test
     public void shouldReturnNullIfNotLogged() {
-        CustomUserDetails expectedUser = null;
+        CustomLdapUserDetails expectedUser = null;
         Authentication authentication = null;
         SecurityContext securityContext = mock(SecurityContext.class);
         when(securityContext.getAuthentication()).thenReturn(authentication);
         SecurityContextHolder.setContext(securityContext);
 
-        CustomUserDetails actualUser = userService.getCurrentUser();
+        CustomLdapUserDetails actualUser = userService.getCurrentUser();
 
         Assert.assertEquals(expectedUser, actualUser);
     }

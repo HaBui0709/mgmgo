@@ -24,8 +24,9 @@
         <thymeleaf-layout-version>2.3.0</thymeleaf-layout-version>
         <bootstrap-version>4.0.0</bootstrap-version>
         <jquery-version>3.1.1</jquery-version>
-        <springsecurity.version>5.1.5.RELEASE</springsecurity.version>
+        <spring-security-version>5.1.5.RELEASE</spring-security-version>
         <jacoco-version>0.8.2</jacoco-version>
+        <spring-ldap-core-version>2.3.2.RELEASE</spring-ldap-core-version>
     </properties>
 
     <profiles>
@@ -114,22 +115,34 @@
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-web</artifactId>
-            <version>${springsecurity.version}</version>
+            <version>${spring-security-version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-config</artifactId>
-            <version>${springsecurity.version}</version>
+            <version>${spring-security-version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-taglibs</artifactId>
-            <version>${springsecurity.version}</version>
+            <version>${spring-security-version}</version>
         </dependency>
         <dependency>
             <groupId>org.thymeleaf.extras</groupId>
             <artifactId>thymeleaf-extras-springsecurity5</artifactId>
             <version>3.0.4.RELEASE</version>
+        </dependency>
+
+        <!--spring ldap-->
+        <dependency>
+            <groupId>org.springframework.ldap</groupId>
+            <artifactId>spring-ldap-core</artifactId>
+            <version>${spring-ldap-core-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-ldap</artifactId>
+            <version>${spring-security-version}</version>
         </dependency>
 
         <dependency>

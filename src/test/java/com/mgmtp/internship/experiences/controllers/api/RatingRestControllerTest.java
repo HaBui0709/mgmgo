@@ -1,6 +1,6 @@
 package com.mgmtp.internship.experiences.controllers.api;
 
-import com.mgmtp.internship.experiences.config.security.CustomUserDetails;
+import com.mgmtp.internship.experiences.config.security.CustomLdapUserDetails;
 import com.mgmtp.internship.experiences.dto.UserProfileDTO;
 import com.mgmtp.internship.experiences.exceptions.ApiException;
 import com.mgmtp.internship.experiences.services.impl.RatingServiceImpl;
@@ -14,12 +14,14 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.ldap.userdetails.LdapUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.util.Collections;
+import static org.mockito.Mockito.mock;
+
 
 /**
  * Unit test for rating rest controller.
@@ -29,12 +31,16 @@ import java.util.Collections;
 @RunWith(MockitoJUnitRunner.class)
 public class RatingRestControllerTest {
 
+    private static final long USER_ID = 1L;
+    private static final long IMAGE_ID = 1l;
+    private static final String DISPLAY_NAME = "name";
     private static final int ACTIVITY_ID = 1;
-    private static final CustomUserDetails CUSTOM_USER_DETAILS = new CustomUserDetails(1L, new UserProfileDTO(1L, "display"), "username", "pass", Collections.emptyList());
     private static final Logger LOGGER = LoggerFactory.getLogger(RatingRestControllerTest.class);
     private static final String RATING_URL = "/rating/activity/1";
     private static final String RATING_PARAM = "rating";
-
+    private static final UserProfileDTO USER_PROFILE_DTO = new UserProfileDTO(IMAGE_ID, DISPLAY_NAME);
+    private static final LdapUserDetails LDAP_USER_DETAILS = mock(LdapUserDetails.class);
+    private static final CustomLdapUserDetails CUSTOM_USER_DETAILS = new CustomLdapUserDetails(USER_ID, USER_PROFILE_DTO, LDAP_USER_DETAILS);
     private MockMvc mockMvc;
 
     @Mock
@@ -63,7 +69,7 @@ public class RatingRestControllerTest {
     }
 
     @Test
-    public void shouldReturnErrorOnGetUserRatingIfNotLogged(){
+    public void shouldReturnErrorOnGetUserRatingIfNotLogged() {
         Mockito.when(userService.getCurrentUser()).thenReturn(null);
 
         try {
@@ -76,7 +82,7 @@ public class RatingRestControllerTest {
     }
 
     @Test
-    public void shouldReturnAverageRatingIfEditSuccess(){
+    public void shouldReturnAverageRatingIfEditSuccess() {
         double expectedRating = 5.0;
         int updateSuccess = 1;
         int rating = 5;
@@ -95,7 +101,7 @@ public class RatingRestControllerTest {
     }
 
     @Test
-    public void shouldReturnErrorOnUpdateRatingIfNotLogged(){
+    public void shouldReturnErrorOnUpdateRatingIfNotLogged() {
         int rating = 4;
         Mockito.when(userService.getCurrentUser()).thenReturn(null);
 
@@ -110,7 +116,7 @@ public class RatingRestControllerTest {
     }
 
     @Test
-    public void shouldReturnServerErrorOnUpdateIfEditFail(){
+    public void shouldReturnServerErrorOnUpdateIfEditFail() {
         int updateFail = 0;
         int rating = 5;
         Mockito.when(userService.getCurrentUser()).thenReturn(CUSTOM_USER_DETAILS);
@@ -125,5 +131,4 @@ public class RatingRestControllerTest {
             LOGGER.error(e.getMessage());
         }
     }
-
 }

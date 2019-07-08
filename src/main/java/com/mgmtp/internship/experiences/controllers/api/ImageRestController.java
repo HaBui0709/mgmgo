@@ -1,6 +1,6 @@
 package com.mgmtp.internship.experiences.controllers.api;
 
-import com.mgmtp.internship.experiences.config.security.CustomUserDetails;
+import com.mgmtp.internship.experiences.config.security.CustomLdapUserDetails;
 import com.mgmtp.internship.experiences.dto.ImageDTO;
 import com.mgmtp.internship.experiences.exceptions.ApiException;
 import com.mgmtp.internship.experiences.services.ImageService;
@@ -61,10 +61,10 @@ public class ImageRestController extends BaseRestController {
             throw new ApiException(HttpStatus.BAD_REQUEST, "Can not process the image.");
         }
 
-        CustomUserDetails userDetails = userService.getCurrentUser();
+        CustomLdapUserDetails userDetails = userService.getCurrentUser();
         try {
-            Long imageId = imageService.updateUserImage(userDetails.getId(), userDetails.getUserProfile().getImageId(), imageData);
-            userDetails.getUserProfile().setImageId(imageId);
+            Long imageId = imageService.updateUserImage(userDetails.getId(), userDetails.getUserProfileDTO().getImageId(), imageData);
+            userDetails.getUserProfileDTO().setImageId(imageId);
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("id", imageId);
             return jsonObject;

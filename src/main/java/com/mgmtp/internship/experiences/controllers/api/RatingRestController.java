@@ -1,6 +1,6 @@
 package com.mgmtp.internship.experiences.controllers.api;
 
-import com.mgmtp.internship.experiences.config.security.CustomUserDetails;
+import com.mgmtp.internship.experiences.config.security.CustomLdapUserDetails;
 import com.mgmtp.internship.experiences.exceptions.ApiException;
 import com.mgmtp.internship.experiences.services.RatingService;
 import com.mgmtp.internship.experiences.services.UserService;
@@ -29,7 +29,7 @@ public class RatingRestController extends BaseRestController {
 
     @GetMapping("/activity/{activityId}")
     public Object getRate(@PathVariable("activityId") long activityId) {
-        CustomUserDetails user = userService.getCurrentUser();
+        CustomLdapUserDetails user = userService.getCurrentUser();
         if (user == null) {
             throw new ApiException(HttpStatus.UNAUTHORIZED, "Please login to perform this operation.");
         }
@@ -44,7 +44,7 @@ public class RatingRestController extends BaseRestController {
                                  @Min(value = 1, message = "Rating has to be greater than or equal to 1 ")
                                  @Max(value = 5, message = "Rating has to be less than or equal to 5 ")
                                          int rating) {
-        CustomUserDetails user = userService.getCurrentUser();
+        CustomLdapUserDetails user = userService.getCurrentUser();
         if (user == null) {
             throw new ApiException(HttpStatus.UNAUTHORIZED, "Please login to perform this operation.");
         }

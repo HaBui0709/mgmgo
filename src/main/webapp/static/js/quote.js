@@ -4,17 +4,22 @@ $(document).ready(function () {
 
 function getQuote() {
     fetch('/api/quote')
-        .then(function (response) {
-            return response.json();
+        .then(response => {
+            return response.json().then(data => {
+                if (response.ok) {
+                    return data;
+                } else {
+                    return Promise.reject({status: response.status, data});
+                }
+            })
         })
-        .then(function (quote) {
-            console.log(quote)
+        .then(quote => {
             $('#quote-content').html(quote.content);
-            $('#quote-author').text(`- ${quote.title} -`);
+            $('#quote-author').html(`- ${quote.title} -`);
 
             $('.quote-wrapper').removeClass('invisible');
         })
-        .catch(function (error) {
+        .catch(error => {
             $('.quote-wrapper').removeClass('invisible');
-        })
+        });
 }

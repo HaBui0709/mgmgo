@@ -1,6 +1,6 @@
 package com.mgmtp.internship.experiences.controllers.app;
 
-import com.mgmtp.internship.experiences.config.security.CustomUserDetails;
+import com.mgmtp.internship.experiences.config.security.CustomLdapUserDetails;
 import com.mgmtp.internship.experiences.dto.UserProfileDTO;
 import com.mgmtp.internship.experiences.services.UserService;
 import com.mgmtp.internship.experiences.utils.StringReplaceWhitespaceEditor;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 /**
- * Activity Controller
+ * Activity Controller.
  *
  * @author: thuynh
  */
@@ -23,7 +23,7 @@ import javax.validation.Valid;
 @RequestMapping("/profile")
 public class UserProfileController {
 
-    private static final String USER_PROFILE_MODEL_TAG = "userProfile";
+    private static final String USER_PROFILE_MODEL_TAG = "userProfileDTO";
     private static final String USERNAME_MODEL_TAG = "username";
 
     @Autowired
@@ -31,11 +31,11 @@ public class UserProfileController {
 
     @GetMapping()
     public String profile(Model model) {
-        CustomUserDetails user = userService.getCurrentUser();
+        CustomLdapUserDetails user = userService.getCurrentUser();
         if (user == null) {
             return "redirect:/login";
         }
-        model.addAttribute(USER_PROFILE_MODEL_TAG, user.getUserProfile());
+        model.addAttribute(USER_PROFILE_MODEL_TAG, user.getUserProfileDTO());
         model.addAttribute(USERNAME_MODEL_TAG, user.getUsername());
         return "user/profile";
     }
@@ -47,7 +47,7 @@ public class UserProfileController {
 
     @PostMapping()
     public String updateProfile(@ModelAttribute(USER_PROFILE_MODEL_TAG) @Valid UserProfileDTO profile, final BindingResult bindingResult, Model model) {
-        CustomUserDetails user = userService.getCurrentUser();
+        CustomLdapUserDetails user = userService.getCurrentUser();
         if (user == null) {
             return "redirect:/login";
         }
@@ -60,7 +60,7 @@ public class UserProfileController {
                 model.addAttribute("error", "Can't update profile.");
             }
         }
-        profile.setImageId(user.getUserProfile().getImageId());
+        profile.setImageId(user.getUserProfileDTO().getImageId());
         model.addAttribute(USER_PROFILE_MODEL_TAG, profile);
         model.addAttribute(USERNAME_MODEL_TAG, userService.getCurrentUser().getUsername());
         return "user/profile";

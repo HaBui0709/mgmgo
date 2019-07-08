@@ -48,6 +48,6 @@ public class Indexes {
         public static Index PK_IMAGE = Internal.createIndex("pk_image", Image.IMAGE, new OrderField[] { Image.IMAGE.ID }, true);
         public static Index PK_RATING = Internal.createIndex("pk_rating", Rating.RATING, new OrderField[] { Rating.RATING.ID }, true);
         public static Index PK_USER = Internal.createIndex("pk_user", User.USER, new OrderField[] { User.USER.ID }, true);
-        public static Index USER_DISPLAY_NAME_KEY = Internal.createIndex("user_display_name_key", User.USER, new OrderField[]{User.USER.DISPLAY_NAME}, true);
+        public static Index USER_DISPLAY_NAME_KEY = Internal.createIndex("user_display_name_key", User.USER, new OrderField[] { User.USER.DISPLAY_NAME }, true);
     }
 }

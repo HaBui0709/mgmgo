@@ -1,6 +1,6 @@
 package com.mgmtp.internship.experiences.controllers.app;
 
-import com.mgmtp.internship.experiences.config.security.CustomUserDetails;
+import com.mgmtp.internship.experiences.config.security.CustomLdapUserDetails;
 import com.mgmtp.internship.experiences.dto.ActivityDetailDTO;
 import com.mgmtp.internship.experiences.services.ActivityService;
 import com.mgmtp.internship.experiences.services.UserService;
@@ -16,7 +16,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.validation.Valid;
 
 /**
- * Activity Controller
+ * Activity Controller.
  *
  * @author: vhduong
  */
@@ -76,7 +76,7 @@ public class ActivityController {
         }
 
         try {
-            CustomUserDetails user = userService.getCurrentUser();
+            CustomLdapUserDetails user = userService.getCurrentUser();
             activityDetailDTO.setUpdatedByUserId(user.getId());
             if (activityService.checkExistNameForUpdate(activityDetailDTO.getId(), activityDetailDTO.getName())) {
                 redirectAttributes.addFlashAttribute(ERROR_VIEW, "This name already exists");
@@ -110,7 +110,7 @@ public class ActivityController {
             return REDIRECT_CREATE_URL;
         }
         try {
-            CustomUserDetails user = userService.getCurrentUser();
+            CustomLdapUserDetails user = userService.getCurrentUser();
             activityDetailDTO.setCreatedByUserId(user.getId());
             if (activityService.checkExistName(activityDetailDTO.getName())) {
                 redirectAttributes.addFlashAttribute(ERROR_VIEW, "This name already exists");
