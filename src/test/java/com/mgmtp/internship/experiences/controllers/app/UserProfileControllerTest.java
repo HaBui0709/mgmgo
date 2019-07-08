@@ -1,6 +1,6 @@
 package com.mgmtp.internship.experiences.controllers.app;
 
-import com.mgmtp.internship.experiences.config.security.CustomUserDetails;
+import com.mgmtp.internship.experiences.config.security.CustomLdapUserDetails;
 import com.mgmtp.internship.experiences.dto.UserProfileDTO;
 import com.mgmtp.internship.experiences.services.impl.UserServiceImpl;
 import org.junit.Before;
@@ -11,11 +11,11 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.ldap.userdetails.LdapUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.util.Collections;
-
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -28,16 +28,20 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @RunWith(MockitoJUnitRunner.class)
 public class UserProfileControllerTest {
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserProfileControllerTest.class);
 
+    private static final long USER_ID = 1L;
+    private static final long IMAGE_ID = 1l;
+    private static final String DISPLAY_NAME = "name";
     private static final String PROFILE_URL = "/profile";
-    private static final UserProfileDTO USER_PROFILE_DTO = new UserProfileDTO(1L, "display name");
-    private static final String USER_PROFILE_MODEL_TAG = "userProfile";
+    private static final String USER_PROFILE_MODEL_TAG = "userProfileDTO";
     private static final String USERNAME_MODEL_TAG = "username";
     private static final String DISPLAY_NAME_FIELD = "displayName";
     private static final String IMAGE_ID_FIELD = "imageId";
     private static final String EXPECTED_VIEW_NAME = "user/profile";
-    private static final CustomUserDetails CUSTOM_USER_DETAILS = new CustomUserDetails(1L, new UserProfileDTO(1L, "display"), "name", "pass", Collections.emptyList());
-    private static final Logger LOGGER = LoggerFactory.getLogger(UserProfileControllerTest.class);
+    private static final UserProfileDTO USER_PROFILE_DTO = new UserProfileDTO(IMAGE_ID, DISPLAY_NAME);
+    private static final LdapUserDetails LDAP_USER_DETAILS = mock(LdapUserDetails.class);
+    private static final CustomLdapUserDetails CUSTOM_USER_DETAILS = new CustomLdapUserDetails(USER_ID, USER_PROFILE_DTO, LDAP_USER_DETAILS);
 
 
     private MockMvc mockMvc;
@@ -59,7 +63,7 @@ public class UserProfileControllerTest {
         try {
             mockMvc.perform(get(PROFILE_URL))
                     .andExpect(status().isOk())
-                    .andExpect(model().attribute(USER_PROFILE_MODEL_TAG, CUSTOM_USER_DETAILS.getUserProfile()))
+                    .andExpect(model().attribute(USER_PROFILE_MODEL_TAG, CUSTOM_USER_DETAILS.getUserProfileDTO()))
                     .andExpect(model().attribute(USERNAME_MODEL_TAG, CUSTOM_USER_DETAILS.getUsername()))
                     .andExpect(view().name(EXPECTED_VIEW_NAME));
         } catch (Exception e) {

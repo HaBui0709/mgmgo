@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import static com.mgmtp.internship.experiences.model.tables.tables.User.USER;
 
 /**
- * userRepository for login
+ * UserRepository for login.
  *
  * @author ttkngo
  */
@@ -20,13 +20,15 @@ public class UserRepository {
     private DSLContext dslContext;
 
     public UserRecord findUserByUsername(String userName) {
-        return dslContext.selectFrom(USER)
+        return dslContext
+                .selectFrom(USER)
                 .where(USER.USERNAME.eq(userName))
                 .fetchOne();
     }
 
     public boolean updateImage(long userId, Long imageId) {
-        return dslContext.update(USER)
+        return dslContext
+                .update(USER)
                 .set(USER.IMAGE_ID, imageId)
                 .where(USER.ID.eq(userId))
                 .execute() == 1;
@@ -40,9 +42,26 @@ public class UserRepository {
     }
 
     public boolean checkExitDisplayName(String displayName, long id) {
-        return dslContext.fetchExists(dslContext.selectFrom(USER)
+        return dslContext
+                .fetchExists(dslContext.selectFrom(USER)
                 .where(USER.DISPLAY_NAME.likeIgnoreCase(displayName)
                 .and(USER.ID.notEqual(id))));
     }
+
+
+    public int insertUser(String username) {
+        return dslContext
+                .insertInto(USER, USER.USERNAME, USER.DISPLAY_NAME)
+                .values(username, username)
+                .execute();
+    }
+
+    public boolean checkUsernameAvailable(String username) {
+        return dslContext
+                .selectFrom(USER)
+                .where(USER.USERNAME.eq(username))
+                .fetchOne() != null;
+    }
+
 }
 

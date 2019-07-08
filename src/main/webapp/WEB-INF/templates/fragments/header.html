@@ -10,10 +10,10 @@
                         data-target="#navbarSupportedContentSearch">
                     <i class="fa fa-search"></i>
                 </button>
-                <button class="navbar-toggler border-0 btn-toggle" type="button" data-toggle="collapse"
-                        data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
+                <button class="navbar-toggler border-0 btn-toggle" id='btn-toggle'type="button" data-toggle="collapse"
+                        data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                        aria-label="Toggle navigation">
+                    <i id='icon-toggle' class="fa fa-bars"></i>
                 </button>
             </div>
 
@@ -49,8 +49,8 @@
                             <a class="dropdown-toggle" id="user_dropdown" data-toggle="dropdown"
                                href="#">
                                 <img id="user-thumbnail" class="img-thumbnail" width="35" height="35"
-                                     th:src="${#authentication.principal.userProfile.imageId!=null}?@{/api/image/}+${#authentication.principal.userProfile.imageId}:@{/static/images/default_profile_picture.png}"
-                                     th:alt="${#authentication.principal.userProfile.displayName}">
+                                     th:src="${#authentication.principal.userProfileDTO.imageId!=null}?@{/api/image/}+${#authentication.principal.userProfileDTO.imageId}:@{/static/images/default_profile_picture.png}"
+                                     th:alt="${#authentication.principal.userProfileDTO.displayName}">
 
                             </a>
                             <div class="dropdown-menu" aria-labelledby="user_dropdown">

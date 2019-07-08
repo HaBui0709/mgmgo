@@ -8,6 +8,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+/**
+ * Search Controller.
+ *
+ * @author: ttkngo
+ */
+
 @Controller
 @RequestMapping("/search")
 public class SearchController {

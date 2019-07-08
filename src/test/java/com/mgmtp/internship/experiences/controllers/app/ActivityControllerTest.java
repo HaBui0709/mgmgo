@@ -1,6 +1,6 @@
 package com.mgmtp.internship.experiences.controllers.app;
 
-import com.mgmtp.internship.experiences.config.security.CustomUserDetails;
+import com.mgmtp.internship.experiences.config.security.CustomLdapUserDetails;
 import com.mgmtp.internship.experiences.dto.ActivityDetailDTO;
 import com.mgmtp.internship.experiences.dto.UserProfileDTO;
 import com.mgmtp.internship.experiences.services.ActivityService;
@@ -15,12 +15,12 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.ldap.userdetails.LdapUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.util.Collections;
-
+import static org.mockito.Mockito.mock;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -35,14 +35,18 @@ public class ActivityControllerTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ActivityControllerTest.class);
     private static final String ACTIVITY_INFO_ATTRIBUTE = "activityInfo";
+    private static final long ID = 1l;
+    private static final long IMAGE_ID = 1l;
+    private static final String DISPLAY_NAME = "name";
     private static final long ACTIVITY_ID = 1;
     private static final String UPDATE_URL = "/activity/update";
     private static final String CREATE_URL = "/activity/create";
     private static final String ERROR_ATTRIBUTE = "error";
     private static final String DESC_PARAM = "description";
-    private static final ActivityDetailDTO EXPECTED_ACTIVITY_DETAIL_DTO = new ActivityDetailDTO(ACTIVITY_ID, "name", "des", 5, 1L);
-    private static final CustomUserDetails EXPECTED_CUSTOM_USER_DETAIL = new CustomUserDetails(1L, new UserProfileDTO(1L, "display"), "username", "pass", Collections.emptyList());
-
+    private static final ActivityDetailDTO EXPECTED_ACTIVITY_DETAIL_DTO = new ActivityDetailDTO(ACTIVITY_ID, "name", "des", 5, IMAGE_ID);
+    private static final UserProfileDTO userProfileDTO = new UserProfileDTO(IMAGE_ID, DISPLAY_NAME);
+    private static final LdapUserDetails ldapUserDetails = mock(LdapUserDetails.class);
+    private static final CustomLdapUserDetails EXPECTED_CUSTOM_USER_DETAIL = new CustomLdapUserDetails(ID, userProfileDTO, ldapUserDetails);
     private MockMvc mockMvc;
 
     @Mock

@@ -1,6 +1,6 @@
 package com.mgmtp.internship.experiences.controllers.api;
 
-import com.mgmtp.internship.experiences.config.security.CustomUserDetails;
+import com.mgmtp.internship.experiences.config.security.CustomLdapUserDetails;
 import com.mgmtp.internship.experiences.dto.ImageDTO;
 import com.mgmtp.internship.experiences.dto.UserProfileDTO;
 import com.mgmtp.internship.experiences.exceptions.ApiException;
@@ -17,23 +17,28 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.security.ldap.userdetails.LdapUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.io.IOException;
-import java.util.Collections;
+
+import static org.mockito.Mockito.mock;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ImageRestControllerTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ImageRestControllerTest.class);
+
+    private static final long USER_ID = 1L;
     private static final MockMultipartFile FILE = new MockMultipartFile("photo", "test.jpg", "multipart/form-data", new byte[]{1});
     private static final Long OLD_IMAGE_ID = 2L;
     private static final String USER_URL = "/api/image/user";
     private static final UserProfileDTO USER_PROFILE_DTO = Mockito.spy(new UserProfileDTO(OLD_IMAGE_ID, "display"));
-    private static final CustomUserDetails USER_DETAILS = Mockito.spy(new CustomUserDetails(1L, USER_PROFILE_DTO, "username", "pass", Collections.emptyList()));
+    private static final LdapUserDetails LDAP_USER_DETAILS = mock(LdapUserDetails.class);
+    private static final CustomLdapUserDetails USER_DETAILS = Mockito.spy(new CustomLdapUserDetails(USER_ID, USER_PROFILE_DTO, LDAP_USER_DETAILS));
 
     private MockMvc mockMvc;
 

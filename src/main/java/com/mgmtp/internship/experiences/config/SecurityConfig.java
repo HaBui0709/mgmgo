@@ -1,20 +1,20 @@
 package com.mgmtp.internship.experiences.config;
 
-import com.mgmtp.internship.experiences.services.impl.UserDetailsServiceImpl;
+import com.mgmtp.internship.experiences.config.security.CustomLdapUserDetailMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.ldap.CommunicationException;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
-import org.springframework.security.crypto.password.DelegatingPasswordEncoder;
-import org.springframework.security.crypto.password.MessageDigestPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.password.LdapShaPasswordEncoder;
+import org.springframework.security.ldap.userdetails.UserDetailsContextMapper;
 import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.filter.CharacterEncodingFilter;
+
 
 /**
  * Security config.
@@ -24,30 +24,49 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-    @Bean
-    public UserDetailsService userDetailsService() {
-        return new UserDetailsServiceImpl();
-    }
+
+    @Value("${ldap.urls}")
+    private String ldapUrls;
+
+    @Value("${ldap.base.dn}")
+    private String ldapBaseDn;
+
+    @Value("${ldap.username}")
+    private String ldapSecurityPrincipal;
+
+    @Value("${ldap.password}")
+    private String ldapPrincipalPassword;
+
+    @Value("#{'${ldap.user.dn.patterns}'.split(', ')}")
+    private String[] ldapUserDnPatterns;
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
-        DelegatingPasswordEncoder passwordEncoder = (DelegatingPasswordEncoder) PasswordEncoderFactories.createDelegatingPasswordEncoder();
-        passwordEncoder.setDefaultPasswordEncoderForMatches(new MessageDigestPasswordEncoder("MD5"));
-        return passwordEncoder;
+    public UserDetailsContextMapper userDetailsContextMapper() {
+        return new CustomLdapUserDetailMapper();
     }
 
     @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService());
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception, CommunicationException {
+        auth.ldapAuthentication()
+                .userDetailsContextMapper(userDetailsContextMapper())
+                .userDnPatterns(ldapUserDnPatterns)
+                .contextSource()
+                .managerDn(ldapSecurityPrincipal)
+                .managerPassword(ldapPrincipalPassword)
+                .url(ldapUrls + ldapBaseDn)
+                .and()
+                .passwordCompare()
+                .passwordEncoder(new LdapShaPasswordEncoder())
+                .passwordAttribute("userPassword");
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.addFilterBefore(characterEncodingFilter(), CsrfFilter.class).authorizeRequests()
+        http.addFilterBefore(characterEncodingFilter(), CsrfFilter.class)
+                .authorizeRequests()
                 .antMatchers("/activity/**", "/api/image/activity/**")
                 .authenticated()
-                .anyRequest()
-                .permitAll()
+                .anyRequest().permitAll()
                 .and()
                 .formLogin()
                 .loginPage("/login")
@@ -60,15 +79,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .logoutSuccessUrl("/");
     }
 
-    private CharacterEncodingFilter characterEncodingFilter(){
+    private CharacterEncodingFilter characterEncodingFilter() {
         CharacterEncodingFilter filter = new CharacterEncodingFilter();
         filter.setEncoding("UTF-8");
         filter.setForceEncoding(true);
         return filter;
     }
-
-
-
-
-
 }

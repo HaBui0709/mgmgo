@@ -9,6 +9,7 @@
 
 * Maven
 * [PostgreSQL](https://www.postgresql.org/) installed locally or on docker (instruction down below)
+* [OpenLDAP Sever](https://www.openldap.org/) installed locally or on docker (instruction down below)
 
 ### [PostgresSQL on Docker](https://hub.docker.com/_/postgres)
 #### Pull the image
@@ -31,8 +32,37 @@ docker run --name {container_name} -e POSTGRES_USER={POSTGRES_USER} -e POSTGRES_
 *    **{POSTGRES_PASSWORD}**: Set default password for the user above
 *    **{POSTGRES_DB}**: Set the name of the default PostgreSQL database
      
+### [OpenLDAP on docker](https://hub.docker.com/r/osixia/openldap)
+#### Pull the image
+```html
+docker pull osixia/openldap:{tag}
+```
+
+*    **\{tag\}**: [The image tag/version](https://hub.docker.com/r/osixia/openldap/tags). Eg: *latest*, *1.2.4*,...
 
 
+#### Start the container
+```html
+docker run --name {container_name}
+            -p {port}:389 
+            -e LDAP_DOMAIN={DOMAIN_NAME} 
+            -e LDAP_ADMIN_PASSWORD={PASSWORD} 
+            -v {PATH_CONTAIN_SEED_LDAP_FILE}:/container/service/slapd/assets/config/bootstrap/ldif/custom 
+            -d osixia/openldap --copy-service
+```
+
+*    **\{container_name\}**: The name for the container you want to create.
+*    **\{port\}**: Your local port you wish to use for OpenLDAP.
+*    **{DOMAIN_NAME}**: Set the your domain name.
+*    **{PASSWORD}**: Set default password to access to OpenLDAP.    
+*    **{PATH_CONTAIN_SEED_LDAP_FILE}**: Set path contain ldif file. You can find ldap-test.ldif in src/main/resources.  
+
+Example:
+```html
+docker run --name openldap -p 389:389 -e LDAP_DOMAIN="mgmgo.com" -e LDAP_ADMIN_PASSWORD="mgm123"  -v ~/Desktop/ldif:/container/service/slapd/assets/config/bootstrap/ldif/custom  -d osixia/openldap --copy-service
+```
+<u>**Note**</u>: In the above example, I copy file ldap-test.ldif to path ~/Desktop/ldif.
+    
 
 ### Clone git
 
@@ -48,6 +78,15 @@ cd main
 src\main\resources\dbschema\liquibase-dev.properties
 src\main\resources\dbschema\liquibase-prod.properties
 src\main\resources\application.properties
+```
+
+*    In file **application.properties**, we have some properties of LDAP Server, we can change like this:
+```html
+ldap.urls= ldap://localhost:389/
+ldap.base.dn= dc=mgmgo,dc=com
+ldap.username= cn=admin,dc=mgmgo,dc=com
+ldap.password= mgm123
+ldap.user.dn.pattern = uid={0},ou=user
 ```
 *    Generate/update tables with Liquibase if necessary:
 

@@ -1,6 +1,9 @@
 package com.mgmtp.internship.experiences.services;
 
-import com.mgmtp.internship.experiences.config.security.CustomUserDetails;
+
+import com.mgmtp.internship.experiences.config.security.CustomLdapUserDetails;
+import com.mgmtp.internship.experiences.model.tables.tables.records.UserRecord;
+
 import com.mgmtp.internship.experiences.dto.UserProfileDTO;
 
 /**
@@ -9,7 +12,13 @@ import com.mgmtp.internship.experiences.dto.UserProfileDTO;
  * @author thuynh
  */
 public interface UserService {
-    CustomUserDetails getCurrentUser();
+    CustomLdapUserDetails getCurrentUser();
+
+    int insertUser(String username);
+
+    boolean checkUsernameAvailable(String username);
+
+    UserRecord findUserByUserName(String username);
 
     boolean updateProfile(long userId, UserProfileDTO profile);
 
