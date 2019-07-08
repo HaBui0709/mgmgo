@@ -3,7 +3,6 @@ package com.mgmtp.internship.experiences.repositories;
 import com.mgmtp.internship.experiences.dto.ImageDTO;
 import com.mgmtp.internship.experiences.model.tables.tables.records.ImageRecord;
 import org.jooq.DSLContext;
-import org.jooq.Record2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.UncategorizedSQLException;

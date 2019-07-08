@@ -4,7 +4,6 @@ import com.mgmtp.internship.experiences.config.security.CustomUserDetails;
 import com.mgmtp.internship.experiences.dto.ImageDTO;
 import com.mgmtp.internship.experiences.dto.UserProfileDTO;
 import com.mgmtp.internship.experiences.exceptions.ApiException;
-import com.mgmtp.internship.experiences.services.ImageService;
 import com.mgmtp.internship.experiences.services.UserService;
 import com.mgmtp.internship.experiences.services.impl.ImageServiceImpl;
 import org.junit.Assert;
@@ -15,6 +14,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -27,8 +28,10 @@ import java.util.Collections;
 @RunWith(MockitoJUnitRunner.class)
 public class ImageRestControllerTest {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(ImageRestControllerTest.class);
     private static final MockMultipartFile FILE = new MockMultipartFile("photo", "test.jpg", "multipart/form-data", new byte[]{1});
     private static final Long OLD_IMAGE_ID = 2L;
+    private static final String USER_URL = "/api/image/user";
     private static final UserProfileDTO USER_PROFILE_DTO = Mockito.spy(new UserProfileDTO(OLD_IMAGE_ID, "display"));
     private static final CustomUserDetails USER_DETAILS = Mockito.spy(new CustomUserDetails(1L, USER_PROFILE_DTO, "username", "pass", Collections.emptyList()));
 
@@ -53,10 +56,11 @@ public class ImageRestControllerTest {
         try {
             Mockito.when(imageService.validateProfilePicture(Mockito.any())).thenReturn(false);
 
-            mockMvc.perform(MockMvcRequestBuilders.multipart("/api/image/user").file(FILE))
+            mockMvc.perform(MockMvcRequestBuilders.multipart(USER_URL).file(FILE))
                     .andExpect(MockMvcResultMatchers.status().isBadRequest())
                     .andExpect(MockMvcResultMatchers.content().string("{\"status\":\"FAILED\",\"message\":\"The image is too large.\"}"));
         } catch (Exception e) {
+            LOGGER.error(e.getMessage());
         }
     }
 
@@ -65,10 +69,11 @@ public class ImageRestControllerTest {
         try {
             Mockito.when(imageService.validateProfilePicture(Mockito.any())).thenThrow(new IOException());
 
-            mockMvc.perform(MockMvcRequestBuilders.multipart("/api/image/user").file(FILE))
+            mockMvc.perform(MockMvcRequestBuilders.multipart(USER_URL).file(FILE))
                     .andExpect(MockMvcResultMatchers.status().isBadRequest())
                     .andExpect(MockMvcResultMatchers.content().string("{\"status\":\"FAILED\",\"message\":\"Can not process the image.\"}"));
         } catch (Exception e) {
+            LOGGER.error(e.getMessage());
         }
     }
 
@@ -79,12 +84,13 @@ public class ImageRestControllerTest {
             Mockito.when(userService.getCurrentUser()).thenReturn(USER_DETAILS);
             Mockito.when(imageService.updateUserImage(USER_DETAILS.getId(), OLD_IMAGE_ID, FILE.getBytes())).thenThrow(new RuntimeException());
 
-            mockMvc.perform(MockMvcRequestBuilders.multipart("/api/image/user").file(FILE))
+            mockMvc.perform(MockMvcRequestBuilders.multipart(USER_URL).file(FILE))
                     .andExpect(MockMvcResultMatchers.status().isBadRequest())
                     .andExpect(MockMvcResultMatchers.content().string("{\"status\":\"FAILED\",\"message\":\"Server error.\"}"));
 
             Mockito.verify(USER_PROFILE_DTO, Mockito.never()).setImageId(Mockito.anyLong());
         } catch (Exception e) {
+            LOGGER.error(e.getMessage());
         }
     }
 
@@ -98,12 +104,13 @@ public class ImageRestControllerTest {
             Mockito.when(userService.getCurrentUser()).thenReturn(USER_DETAILS);
             Mockito.when(imageService.updateUserImage(USER_DETAILS.getId(), OLD_IMAGE_ID, FILE.getBytes())).thenReturn(imageId);
 
-            mockMvc.perform(MockMvcRequestBuilders.multipart("/api/image/user").file(FILE))
+            mockMvc.perform(MockMvcRequestBuilders.multipart(USER_URL).file(FILE))
                     .andExpect(MockMvcResultMatchers.status().isOk())
                     .andExpect(MockMvcResultMatchers.content().string("{\"id\":1}"));
 
             Mockito.verify(USER_PROFILE_DTO).setImageId(imageId);
         } catch (Exception e) {
+            LOGGER.error(e.getMessage());
         }
     }
 

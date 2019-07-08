@@ -20,7 +20,7 @@ import java.util.Collections;
 public class UserDetailsServiceImplTest {
     private static final long EXPECTEDID = 1L;
     private static final String EXPECTEDUSERNAME = "username";
-    private static final String EXPECTEDDISPLAYNAME = "username";
+    private static final String EXPECTEDDISPLAYNAME = "displayname";
     private static final long EXPECTEDIMAGEID = 1;
 
     @Mock
