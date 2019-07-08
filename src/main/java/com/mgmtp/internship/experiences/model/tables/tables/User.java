@@ -41,7 +41,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class User extends TableImpl<UserRecord> {
 
-    private static final long serialVersionUID = 735581137;
+    private static final long serialVersionUID = 202361045;
 
     /**
      * The reference instance of <code>public.user</code>
@@ -75,6 +75,11 @@ public class User extends TableImpl<UserRecord> {
      * The column <code>public.user.image_id</code>.
      */
     public final TableField<UserRecord, Long> IMAGE_ID = createField("image_id", org.jooq.impl.SQLDataType.BIGINT, this, "");
+
+    /**
+     * The column <code>public.user.reputation_score</code>.
+     */
+    public final TableField<UserRecord, Integer> REPUTATION_SCORE = createField("reputation_score", org.jooq.impl.SQLDataType.INTEGER.defaultValue(org.jooq.impl.DSL.field("0", org.jooq.impl.SQLDataType.INTEGER)), this, "");
 
     /**
      * Create a <code>public.user</code> table reference

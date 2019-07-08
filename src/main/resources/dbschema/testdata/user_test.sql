@@ -1,25 +1,25 @@
-INSERT INTO public.user ( username, display_name)
-VALUES ('ntran.ext','ntran.ext');
-INSERT INTO public.user ( username, display_name)
-VALUES ('sfrank.ext','sfrank.ext');
-INSERT INTO public.user ( username, display_name)
-VALUES ('dtle.ext','dtle.ext');
-INSERT INTO public.user ( username, display_name)
-VALUES ('hntran.ext','hntran.ext');
-INSERT INTO public.user ( username, display_name)
-VALUES ('httbui.ext','httbui.ext');
-INSERT INTO public.user ( username, display_name)
-VALUES ('kvdoan.ext','kvdoan.ext');
-INSERT INTO public.user ( username, display_name)
-VALUES ('ttkngo.ext','ttkngo.ext');
-INSERT INTO public.user ( username, display_name)
-VALUES ('hnguyen.ext','hnguyen.ext');
-INSERT INTO public.user ( username, display_name)
-VALUES ('vhduong.ext','vhduong.ext');
-INSERT INTO public.user ( username, display_name)
-VALUES ('dhnguyen.ext','dhnguyen.ext');
-INSERT INTO public.user ( username, display_name)
-VALUES ('htnguyen.ext','htnguyen.ext');
+INSERT INTO public.user ( username, display_name, reputation_score)
+VALUES ('ntran','ntran',95);
+INSERT INTO public.user ( username, display_name, reputation_score)
+VALUES ('sfrank','sfrank', 52);
+INSERT INTO public.user ( username, display_name, reputation_score)
+VALUES ('dtle.ext','dtle.ext', 73);
+INSERT INTO public.user ( username, display_name, reputation_score)
+VALUES ('hntran.ext','hntran.ext', 3);
+INSERT INTO public.user ( username, display_name, reputation_score)
+VALUES ('httbui.ext','httbui.ext', 0);
+INSERT INTO public.user ( username, display_name, reputation_score)
+VALUES ('kvdoan.ext','kvdoan.ext', 2);
+INSERT INTO public.user ( username, display_name, reputation_score)
+VALUES ('ttkngo.ext','ttkngo.ext', 3);
+INSERT INTO public.user ( username, display_name, reputation_score)
+VALUES ('hnguyen.ext','hnguyen.ext', 1);
+INSERT INTO public.user ( username, display_name, reputation_score)
+VALUES ('vhduong.ext','vhduong.ext', 4);
+INSERT INTO public.user ( username, display_name, reputation_score)
+VALUES ('dhnguyen.ext','dhnguyen.ext', 3);
+INSERT INTO public.user ( username, display_name, reputation_score)
+VALUES ('htnguyen.ext','htnguyen.ext', 2);
 INSERT INTO public.user ( username, display_name)
 VALUES ('tdnguyen.ext','tdnguyen.ext');
 INSERT INTO public.user ( username, display_name)

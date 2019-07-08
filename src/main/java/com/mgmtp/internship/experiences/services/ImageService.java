@@ -24,4 +24,6 @@ public interface ImageService {
     boolean validateProfilePicture(InputStream inputStream) throws IOException;
 
     Long updateActivityImage(long activityId, byte[] imageData);
+
+    boolean checkExistedImageOfActivity(Long activityId);
 }

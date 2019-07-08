@@ -31,7 +31,6 @@ public class ActivityController {
     private static final String REDIRECT_UPDATE_URL = "redirect:/activity/update/";
     private static final String REDIRECT_CREATE_URL = "redirect:/activity/create";
 
-
     @Autowired
     private ActivityService activityService;
 
@@ -126,6 +125,7 @@ public class ActivityController {
                 return REDIRECT_CREATE_URL;
             }
             activityService.create(activityDetailDTO);
+            userService.calculateAndUpdateRepulationScore(activityDetailDTO.getCreatedByUserId(), ApplicationConstant.REPUTATION_SCORE_CREATE_ACTIVITY);
             redirectAttributes.addFlashAttribute("successTemp", "");
             return "redirect:/";
 

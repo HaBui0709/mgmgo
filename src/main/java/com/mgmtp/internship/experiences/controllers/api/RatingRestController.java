@@ -1,5 +1,6 @@
 package com.mgmtp.internship.experiences.controllers.api;
 
+import com.mgmtp.internship.experiences.constants.ApplicationConstant;
 import com.mgmtp.internship.experiences.config.security.CustomLdapUserDetails;
 import com.mgmtp.internship.experiences.exceptions.ApiException;
 import com.mgmtp.internship.experiences.services.RatingService;
@@ -48,7 +49,11 @@ public class RatingRestController extends BaseRestController {
         if (user == null) {
             throw new ApiException(HttpStatus.UNAUTHORIZED, "Please login to perform this operation.");
         }
+        int rateOfUser = ratingService.getRateByUserId(activityId, user.getId());
         if (ratingService.editRateByUserId(activityId, user.getId(), rating) == 1) {
+            if (rateOfUser == 0) {
+                userService.calculateAndUpdateRepulationScore(user.getId(), ApplicationConstant.REPUTATION_SCORE_RATING_ACTIVITY_FIRST);
+            }
             JSONObject result = new JSONObject();
             result.put("rating", ratingService.getRate(activityId));
             return result;

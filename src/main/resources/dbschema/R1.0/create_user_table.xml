@@ -19,6 +19,9 @@
             <column name="image_id" type="bigint">
                 <constraints foreignKeyName="fk_user_image" references="image(id)" nullable="true"/>
             </column>
+            <column name="reputation_score" type="int" defaultValue="0">
+                <constraints nullable="true" />
+            </column>
         </createTable>
     </changeSet>
 

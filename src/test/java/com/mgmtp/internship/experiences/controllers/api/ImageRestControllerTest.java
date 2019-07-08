@@ -4,8 +4,8 @@ import com.mgmtp.internship.experiences.config.security.CustomLdapUserDetails;
 import com.mgmtp.internship.experiences.dto.ImageDTO;
 import com.mgmtp.internship.experiences.dto.UserProfileDTO;
 import com.mgmtp.internship.experiences.exceptions.ApiException;
+import com.mgmtp.internship.experiences.services.ImageService;
 import com.mgmtp.internship.experiences.services.UserService;
-import com.mgmtp.internship.experiences.services.impl.ImageServiceImpl;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,14 +36,14 @@ public class ImageRestControllerTest {
     private static final MockMultipartFile FILE = new MockMultipartFile("photo", "test.jpg", "multipart/form-data", new byte[]{1});
     private static final Long OLD_IMAGE_ID = 2L;
     private static final String USER_URL = "/api/image/user";
-    private static final UserProfileDTO USER_PROFILE_DTO = Mockito.spy(new UserProfileDTO(OLD_IMAGE_ID, "display"));
+    private static final UserProfileDTO USER_PROFILE_DTO = Mockito.spy(new UserProfileDTO(OLD_IMAGE_ID, "display", 0));
     private static final LdapUserDetails LDAP_USER_DETAILS = mock(LdapUserDetails.class);
     private static final CustomLdapUserDetails USER_DETAILS = Mockito.spy(new CustomLdapUserDetails(USER_ID, USER_PROFILE_DTO, LDAP_USER_DETAILS));
 
     private MockMvc mockMvc;
 
     @Mock
-    private ImageServiceImpl imageService;
+    private ImageService imageService;
 
     @Mock
     private UserService userService;
@@ -141,8 +141,8 @@ public class ImageRestControllerTest {
     public void shouldThrowApiExceptionIfAddImageFailed() throws IOException {
         long activityId = 1;
         MockMultipartFile photo = new MockMultipartFile("data", "data.jpg", "image/jpg", new byte[]{0x4f, 0x3f});
+        Mockito.when(userService.getCurrentUser()).thenReturn(USER_DETAILS);
         Mockito.when(imageService.updateActivityImage(activityId, photo.getBytes())).thenReturn(null);
         imageRestController.addImage(activityId, photo);
     }
-
 }

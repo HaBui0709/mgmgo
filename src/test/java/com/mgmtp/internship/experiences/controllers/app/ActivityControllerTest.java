@@ -35,9 +35,10 @@ public class ActivityControllerTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ActivityControllerTest.class);
     private static final String ACTIVITY_INFO_ATTRIBUTE = "activityDetailDTO";
-    private static final long ID = 1L;
-    private static final long IMAGE_ID = 1L;
+    private static final long ID = 1l;
+    private static final long IMAGE_ID = 1l;
     private static final String DISPLAY_NAME = "name";
+    private static final int USER_REPUTATION_SCORE = 1;
     private static final long ACTIVITY_ID = 1;
     private static final String UPDATE_URL = "/activity/update";
     private static final String CREATE_URL = "/activity/create";
@@ -45,7 +46,7 @@ public class ActivityControllerTest {
     private static final String DESC_PARAM = "description";
     private static final ActivityDetailDTO EXPECTED_ACTIVITY_DETAIL_DTO = new ActivityDetailDTO(ACTIVITY_ID, "name", "des", 5, IMAGE_ID);
     private static final ActivityDetailDTO EXISTED_ACTIVITY_DETAIL_DTO = new ActivityDetailDTO(1, "existedName", "des2", 3, 2L);
-    private static final UserProfileDTO userProfileDTO = new UserProfileDTO(IMAGE_ID, DISPLAY_NAME);
+    private static final UserProfileDTO userProfileDTO = new UserProfileDTO(IMAGE_ID, DISPLAY_NAME, USER_REPUTATION_SCORE);
     private static final LdapUserDetails ldapUserDetails = mock(LdapUserDetails.class);
     private static final CustomLdapUserDetails EXPECTED_CUSTOM_USER_DETAIL = new CustomLdapUserDetails(ID, userProfileDTO, ldapUserDetails);
     private MockMvc mockMvc;

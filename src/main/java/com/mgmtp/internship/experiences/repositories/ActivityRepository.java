@@ -46,7 +46,7 @@ public class ActivityRepository {
     public ActivityDetailDTO findById(long activityId) {
 
         Record6<Long, String, String, String, BigDecimal, Long> activity = dslContext.select(ACTIVITY.ID,
-                ACTIVITY.NAME, ACTIVITY.DESCRIPTION, ACTIVITY.ADDRESS, round(avg(RATING.VALUE), 1).as("rating"), IMAGE.ID.as("imageId"))
+                ACTIVITY.NAME, ACTIVITY.DESCRIPTION, ACTIVITY.ADDRESS, round(avg(RATING.VALUE), 1).as("rating"), IMAGE.ID.as(IMAGE_ID_PROPERTY))
                 .from(ACTIVITY)
                 .leftJoin(RATING)
                 .on(ACTIVITY.ID.eq(RATING.ACTIVITY_ID))
@@ -89,7 +89,7 @@ public class ActivityRepository {
     public List<ActivityDTO> search(String text) {
         final String unaccentFunc = "unaccent";
         Field<String> keySearch = DSL.function(unaccentFunc, String.class, DSL.val(text.trim()));
-        return dslContext.select(ACTIVITY.ID, ACTIVITY.NAME, IMAGE.ID.as("imageId"))
+        return dslContext.select(ACTIVITY.ID, ACTIVITY.NAME, IMAGE.ID.as(IMAGE_ID_PROPERTY))
                 .from(ACTIVITY)
                 .leftJoin(ACTIVITY_IMAGE)
                 .on(ACTIVITY.ID.eq(ACTIVITY_IMAGE.ACTIVITY_ID))
