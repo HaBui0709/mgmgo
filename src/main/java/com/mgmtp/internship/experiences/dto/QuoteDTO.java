@@ -9,9 +9,10 @@ public class QuoteDTO {
     private String content;
     private String title;
 
-    public QuoteDTO(){
+    public QuoteDTO() {
 
     }
+
     public QuoteDTO(String content, String title) {
         this.content = content;
         this.title = title;

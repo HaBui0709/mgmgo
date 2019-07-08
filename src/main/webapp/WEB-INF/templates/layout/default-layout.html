@@ -15,6 +15,11 @@
         <!-- main content -->
         <div layout:fragment="main-content" class="content-wrapper container py-2"></div>
 
+        <!-- Message when create successfull default-layout-->
+        <div id="message-success" th:if="${success != null}">
+            <div class="alert-success alert create-message-success" th:text="${success}"></div>
+        </div>
+
         <!-- footer -->
         <footer th:replace="fragments/footer :: footer" class="footer"></footer>
 

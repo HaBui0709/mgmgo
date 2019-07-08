@@ -4,12 +4,12 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/default-layout}">
 <head>
-    <title th:text="${activityInfo.getName()}"></title>
+    <title th:text="${activityDetailDTO.getName()}"></title>
     <link rel="stylesheet" type="text/css" th:href="@{/static/css/activity/detail.css}"/>
     <link rel="stylesheet" type="text/css" th:href="@{/static/css/home/index.css}"/>
     <link rel="stylesheet" type="text/css" th:href="@{/static/css/editPicture/editPicture.css}"/>
 
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta type="text" name="csrf-token" th:content="${_csrf!=null?_csrf.token:''}"/>
     <meta type="text" name="csrf-header" th:content="${_csrf!=null?_csrf.headerName:'X-CSRF-Token'}"/>
 </head>
@@ -21,22 +21,22 @@
     <div class="card" id="activity-detail">
         <div class="card-body px-0">
             <div id="detail-header" class="card-title col-12 row mx-0">
-                <h1 th:text="${activityInfo.getName()}" id="detail-title"></h1>
+                <h1 th:text="${activityDetailDTO.getName()}" id="detail-title"></h1>
                 <div id="activity-rating">
                     <button class="row px-0 mx-0" data-toggle="modal" id="rate-button" data-target="#rateModal">
                         <div id="rating-star">
                             <i class="fa fa-star" id="star-filled"></i>
                             <i class="fa fa-star-o" id="star-empty"></i>
                             <i class="fa fa-star" id="star-removed"
-                               th:style="'height: '+${activityInfo.getRating()>0?(15+(1-(activityInfo.getRating()/5))*65):100}+'%;'"></i>
+                               th:style="'height: '+${activityDetailDTO.getRating()>0?(15+(1-(activityDetailDTO.getRating()/5))*65):100}+'%;'"></i>
                         </div>
-                        <div id="rating-score" th:text="${activityInfo.getRating()}"
-                             th:class="'px-1'+${activityInfo.getRating()>0?'':' d-none'}"></div>
+                        <div id="rating-score" th:text="${activityDetailDTO.getRating()}"
+                             th:class="'px-1'+${activityDetailDTO.getRating()>0?'':' d-none'}"></div>
                     </button>
                 </div>
             </div>
             <th:block th:replace="activity/fragments/upload-picture"></th:block>
-            <p th:text="${activityInfo.description}" class="card-text"></p>
+            <p th:text="${activityDetailDTO.description}" class="card-text"></p>
             <div class="d-flex justify-content-end">
                 <a th:href="@{/activity/update/{activityId}(activityId=${activityId})}"
                    class="btn btn-primary text-right">Edit</a>
@@ -55,7 +55,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <input id="activity-id" type="text" th:value="${activityInfo.getId()}" hidden/>
+                    <input id="activity-id" type="text" th:value="${activityDetailDTO.getId()}" hidden/>
                     <input id="user-rating" type="text" value="0" hidden/>
                     <div class="alert d-none" id="rate-return"></div>
                     <div class="justify-content-center" id="rate-stars">

@@ -15,8 +15,11 @@ public class HomeController {
     private ActivityService activityService;
 
     @GetMapping
-    public  String getHome(Model model){
+    public String getHome(Model model) {
         model.addAttribute("activities", activityService.findAll());
+        if (model.containsAttribute("successTemp")) {
+            model.addAttribute("success", "Created activity successfully!");
+        }
         return "home/index";
     }
 }

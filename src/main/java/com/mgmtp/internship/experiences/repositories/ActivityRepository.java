@@ -60,13 +60,13 @@ public class ActivityRepository {
                 .where(ACTIVITY.ID.eq(activityDetailDTO.getId())).execute();
     }
 
-    public int create(ActivityDetailDTO activityDetailDTO){
+    public int create(ActivityDetailDTO activityDetailDTO) {
         return dslContext.insertInto(ACTIVITY, ACTIVITY.NAME, ACTIVITY.DESCRIPTION, ACTIVITY.CREATED_BY_USER_ID, ACTIVITY.UPDATED_BY_USER_ID)
-                .values(activityDetailDTO.getName(),activityDetailDTO.getDescription(), activityDetailDTO.getCreatedByUserId(), activityDetailDTO.getCreatedByUserId())
+                .values(activityDetailDTO.getName(), activityDetailDTO.getDescription(), activityDetailDTO.getCreatedByUserId(), activityDetailDTO.getCreatedByUserId())
                 .execute();
     }
 
-    public boolean checkExistName(String activityName){
+    public boolean checkExistName(String activityName) {
         return dslContext.fetchExists(dslContext.selectFrom(ACTIVITY)
                 .where(ACTIVITY.NAME.likeIgnoreCase(activityName)));
     }

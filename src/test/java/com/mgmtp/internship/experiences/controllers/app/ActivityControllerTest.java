@@ -34,7 +34,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class ActivityControllerTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ActivityControllerTest.class);
-    private static final String ACTIVITY_INFO_ATTRIBUTE = "activityInfo";
+    private static final String ACTIVITY_INFO_ATTRIBUTE = "activityDetailDTO";
     private static final long ID = 1l;
     private static final long IMAGE_ID = 1l;
     private static final String DISPLAY_NAME = "name";
