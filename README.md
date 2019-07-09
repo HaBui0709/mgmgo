@@ -86,7 +86,7 @@ ldap.urls= ldap://localhost:389/
 ldap.base.dn= dc=mgmgo,dc=com
 ldap.username= cn=admin,dc=mgmgo,dc=com
 ldap.password= mgm123
-ldap.user.dn.pattern = uid={0},ou=user
+ldap.user.dn.patterns = uid={0},ou=user
 ```
 *    Generate/update tables with Liquibase if necessary:
 
