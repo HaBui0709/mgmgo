@@ -11,7 +11,7 @@ objectClass: top
 objectClass: uidObject
 ou: user
 uid: ntran
-userPassword: {SHA}75b1d5yYzj37s8PVTJUVPSpuNOo=
+userPassword: {SHA}Er/P9eGTlLQEpcoSoJbtqv+48+0=
 
 dn: uid=sfrank,ou=user,dc=mgmgo,dc=com
 changetype: add
@@ -20,7 +20,7 @@ objectClass: top
 objectClass: uidObject
 ou: user
 uid: sfrank
-userPassword: {SHA}sjtcNWDFfPaIPCoUH8c1YVgMVYI=
+userPassword: {SHA}PGraxxqZcPbbFoSOrEoquZEML+0=
 
 dn: uid=dtle.ext,ou=user,dc=mgmgo,dc=com
 changetype: add
@@ -29,7 +29,7 @@ objectClass: top
 objectClass: uidObject
 ou: user
 uid: dtle.ext
-userPassword: {SHA}Qw2GEa6kpNXmYZ5cSNj0QndVFpc=
+userPassword: {SHA}wN/sAfv+vA1E2e68FIOPqaOyZQ8=
 
 dn: uid=hntran.ext,ou=user,dc=mgmgo,dc=com
 changetype: add
@@ -38,7 +38,7 @@ objectClass: top
 objectClass: uidObject
 ou: user
 uid: hntran.ext
-userPassword: {SHA}9Dqvpax8yfzzRuKDW1Fc7mMRVrM=
+userPassword: {SHA}NtCq2oI0aeD2hHOxAb/akr+Jpmo=
 
 dn: uid=httbui.ext,ou=user,dc=mgmgo,dc=com
 changetype: add
@@ -47,7 +47,7 @@ objectClass: top
 objectClass: uidObject
 ou: user
 uid: httbui.ext
-userPassword: {SHA}+fwnuTdK0eO/NP287DpP1jJCf+0=
+userPassword: {SHA}+BemQZlCbhzeghlq5t6UyC1fN0I=
 
 dn: uid=kvdoan.ext,ou=user,dc=mgmgo,dc=com
 changetype: add
@@ -56,7 +56,7 @@ objectClass: top
 objectClass: uidObject
 ou: user
 uid: kvdoan.ext
-userPassword: {SHA}MUKreMcUA531i4eVYW4/o/TokmQ=
+userPassword: {SHA}dylxSryXZ4SGLmQOGoAFVIgIZDU=
 
 dn: uid=ttkngo.ext,ou=user,dc=mgmgo,dc=com
 changetype: add
@@ -65,7 +65,7 @@ objectClass: top
 objectClass: uidObject
 ou: user
 uid: ttkngo.ext
-userPassword: {SHA}9jjCUyEnsSsc7+pxUeyz8audgSk=
+userPassword: {SHA}St6vVxWftfsdRn0b0WG9beT91Kc=
 
 dn: uid=hnguyen.ext,ou=user,dc=mgmgo,dc=com
 changetype: add
@@ -74,7 +74,7 @@ objectClass: top
 objectClass: uidObject
 ou: user
 uid: hnguyen.ext
-userPassword: {SHA}TtiRrPqjW0w3qQ1/gD7rek6YEKo=
+userPassword: {SHA}T72s3XYYpBz7sX1qzkSy14/Gids=
 
 dn: uid=vhduong.ext,ou=user,dc=mgmgo,dc=com
 changetype: add
@@ -83,7 +83,7 @@ objectClass: top
 objectClass: uidObject
 ou: user
 uid: vhduong.ext
-userPassword: {SHA}op0FC+541Auz5+MDcN2XyJDZjDY=
+userPassword: {SHA}wimXrIzkKJHgLzAzxygF+hYAcEo=
 
 dn: uid=dhnguyen.ext,ou=user,dc=mgmgo,dc=com
 changetype: add
@@ -92,7 +92,7 @@ objectClass: top
 objectClass: uidObject
 ou: user
 uid: dhnguyen.ext
-userPassword: {SHA}+9C5w2dyQYmbrXe+Sdy7aUcafvU=
+userPassword: {SHA}KSdoUjYxYTK85YV3Wu05UmXS7Qk=
 
 dn: uid=htnguyen.ext,ou=user,dc=mgmgo,dc=com
 changetype: add
@@ -101,7 +101,7 @@ objectClass: top
 objectClass: uidObject
 ou: user
 uid: htnguyen.ext
-userPassword: {SHA}O6qnkqo+7CWJemqEz4swoJaZAzY=
+userPassword: {SHA}3A3JfqvnXnk6RMagutXZAYtn1bw=
 
 dn: uid=tdnguyen.ext,ou=user,dc=mgmgo,dc=com
 changetype: add
@@ -110,7 +110,7 @@ objectClass: top
 objectClass: uidObject
 ou: user
 uid: tdnguyen.ext
-userPassword: {SHA}tB8mVxEcL4sz6E8SDEZxliAPxsE=
+userPassword: {SHA}uRpJLT0tZ+/j0jNmCdQU9V4tY3E=
 
 dn: uid=ttdhuynh.ext,ou=user,dc=mgmgo,dc=com
 changetype: add
@@ -119,7 +119,7 @@ objectClass: top
 objectClass: uidObject
 ou: user
 uid: ttdhuynh.ext
-userPassword: {SHA}qvLdNIKd3AobwTKKuhW6d1Zbc5Q=
+userPassword: {SHA}EykcwbJgcg8y9RVU9a+ZvH4Pnng=
 
 dn: uid=ntynguyen.ext,ou=user,dc=mgmgo,dc=com
 changetype: add
@@ -128,6 +128,6 @@ objectClass: top
 objectClass: uidObject
 ou: user
 uid: ntynguyen.ext
-userPassword: {SHA}+hUQrOknYhZd+KaldL8IhvzSG3Q=
+userPassword: {SHA}QoKoRwcIs9d9YEhXtRLQX+EIDBk=
 
 
