@@ -3,7 +3,9 @@ package com.mgmtp.internship.experiences.repositories;
 import com.mgmtp.internship.experiences.dto.ActivityDTO;
 import com.mgmtp.internship.experiences.dto.ActivityDetailDTO;
 import org.jooq.DSLContext;
+import org.jooq.Field;
 import org.jooq.Record5;
+import org.jooq.impl.DSL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -60,27 +62,29 @@ public class ActivityRepository {
                 .where(ACTIVITY.ID.eq(activityDetailDTO.getId())).execute();
     }
 
-    public int create(ActivityDetailDTO activityDetailDTO){
+    public int create(ActivityDetailDTO activityDetailDTO) {
         return dslContext.insertInto(ACTIVITY, ACTIVITY.NAME, ACTIVITY.DESCRIPTION, ACTIVITY.CREATED_BY_USER_ID, ACTIVITY.UPDATED_BY_USER_ID)
-                .values(activityDetailDTO.getName(),activityDetailDTO.getDescription(), activityDetailDTO.getCreatedByUserId(), activityDetailDTO.getCreatedByUserId())
+                .values(activityDetailDTO.getName(), activityDetailDTO.getDescription(), activityDetailDTO.getCreatedByUserId(), activityDetailDTO.getCreatedByUserId())
                 .execute();
     }
 
-    public boolean checkExistName(String activityName){
+    public boolean checkExistName(String activityName) {
         return dslContext.fetchExists(dslContext.selectFrom(ACTIVITY)
                 .where(ACTIVITY.NAME.likeIgnoreCase(activityName)));
     }
 
     public boolean checkExistNameForUpdate(long activityId, String activityName) {
         return dslContext.fetchExists(dslContext.selectFrom(ACTIVITY)
-                .where(ACTIVITY.NAME.likeIgnoreCase(activityName)
-                        .and(ACTIVITY.ID.notEqual(activityId))));
+                .where(ACTIVITY.NAME.likeIgnoreCase(activityName).and(ACTIVITY.ID.notEqual(activityId))));
     }
 
     public List<ActivityDTO> search(String text) {
+        final String unaccentFunc = "unaccent";
+        Field<String> keySearch = DSL.function("concat", String.class, DSL.field("'%'"),
+                DSL.function(unaccentFunc, String.class, DSL.field("'" + text + "'", String.class)), DSL.field("'%'"));
         return dslContext.selectFrom(ACTIVITY)
-                .where(ACTIVITY.NAME.likeIgnoreCase('%' + text.trim() + '%'))
-                .or(ACTIVITY.DESCRIPTION.likeIgnoreCase('%' + text.trim() + '%'))
+                .where(DSL.function(unaccentFunc, String.class, ACTIVITY.NAME).likeIgnoreCase(keySearch))
+                .or(DSL.function(unaccentFunc, String.class, ACTIVITY.DESCRIPTION).likeIgnoreCase(keySearch))
                 .fetchInto(ActivityDTO.class);
     }
 }
