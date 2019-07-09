@@ -79,11 +79,12 @@ public class ActivityRepository {
     }
 
     public List<ActivityDTO> search(String text) {
+        final String unaccentFunc = "unaccent";
         Field<String> keySearch = DSL.function("concat", String.class, DSL.field("'%'"),
-                DSL.function("unaccent", String.class, DSL.field("'" + text + "'", String.class)), DSL.field("'%'"));
+                DSL.function(unaccentFunc, String.class, DSL.field("'" + text + "'", String.class)), DSL.field("'%'"));
         return dslContext.selectFrom(ACTIVITY)
-                .where(DSL.function("unaccent", String.class, ACTIVITY.NAME).likeIgnoreCase(keySearch))
-                .or(DSL.function("unaccent", String.class, ACTIVITY.DESCRIPTION).likeIgnoreCase(keySearch))
+                .where(DSL.function(unaccentFunc, String.class, ACTIVITY.NAME).likeIgnoreCase(keySearch))
+                .or(DSL.function(unaccentFunc, String.class, ACTIVITY.DESCRIPTION).likeIgnoreCase(keySearch))
                 .fetchInto(ActivityDTO.class);
     }
 }
