@@ -1,7 +1,6 @@
 package com.mgmtp.internship.experiences.dto;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Objects;
 
@@ -14,12 +13,10 @@ public class ActivityDetailDTO {
 
     private long id;
 
-    @NotNull(message = "Name may not be null")
     @NotBlank(message = "Name may not be blank")
     @Size(max = 100, message = "You can not write more than 100 characters for name")
     private String name;
 
-    @NotNull(message = "Description may not be null")
     @NotBlank(message = "Description may not be blank")
     @Size(max = 100000, message = "You can not write more than 10000 characters for description")
     private String description;

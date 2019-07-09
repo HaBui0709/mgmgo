@@ -25,7 +25,7 @@ import javax.validation.Valid;
 @RequestMapping("/activity")
 public class ActivityController {
 
-    private static final String ACTIVITY_INFO_ATTRIBUTE = "activityInfo";
+    private static final String ACTIVITY_INFO_ATTRIBUTE = "activityDetailDTO";
     private static final String ERROR_VIEW = "error";
     private static final String REDIRECT_UPDATE_URL = "redirect:/activity/update/";
     private static final String REDIRECT_CREATE_URL = "redirect:/activity/create";
@@ -70,7 +70,7 @@ public class ActivityController {
                                  final BindingResult bindingResult,
                                  RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
-            redirectAttributes.addFlashAttribute(ERROR_VIEW, bindingResult.getFieldError().getDefaultMessage());
+            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult." + ACTIVITY_INFO_ATTRIBUTE, bindingResult);
             redirectAttributes.addFlashAttribute(ACTIVITY_INFO_ATTRIBUTE, activityDetailDTO);
             return REDIRECT_UPDATE_URL + activityDetailDTO.getId();
         }
@@ -84,6 +84,7 @@ public class ActivityController {
                 return REDIRECT_UPDATE_URL + activityDetailDTO.getId();
             }
             activityService.update(activityDetailDTO);
+            redirectAttributes.addFlashAttribute("success", "Edit activity success!");
             return "redirect:/activity/" + activityDetailDTO.getId();
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute(ERROR_VIEW, "Can't update Activity. Try again!");
@@ -105,7 +106,7 @@ public class ActivityController {
                          final BindingResult bindingResult,
                          RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
-            redirectAttributes.addFlashAttribute(ERROR_VIEW, bindingResult.getFieldError().getDefaultMessage());
+            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult." + ACTIVITY_INFO_ATTRIBUTE, bindingResult);
             redirectAttributes.addFlashAttribute(ACTIVITY_INFO_ATTRIBUTE, activityDetailDTO);
             return REDIRECT_CREATE_URL;
         }
@@ -118,6 +119,7 @@ public class ActivityController {
                 return REDIRECT_CREATE_URL;
             }
             activityService.create(activityDetailDTO);
+            redirectAttributes.addFlashAttribute("successTemp", "");
             return "redirect:/";
 
         } catch (Exception e) {

@@ -1,7 +1,7 @@
 <th:block xmlns:th="www.thymeLeaf.org" th:fragment="upload">
     <div class="image-wrapper">
         <img id="image-on-detail-page"
-             th:src="${activityInfo.imageId!=null}?@{/api/image/}+${activityInfo.imageId}:@{/static/images/no-img.png}"
+             th:src="${activityDetailDTO.imageId!=null}?@{/api/image/}+${activityDetailDTO.imageId}:@{/static/images/no-img.png}"
              alt=""/>
     </div>
     <button type="button" class="btn btn-primary d-block mx-auto my-2" data-toggle="modal"
@@ -19,16 +19,16 @@
                     </button>
                 </div>
                 <form id="upload-image-form"
-                      th:action="@{/api/image/activity/{activityId}(activityId=${activityInfo.getId()})}" method="post"
+                      th:action="@{/api/image/activity/{activityId}(activityId=${activityDetailDTO.getId()})}" method="post"
                       enctype="multipart/form-data">
                     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
                     <div class="modal-body">
-                        <input id="activity-id" type="text" th:value="${activityInfo.getId()}" hidden/>
+                        <input id="activity-id" type="text" th:value="${activityDetailDTO.getId()}" hidden/>
                         <div id="image-error" class="alert alert-danger d-none"></div>
                         <div id="image-preview-container">
                             <div class="image-wrapper">
                                 <img id="image"
-                                     th:src="${activityInfo.imageId!=null}?@{/api/image/}+${activityInfo.imageId}:@{/static/images/no-img.png}"
+                                     th:src="${activityDetailDTO.imageId!=null}?@{/api/image/}+${activityDetailDTO.imageId}:@{/static/images/no-img.png}"
                                      alt=""/>
                             </div>
                         </div>

@@ -112,3 +112,39 @@ body {
     padding: 0px;
     border-radius: 50%;
 }
+
+.create-message-success {
+    bottom: 15px;
+    right: 15px;
+    position: fixed;
+}
+.create-message-success {
+    bottom: 15px;
+    right: 15px;
+    position: fixed;
+}
+@media only screen and (max-width: 700px) {
+    [class*="create-message-success"]{
+        width: 70%;
+    }
+}
+@media only screen and (min-width: 700px) {
+    [class*="create-message-success"]{
+        width: 60%;
+    }
+}
+@media only screen and (min-width: 900px) {
+    [class*="create-message-success"]{
+        width: 50%;
+    }
+}
+@media only screen and (min-width: 1200px) {
+    [class*="create-message-success"]{
+        width: 30%;
+    }
+}
+@media only screen and (min-width: 1800px) {
+    [class*="create-message-success"]{
+        width: 15%;
+    }
+}
