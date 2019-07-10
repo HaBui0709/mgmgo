@@ -1,5 +1,5 @@
 .logo_img {
-    height: 40px;
+    height: 35px;
     width: auto;
 }
 
@@ -20,6 +20,7 @@ body {
     font-weight: 500;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    overflow-y:scroll;
 }
 
 .content-wrapper {
@@ -51,7 +52,7 @@ body {
 
 #header_area {
     background: #fff;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    border-bottom: 2px solid rgba(0, 0, 0, 0.1);
     z-index: 2;
 }
 
@@ -65,7 +66,7 @@ body {
 .navbar a:hover {
     cursor: pointer;
     color: #333 !important;
-    background: none !important;
+    /*background: none !important;*/
 }
 
 .navbar a:active {
@@ -77,8 +78,8 @@ body {
     color: #1d76bb;
 }
 
-.bg-primary {
-    background-color: #1d76bb;
+.bg-primary, .btn-primary {
+    background-color: #1d76bb !important;
 }
 
 .text-warning {
@@ -144,10 +145,25 @@ body {
     }
 }
 @media only screen and (min-width: 1800px) {
-    [class*="create-message-success"]{
+    [class*="create-message-success"] {
         width: 15%;
     }
 }
+
+.navbar{
+    border-top: 3px solid #1d76bb ;
+    padding-bottom: 0;
+    padding-top: 0;
+    min-height: 54px;
+}
+
+.dropdown-menu a:hover{
+    background-color: #fafafa;
+}
+.dropdown-menu a:focus{
+    background-color: transparent;
+}
+
 .dropdown-menu{
     right: 0 !important;
 }

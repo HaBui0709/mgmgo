@@ -6,6 +6,7 @@
 
 .input-group #searchInfor {
     border-radius: .25rem;
+    font-size: 100%;
 }
 
 .input-group-append.inside {

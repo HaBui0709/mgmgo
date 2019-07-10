@@ -1,6 +1,6 @@
 <header id="header_area" xmlns:th="www.thymeLeaf.org" th:fragment="header" class="sticky-top"
         xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
-    <nav class="navbar navbar-expand-lg navbar-light menu_box_shadow">
+    <nav class="navbar navbar-expand-lg navbar-light">
         <div class="container">
             <!-- Brand and toggle get grouped for better mobile display -->
             <a class="navbar-brand logo_h" href="/"><img src="/static/images/mgm-go-logo.png" class="logo_img"
@@ -10,8 +10,9 @@
                         data-target="#navbarSupportedContentSearch">
                     <i class="fa fa-search"></i>
                 </button>
-                <button class="navbar-toggler border-0 btn-toggle" id='btn-toggle'type="button" data-toggle="collapse"
-                        data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                <button class="navbar-toggler border-0 btn-toggle" id='btn-toggle' type="button" data-toggle="collapse"
+                        data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                        aria-expanded="false"
                         aria-label="Toggle navigation">
                     <i id='icon-toggle' class="fa fa-bars"></i>
                 </button>
@@ -20,12 +21,12 @@
             <div class="collapse navbar-collapse  " id="navbarSupportedContentSearch">
                 <ul class="nav navbar-nav">
                     <form th:action="@{/search}" method="get" class="nav navbar-nav align-content-center">
-                        <div class="input-group ">
+                        <div class="input-group my-2 my-lg-block">
                             <input type="text" class="form-control "
                                    id="searchInfor"
                                    name="searchInfor"
                                    placeholder="Search for activities" th:value="${keySearch} ? ${keySearch} : ''">
-                            <span class="input-group-append inside">
+                            <span class="input-group-append inside d-none d-lg-block">
                                       <button class="btn btn-outline-none"
                                               type="submit" id="search">
                                         <i class="fa fa-search"></i>
@@ -41,8 +42,10 @@
             <div class="collapse navbar-collapse offset" id="navbarSupportedContent">
                 <ul class="nav navbar-nav menu_nav ml-auto">
                     <li class="nav-item">
-                        <a class="nav-link" th:href="@{/activity/create}" th:text="'New activity'" sec:authorize="!isAuthenticated()">New activity</a>
-                        <a class="nav-link mt-1" th:href="@{/activity/create}" th:text="'New activity'" sec:authorize="isAuthenticated()">New activity</a>
+                        <a class="nav-link" th:href="@{/activity/create}" th:text="'New activity'"
+                           sec:authorize="!isAuthenticated()">New activity</a>
+                        <a class="nav-link mt-1" th:href="@{/activity/create}" th:text="'New activity'"
+                           sec:authorize="isAuthenticated()">New activity</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" th:href="@{/login}" th:text="Login" sec:authorize="!isAuthenticated()"></a>
