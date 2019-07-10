@@ -27,6 +27,8 @@ public class ActivityServiceImplTest {
     private static final ActivityDetailDTO EXISTED_ACTIVITY_DETAIL_DTO = new ActivityDetailDTO(2, "new", "Descriptionabc", 5, 1L);
     private static final String KEY_SEARCH = "abc";
     private static final List<ActivityDTO> EXPECTED_LIST_ACTIVITY_DTO = Collections.singletonList(new ActivityDTO(1L, "name", 1L));
+    private static final int CURRENT_PAGE = 1;
+
     @Mock
     private ActivityRepository activityRepository;
 
@@ -137,5 +139,43 @@ public class ActivityServiceImplTest {
         List<ActivityDTO> actualListActivityDTO = activityService.search(KEY_SEARCH);
 
         Assert.assertEquals(null, actualListActivityDTO);
+    }
+
+    @Test
+    public void shouldReturnActivitiesOfPage() {
+        Mockito.when(activityRepository.getActivities(CURRENT_PAGE)).thenReturn(EXPECTED_LIST_ACTIVITY_DTO);
+
+        List<ActivityDTO> actualActivities = activityService.getActivities(CURRENT_PAGE);
+
+        Assert.assertEquals(EXPECTED_LIST_ACTIVITY_DTO, actualActivities);
+    }
+
+    @Test
+    public void shouldReturnEmptyListActivitiesIfPageIncorrect() {
+        List<ActivityDTO> expectedActivities = Collections.emptyList();
+
+        List<ActivityDTO> actualActivities = activityService.getActivities(-1);
+
+        Assert.assertEquals(expectedActivities, actualActivities);
+    }
+
+    @Test
+    public void shouldReturnPageSizeOfActivities() {
+        int expectedPageSize = 3;
+        Mockito.when(activityRepository.countPages()).thenReturn(expectedPageSize);
+
+        int actualPageSize = activityService.countPages();
+
+        Assert.assertEquals(expectedPageSize, actualPageSize);
+    }
+
+    @Test
+    public void shouldReturnZeroIfHaveNotActivity() {
+        int expectedPageSize = 0;
+        Mockito.when(activityRepository.countPages()).thenReturn(expectedPageSize);
+
+        int actualPageSize = activityService.countPages();
+
+        Assert.assertEquals(expectedPageSize, actualPageSize);
     }
 }

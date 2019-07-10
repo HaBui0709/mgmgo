@@ -48,7 +48,6 @@
     height: auto;
 }
 
-
 .activity-name{
     color: black !important;
     text-decoration:none;
@@ -70,3 +69,18 @@
     }
 }
 
+#see-more {
+    background-color: white;
+    border: 1px solid #ced4da;
+}
+
+#see-more:hover {
+    background-color: #EEEEEE;
+    -webkit-transition: all .7s;
+    -o-transition: all .7s;
+    transition: all .7s;
+}
+
+#see-more:focus {
+    box-shadow: none;
+}

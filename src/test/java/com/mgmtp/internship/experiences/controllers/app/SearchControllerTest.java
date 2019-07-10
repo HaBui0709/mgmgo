@@ -18,6 +18,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.Collections;
 import java.util.List;
+
 /**
  * Unit Test for Search Controller.
  *
@@ -26,11 +27,11 @@ import java.util.List;
 @RunWith(MockitoJUnitRunner.class)
 public class SearchControllerTest {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(SearchControllerTest.class);
     private static final String URL = "/search/";
     private static final String URL_VIEW = "search";
     private static final String KEY_SEARCH = "abc";
     private static final List<ActivityDTO> EXPECTED_ACTIVITY_DTO = Collections.singletonList(new ActivityDTO(1L, "name", null));
-    private static final Logger LOGGER = LoggerFactory.getLogger(SearchControllerTest.class);
 
     private MockMvc mockMvc;
     @Mock
@@ -72,5 +73,4 @@ public class SearchControllerTest {
             LOGGER.error(e.getMessage());
         }
     }
-
 }

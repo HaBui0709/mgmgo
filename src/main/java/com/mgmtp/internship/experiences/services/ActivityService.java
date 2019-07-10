@@ -24,4 +24,8 @@ public interface ActivityService {
     ActivityDetailDTO checkExistNameForUpdate(long activityId, String activityName);
 
     List<ActivityDTO> search(String text);
+
+    List<ActivityDTO> getActivities(int currentPage);
+
+    int countPages();
 }
