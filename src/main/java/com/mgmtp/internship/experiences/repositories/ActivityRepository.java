@@ -80,11 +80,10 @@ public class ActivityRepository {
 
     public List<ActivityDTO> search(String text) {
         final String unaccentFunc = "unaccent";
-        Field<String> keySearch = DSL.function("concat", String.class, DSL.field("'%'"),
-                DSL.function(unaccentFunc, String.class, DSL.field("'" + text + "'", String.class)), DSL.field("'%'"));
+        Field<String> keySearch = DSL.function(unaccentFunc, String.class, DSL.val(text.trim()));
         return dslContext.selectFrom(ACTIVITY)
-                .where(DSL.function(unaccentFunc, String.class, ACTIVITY.NAME).likeIgnoreCase(keySearch))
-                .or(DSL.function(unaccentFunc, String.class, ACTIVITY.DESCRIPTION).likeIgnoreCase(keySearch))
+                .where(DSL.function(unaccentFunc, String.class, ACTIVITY.NAME).containsIgnoreCase(keySearch))
+                .or(DSL.function(unaccentFunc, String.class, ACTIVITY.DESCRIPTION).containsIgnoreCase(keySearch))
                 .fetchInto(ActivityDTO.class);
     }
 }
