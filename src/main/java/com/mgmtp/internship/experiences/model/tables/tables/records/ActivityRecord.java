@@ -28,7 +28,7 @@ import org.jooq.impl.UpdatableRecordImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class ActivityRecord extends UpdatableRecordImpl<ActivityRecord> implements Record6<Long, String, String, String, Long, Long> {
 
-    private static final long serialVersionUID = -1776416962;
+    private static final long serialVersionUID = -504325730;
 
     /**
      * Setter for <code>public.activity.id</code>.
@@ -59,30 +59,30 @@ public class ActivityRecord extends UpdatableRecordImpl<ActivityRecord> implemen
     }
 
     /**
-     * Setter for <code>public.activity.description</code>.
-     */
-    public void setDescription(String value) {
-        set(2, value);
-    }
-
-    /**
-     * Getter for <code>public.activity.description</code>.
-     */
-    public String getDescription() {
-        return (String) get(2);
-    }
-
-    /**
      * Setter for <code>public.activity.address</code>.
      */
     public void setAddress(String value) {
-        set(3, value);
+        set(2, value);
     }
 
     /**
      * Getter for <code>public.activity.address</code>.
      */
     public String getAddress() {
+        return (String) get(2);
+    }
+
+    /**
+     * Setter for <code>public.activity.description</code>.
+     */
+    public void setDescription(String value) {
+        set(3, value);
+    }
+
+    /**
+     * Getter for <code>public.activity.description</code>.
+     */
+    public String getDescription() {
         return (String) get(3);
     }
 
@@ -167,7 +167,7 @@ public class ActivityRecord extends UpdatableRecordImpl<ActivityRecord> implemen
      */
     @Override
     public Field<String> field3() {
-        return Activity.ACTIVITY.DESCRIPTION;
+        return Activity.ACTIVITY.ADDRESS;
     }
 
     /**
@@ -175,7 +175,7 @@ public class ActivityRecord extends UpdatableRecordImpl<ActivityRecord> implemen
      */
     @Override
     public Field<String> field4() {
-        return Activity.ACTIVITY.ADDRESS;
+        return Activity.ACTIVITY.DESCRIPTION;
     }
 
     /**
@@ -215,7 +215,7 @@ public class ActivityRecord extends UpdatableRecordImpl<ActivityRecord> implemen
      */
     @Override
     public String component3() {
-        return getDescription();
+        return getAddress();
     }
 
     /**
@@ -223,7 +223,7 @@ public class ActivityRecord extends UpdatableRecordImpl<ActivityRecord> implemen
      */
     @Override
     public String component4() {
-        return getAddress();
+        return getDescription();
     }
 
     /**
@@ -263,7 +263,7 @@ public class ActivityRecord extends UpdatableRecordImpl<ActivityRecord> implemen
      */
     @Override
     public String value3() {
-        return getDescription();
+        return getAddress();
     }
 
     /**
@@ -271,7 +271,7 @@ public class ActivityRecord extends UpdatableRecordImpl<ActivityRecord> implemen
      */
     @Override
     public String value4() {
-        return getAddress();
+        return getDescription();
     }
 
     /**
@@ -313,7 +313,7 @@ public class ActivityRecord extends UpdatableRecordImpl<ActivityRecord> implemen
      */
     @Override
     public ActivityRecord value3(String value) {
-        setDescription(value);
+        setAddress(value);
         return this;
     }
 
@@ -322,7 +322,7 @@ public class ActivityRecord extends UpdatableRecordImpl<ActivityRecord> implemen
      */
     @Override
     public ActivityRecord value4(String value) {
-        setAddress(value);
+        setDescription(value);
         return this;
     }
 
@@ -372,13 +372,13 @@ public class ActivityRecord extends UpdatableRecordImpl<ActivityRecord> implemen
     /**
      * Create a detached, initialised ActivityRecord
      */
-    public ActivityRecord(Long id, String name, String description, String address, Long createdByUserId, Long updatedByUserId) {
+    public ActivityRecord(Long id, String name, String address, String description, Long createdByUserId, Long updatedByUserId) {
         super(Activity.ACTIVITY);
 
         set(0, id);
         set(1, name);
-        set(2, description);
-        set(3, address);
+        set(2, address);
+        set(3, description);
         set(4, createdByUserId);
         set(5, updatedByUserId);
     }

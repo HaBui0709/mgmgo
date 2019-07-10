@@ -1,5 +1,5 @@
-INSERT INTO activity ( name, description, created_by_user_id, updated_by_user_id)
-VALUES ('Dasushi - Ăn Nhậu Kiểu Nhật', 'Ẩm thực Nhật Bản dẫn trở nên quen thuộc với người dân Việt Nam, đặc biệt là ở các thành phố lớn như Hà Nội, TPHCM, và Đà Nẵng không thể thiếu rồi. Đà Nẵng nổi tiếng với nhà hàng Dasushi - Ăn Nhậu Kiểu Nhật nằm trên tuyến đường đông nhất thành phố, sẽ là nơi thu hút sự chú ý của thực khách mỗi khi ngang qua.', 1,1);
+INSERT INTO activity ( name, description, created_by_user_id, updated_by_user_id, address)
+VALUES ('Dasushi - Ăn Nhậu Kiểu Nhật', 'Ẩm thực Nhật Bản dẫn trở nên quen thuộc với người dân Việt Nam, đặc biệt là ở các thành phố lớn như Hà Nội, TPHCM, và Đà Nẵng không thể thiếu rồi. Đà Nẵng nổi tiếng với nhà hàng Dasushi - Ăn Nhậu Kiểu Nhật nằm trên tuyến đường đông nhất thành phố, sẽ là nơi thu hút sự chú ý của thực khách mỗi khi ngang qua.', 1,1, 'Some where in Da Nang');
 
 INSERT INTO activity ( name, description, created_by_user_id, updated_by_user_id)
 VALUES ('King - Trà Bí Đao & Trà Tắc - Phan Đăng Lưu', 'Trà ở đây ngon lắm', 1,1);
