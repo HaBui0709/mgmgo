@@ -87,3 +87,11 @@
 #rateModal button.checked {
     color: #fbbe0a !important;
 }
+
+pre {
+    font-family: 'Open Sans', Arial, sans-serif;
+    font-size: 100%;
+    display: flex;
+    white-space: pre-wrap;
+    word-break: break-word;
+}

@@ -36,7 +36,7 @@
                 </div>
             </div>
             <th:block th:replace="activity/fragments/upload-picture"></th:block>
-            <p th:text="${activityDetailDTO.description}" class="card-text"></p>
+            <pre th:text="${activityDetailDTO.description}" class="card-text"></pre>
             <div class="d-flex justify-content-end">
                 <a th:href="@{/activity/update/{activityId}(activityId=${activityId})}"
                    class="btn btn-primary text-right">Edit</a>

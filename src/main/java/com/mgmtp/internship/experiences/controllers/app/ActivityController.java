@@ -1,10 +1,11 @@
 package com.mgmtp.internship.experiences.controllers.app;
 
 import com.mgmtp.internship.experiences.config.security.CustomLdapUserDetails;
+import com.mgmtp.internship.experiences.constants.ApplicationConstant;
 import com.mgmtp.internship.experiences.dto.ActivityDetailDTO;
 import com.mgmtp.internship.experiences.services.ActivityService;
 import com.mgmtp.internship.experiences.services.UserService;
-import com.mgmtp.internship.experiences.utils.StringReplaceWhitespaceEditor;
+import com.mgmtp.internship.experiences.utils.StringReplaceByRegexEditor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -61,8 +62,8 @@ public class ActivityController {
 
     @InitBinder
     public void initBinder(WebDataBinder dataBinder) {
-        dataBinder.registerCustomEditor(String.class, new StringReplaceWhitespaceEditor(true));
-
+        dataBinder.registerCustomEditor(String.class, "name", new StringReplaceByRegexEditor(true, ApplicationConstant.REGEX_ALL_WHITESPACE_ENTER_TAB));
+        dataBinder.registerCustomEditor(String.class, "description", new StringReplaceByRegexEditor(true, ApplicationConstant.REGEX_ALL_WHITESPACE));
     }
 
     @PostMapping("/update")
@@ -128,5 +129,4 @@ public class ActivityController {
             return REDIRECT_CREATE_URL;
         }
     }
-
 }
