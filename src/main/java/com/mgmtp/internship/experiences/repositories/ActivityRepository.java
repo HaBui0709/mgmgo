@@ -81,9 +81,14 @@ public class ActivityRepository {
     public List<ActivityDTO> search(String text) {
         final String unaccentFunc = "unaccent";
         Field<String> keySearch = DSL.function(unaccentFunc, String.class, DSL.val(text.trim()));
-        return dslContext.selectFrom(ACTIVITY)
+        return dslContext.select(ACTIVITY.ID, ACTIVITY.NAME, IMAGE.ID.as("imageId"))
+                .from(ACTIVITY)
+                .leftJoin(ACTIVITY_IMAGE)
+                .on(ACTIVITY.ID.eq(ACTIVITY_IMAGE.ACTIVITY_ID))
+                .leftJoin(IMAGE).on(ACTIVITY_IMAGE.IMAGE_ID.eq(IMAGE.ID))
                 .where(DSL.function(unaccentFunc, String.class, ACTIVITY.NAME).containsIgnoreCase(keySearch))
                 .or(DSL.function(unaccentFunc, String.class, ACTIVITY.DESCRIPTION).containsIgnoreCase(keySearch))
+                .orderBy(ACTIVITY.ID)
                 .fetchInto(ActivityDTO.class);
     }
 }
