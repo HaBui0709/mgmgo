@@ -64,6 +64,7 @@ public class ActivityController {
     public void initBinder(WebDataBinder dataBinder) {
         dataBinder.registerCustomEditor(String.class, "name", new StringReplaceByRegexEditor(true, ApplicationConstant.REGEX_ALL_WHITESPACE_ENTER_TAB));
         dataBinder.registerCustomEditor(String.class, "description", new StringReplaceByRegexEditor(true, ApplicationConstant.REGEX_ALL_WHITESPACE));
+        dataBinder.registerCustomEditor(String.class, "address", new StringReplaceByRegexEditor(true, ApplicationConstant.REGEX_ALL_WHITESPACE_ENTER_TAB));
     }
 
     @PostMapping("/update")

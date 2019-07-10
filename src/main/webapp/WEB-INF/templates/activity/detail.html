@@ -36,6 +36,9 @@
                 </div>
             </div>
             <th:block th:replace="activity/fragments/upload-picture"></th:block>
+            <div th:if="${activityDetailDTO.address != null && activityDetailDTO.address != ''}"
+                 class="d-flex mt-3 mb-3"><img src="/static/icons/location.png" class="address-icon" alt="mgm-go"><span
+                    class="ml-2" th:text="${activityDetailDTO.address}"></span></div>
             <pre th:text="${activityDetailDTO.description}" class="card-text"></pre>
             <div class="d-flex justify-content-end">
                 <a th:href="@{/activity/update/{activityId}(activityId=${activityId})}"

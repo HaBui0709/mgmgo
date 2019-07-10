@@ -20,6 +20,7 @@ public class ActivityDetailDTO {
     @NotBlank(message = "Description may not be blank")
     @Size(max = 100000, message = "You can not write more than 10000 characters for description")
     private String description;
+    private String address;
     private Long imageId;
     private double rating;
     private long createdByUserId;
@@ -33,6 +34,15 @@ public class ActivityDetailDTO {
         this.id = id;
         this.name = name;
         this.description = description;
+        this.imageId = imageId;
+        this.rating = rating;
+    }
+
+    public ActivityDetailDTO(long id, String name, String description, String address, double rating, Long imageId) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.address = address;
         this.imageId = imageId;
         this.rating = rating;
     }
@@ -91,6 +101,14 @@ public class ActivityDetailDTO {
 
     public void setUpdatedByUserId(long updatedByUserId) {
         this.updatedByUserId = updatedByUserId;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
 

@@ -148,3 +148,6 @@ body {
         width: 15%;
     }
 }
+.dropdown-menu{
+    right: 0 !important;
+}

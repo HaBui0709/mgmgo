@@ -4,7 +4,7 @@ import com.mgmtp.internship.experiences.dto.ActivityDTO;
 import com.mgmtp.internship.experiences.dto.ActivityDetailDTO;
 import org.jooq.DSLContext;
 import org.jooq.Field;
-import org.jooq.Record5;
+import org.jooq.Record6;
 import org.jooq.impl.DSL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -31,7 +31,7 @@ public class ActivityRepository {
     private DSLContext dslContext;
 
     public List<ActivityDTO> findAll() {
-        return dslContext.select(ACTIVITY.ID, ACTIVITY.NAME, IMAGE.ID.as("imageId"))
+        return dslContext.select(ACTIVITY.ID, ACTIVITY.NAME, IMAGE.ID.as("imageId"), ACTIVITY.ADDRESS)
                 .from(ACTIVITY)
                 .leftJoin(ACTIVITY_IMAGE)
                 .on(ACTIVITY.ID.eq(ACTIVITY_IMAGE.ACTIVITY_ID))
@@ -41,8 +41,8 @@ public class ActivityRepository {
     }
 
     public ActivityDetailDTO findById(long activityId) {
-        Record5<Long, String, String, BigDecimal, Long> activity = dslContext.select(ACTIVITY.ID,
-                ACTIVITY.NAME, ACTIVITY.DESCRIPTION, round(avg(RATING.VALUE), 1).as("rating"), IMAGE.ID.as("imageId"))
+        Record6<Long, String, String, String, BigDecimal, Long> activity = dslContext.select(ACTIVITY.ID,
+                ACTIVITY.NAME, ACTIVITY.DESCRIPTION, ACTIVITY.ADDRESS, round(avg(RATING.VALUE), 1).as("rating"), IMAGE.ID.as("imageId"))
                 .from(ACTIVITY)
                 .leftJoin(RATING)
                 .on(ACTIVITY.ID.eq(RATING.ACTIVITY_ID))
@@ -59,12 +59,13 @@ public class ActivityRepository {
                 .set(ACTIVITY.NAME, activityDetailDTO.getName())
                 .set(ACTIVITY.DESCRIPTION, activityDetailDTO.getDescription())
                 .set(ACTIVITY.UPDATED_BY_USER_ID, activityDetailDTO.getUpdatedByUserId())
+                .set(ACTIVITY.ADDRESS, activityDetailDTO.getAddress())
                 .where(ACTIVITY.ID.eq(activityDetailDTO.getId())).execute();
     }
 
     public int create(ActivityDetailDTO activityDetailDTO) {
-        return dslContext.insertInto(ACTIVITY, ACTIVITY.NAME, ACTIVITY.DESCRIPTION, ACTIVITY.CREATED_BY_USER_ID, ACTIVITY.UPDATED_BY_USER_ID)
-                .values(activityDetailDTO.getName(), activityDetailDTO.getDescription(), activityDetailDTO.getCreatedByUserId(), activityDetailDTO.getCreatedByUserId())
+        return dslContext.insertInto(ACTIVITY, ACTIVITY.NAME, ACTIVITY.DESCRIPTION, ACTIVITY.CREATED_BY_USER_ID, ACTIVITY.UPDATED_BY_USER_ID, ACTIVITY.ADDRESS)
+                .values(activityDetailDTO.getName(), activityDetailDTO.getDescription(), activityDetailDTO.getCreatedByUserId(), activityDetailDTO.getCreatedByUserId(), activityDetailDTO.getAddress())
                 .execute();
     }
 
@@ -88,6 +89,7 @@ public class ActivityRepository {
                 .leftJoin(IMAGE).on(ACTIVITY_IMAGE.IMAGE_ID.eq(IMAGE.ID))
                 .where(DSL.function(unaccentFunc, String.class, ACTIVITY.NAME).containsIgnoreCase(keySearch))
                 .or(DSL.function(unaccentFunc, String.class, ACTIVITY.DESCRIPTION).containsIgnoreCase(keySearch))
+                .or(DSL.function(unaccentFunc, String.class, ACTIVITY.ADDRESS).containsIgnoreCase(keySearch))
                 .orderBy(ACTIVITY.ID)
                 .fetchInto(ActivityDTO.class);
     }
