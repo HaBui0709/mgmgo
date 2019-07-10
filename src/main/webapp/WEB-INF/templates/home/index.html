@@ -14,15 +14,8 @@
     <h5 class="display-4 d-none d-lg-block">Welcome to mgm go!</h5>
     <hr class="my-4 display-4 d-none d-lg-block">
     <p>You can find events, places and anything in here.</p>
-    <div th:if="${not #lists.isEmpty(activities)}" th:each="item: ${activities}" class="activities">
-        <a class="activity-item" th:href="@{/activity/{id}(id=${item.id})}" id="activity-link">
-            <div class="activity-img--wrapper col-lg-2 col-4 mr-1 pl-0">
-                <img id="image-on-home-page"
-                     th:src="${item.imageId!=null}?@{/api/image/}+${item.imageId}:@{/static/images/no-img.png}"
-                     alt=""/>
-            </div>
-            <p class="activity-name" th:text="${item.name}"></p>
-        </a>
+    <div class="activities" id="activities">
+        <th:block th:replace="activity/fragments/list-activities"></th:block>
     </div>
 </div>
 </body>
