@@ -14,6 +14,9 @@
             <column name="name" type="varchar(255)">
                 <constraints nullable="false"/>
             </column>
+            
+            <column name="address" type="varchar(255)">
+            </column>
 
             <column name="description" type="longvarchar">
                 <constraints nullable="false"/>

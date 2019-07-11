@@ -33,7 +33,12 @@
                 <div class="text-danger text-alert-mes" th:if="${#fields.hasErrors('description')}"
                      th:errors="*{description}"></div>
             </div>
-            <button id="submitBtn" type="submit" class="btn btn-success">Ok</button>
+            <div class="form-group">
+                <label for="address">Address</label>
+                <input type="text" class="form-control" id="address"
+                       th:value="${activityDetailDTO.address}" th:field="*{address}">
+            </div>
+            <button id="submitBtn" type="submit" class="btn btn-success">Save</button>
             <a th:href="@{/activity/{activityId}(activityId=${activityId})}" class="btn btn-negative">Cancel</a>
         </form>
     </div>

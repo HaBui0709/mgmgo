@@ -14,6 +14,9 @@ $("#editForm").on("submit", function () {
     if (desInput.value.length == 0 || desInput.value.toString().trim().length == 0 || desInput.value.toString().trim().length > 100000) {
         return false;
     }
+    //trim for address
+    let addressInputValue = document.getElementById("address");
+    $("#address").val(addressInputValue.value.replace(/\s+/g, ' ').trim());
     return true;
 });
 
