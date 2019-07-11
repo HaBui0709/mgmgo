@@ -35,8 +35,8 @@ public class ActivityControllerTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ActivityControllerTest.class);
     private static final String ACTIVITY_INFO_ATTRIBUTE = "activityDetailDTO";
-    private static final long ID = 1l;
-    private static final long IMAGE_ID = 1l;
+    private static final long ID = 1L;
+    private static final long IMAGE_ID = 1L;
     private static final String DISPLAY_NAME = "name";
     private static final long ACTIVITY_ID = 1;
     private static final String UPDATE_URL = "/activity/update";
@@ -44,6 +44,7 @@ public class ActivityControllerTest {
     private static final String ERROR_ATTRIBUTE = "error";
     private static final String DESC_PARAM = "description";
     private static final ActivityDetailDTO EXPECTED_ACTIVITY_DETAIL_DTO = new ActivityDetailDTO(ACTIVITY_ID, "name", "des", 5, IMAGE_ID);
+    private static final ActivityDetailDTO EXISTED_ACTIVITY_DETAIL_DTO = new ActivityDetailDTO(1, "existedName", "des2", 3, 2L);
     private static final UserProfileDTO userProfileDTO = new UserProfileDTO(IMAGE_ID, DISPLAY_NAME);
     private static final LdapUserDetails ldapUserDetails = mock(LdapUserDetails.class);
     private static final CustomLdapUserDetails EXPECTED_CUSTOM_USER_DETAIL = new CustomLdapUserDetails(ID, userProfileDTO, ldapUserDetails);
@@ -65,7 +66,7 @@ public class ActivityControllerTest {
 
     @Test
     public void shouldGetActivityShowOnActivityPage() {
-            Mockito.when(activityService.findById(ACTIVITY_ID)).thenReturn(EXPECTED_ACTIVITY_DETAIL_DTO);
+        Mockito.when(activityService.findById(ACTIVITY_ID)).thenReturn(EXPECTED_ACTIVITY_DETAIL_DTO);
 
         try {
             mockMvc.perform(get("/activity/1"))
@@ -129,7 +130,7 @@ public class ActivityControllerTest {
     public void shouldShowMessageErrorIfUpdateExistName() {
         Mockito.when(userService.getCurrentUser()).thenReturn(EXPECTED_CUSTOM_USER_DETAIL);
         EXPECTED_ACTIVITY_DETAIL_DTO.setCreatedByUserId(EXPECTED_CUSTOM_USER_DETAIL.getId());
-        Mockito.when(activityService.checkExistNameForUpdate(EXPECTED_ACTIVITY_DETAIL_DTO.getId(), EXPECTED_ACTIVITY_DETAIL_DTO.getName())).thenReturn(true);
+        Mockito.when(activityService.checkExistNameForUpdate(EXPECTED_ACTIVITY_DETAIL_DTO.getId(), EXPECTED_ACTIVITY_DETAIL_DTO.getName())).thenReturn(EXISTED_ACTIVITY_DETAIL_DTO);
 
         try {
             mockMvc.perform(post(UPDATE_URL)
@@ -138,7 +139,7 @@ public class ActivityControllerTest {
                     .param(DESC_PARAM, EXPECTED_ACTIVITY_DETAIL_DTO.getDescription()))
                     .andDo(MockMvcResultHandlers.print())
                     .andExpect(status().is3xxRedirection())
-                    .andExpect(flash().attribute(ERROR_ATTRIBUTE, "This name already exists"))
+                    .andExpect(flash().attribute(ERROR_ATTRIBUTE, "This name already exists. Please choose a difference name from the activity below!"))
                     .andExpect(flash().attribute(ACTIVITY_INFO_ATTRIBUTE, EXPECTED_ACTIVITY_DETAIL_DTO))
                     .andExpect(view().name("redirect:/activity/update/" + EXPECTED_ACTIVITY_DETAIL_DTO.getId()))
                     .andExpect(redirectedUrl("/activity/update/" + EXPECTED_ACTIVITY_DETAIL_DTO.getId()));
@@ -148,7 +149,7 @@ public class ActivityControllerTest {
     }
 
     @Test
-    public void shouldShowMessageIfUpdateFail(){
+    public void shouldShowMessageIfUpdateFail() {
         Mockito.when(userService.getCurrentUser()).thenReturn(EXPECTED_CUSTOM_USER_DETAIL);
         Mockito.when(activityService.update(EXPECTED_ACTIVITY_DETAIL_DTO)).thenThrow(DataIntegrityViolationException.class);
         try {
@@ -206,7 +207,7 @@ public class ActivityControllerTest {
     public void shouldShowMessageErrorIfCreateExistName() {
         Mockito.when(userService.getCurrentUser()).thenReturn(EXPECTED_CUSTOM_USER_DETAIL);
         EXPECTED_ACTIVITY_DETAIL_DTO.setCreatedByUserId(EXPECTED_CUSTOM_USER_DETAIL.getId());
-        Mockito.when(activityService.checkExistName(EXPECTED_ACTIVITY_DETAIL_DTO.getName())).thenReturn(true);
+        Mockito.when(activityService.checkExistNameForCreate(EXPECTED_ACTIVITY_DETAIL_DTO.getName())).thenReturn(EXISTED_ACTIVITY_DETAIL_DTO);
 
         try {
             mockMvc.perform(post(CREATE_URL)
@@ -215,7 +216,7 @@ public class ActivityControllerTest {
                     .param(DESC_PARAM, EXPECTED_ACTIVITY_DETAIL_DTO.getDescription()))
                     .andDo(MockMvcResultHandlers.print())
                     .andExpect(status().is3xxRedirection())
-                    .andExpect(flash().attribute(ERROR_ATTRIBUTE, "This name already exists"))
+                    .andExpect(flash().attribute(ERROR_ATTRIBUTE, "This name already exists. Please check existed activity before create the new one!"))
                     .andExpect(flash().attribute(ACTIVITY_INFO_ATTRIBUTE, EXPECTED_ACTIVITY_DETAIL_DTO))
                     .andExpect(view().name("redirect:/activity/create"))
                     .andExpect(redirectedUrl(CREATE_URL));
@@ -225,7 +226,7 @@ public class ActivityControllerTest {
     }
 
     @Test
-    public void shouldShowMessageIfCreateFail(){
+    public void shouldShowMessageIfCreateFail() {
         Mockito.when(userService.getCurrentUser()).thenReturn(EXPECTED_CUSTOM_USER_DETAIL);
         Mockito.when(activityService.create(EXPECTED_ACTIVITY_DETAIL_DTO)).thenThrow(DataIntegrityViolationException.class);
         try {

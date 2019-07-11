@@ -22,10 +22,11 @@ import java.util.List;
 @RunWith(MockitoJUnitRunner.class)
 public class ActivityServiceImplTest {
     private static final long ACTIVITY_ID = 1;
+    private static final String EXIST_NAME = "new name";
     private static final ActivityDetailDTO EXPECTED_ACTIVITY_DETAIL_DTO = new ActivityDetailDTO(ACTIVITY_ID, "new", "Description", 5, 1L);
-
+    private static final ActivityDetailDTO EXISTED_ACTIVITY_DETAIL_DTO = new ActivityDetailDTO(2, "new", "Descriptionabc", 5, 1L);
     private static final String KEY_SEARCH = "abc";
-    private static final List<ActivityDTO> EXPECTED_ACTIVITY_DTO = Collections.singletonList(new ActivityDTO(1L, "name", 1L));
+    private static final List<ActivityDTO> EXPECTED_LIST_ACTIVITY_DTO = Collections.singletonList(new ActivityDTO(1L, "name", 1L));
     @Mock
     private ActivityRepository activityRepository;
 
@@ -78,7 +79,7 @@ public class ActivityServiceImplTest {
     }
 
     @Test
-    public void shouldReturn1IfInsertSuccess(){
+    public void shouldReturn1IfInsertSuccess() {
         final int INSERT_SUCCESS = 1;
         Mockito.when(activityRepository.create(EXPECTED_ACTIVITY_DETAIL_DTO)).thenReturn(INSERT_SUCCESS);
 
@@ -86,7 +87,7 @@ public class ActivityServiceImplTest {
     }
 
     @Test
-    public void shouldReturn0IfInsertFailed(){
+    public void shouldReturn0IfInsertFailed() {
         final int INSERT_SUCCESS = 0;
         Mockito.when(activityRepository.create(EXPECTED_ACTIVITY_DETAIL_DTO)).thenReturn(INSERT_SUCCESS);
 
@@ -94,44 +95,43 @@ public class ActivityServiceImplTest {
     }
 
     @Test
-    public void shouldReturnTrueIfNameExist(){
-        Mockito.when(activityRepository.checkExistName(EXPECTED_ACTIVITY_DETAIL_DTO.getName())).thenReturn(true);
+    public void shouldReturnExistedActivityIfNameExistWhenCreate() {
+        Mockito.when(activityRepository.findByName(EXIST_NAME)).thenReturn(EXISTED_ACTIVITY_DETAIL_DTO);
 
-        Assert.assertEquals(true, activityService.checkExistName(EXPECTED_ACTIVITY_DETAIL_DTO.getName()));
+        Assert.assertEquals(EXISTED_ACTIVITY_DETAIL_DTO, activityService.checkExistNameForCreate(EXIST_NAME));
     }
 
     @Test
-    public void shouldReturnFalseIfNameExist(){
-        Mockito.when(activityRepository.checkExistName(EXPECTED_ACTIVITY_DETAIL_DTO.getName())).thenReturn(false);
+    public void shouldReturnNullIfNameNotExistWhenCreate() {
+        Mockito.when(activityRepository.findByName(EXPECTED_ACTIVITY_DETAIL_DTO.getName())).thenReturn(null);
 
-        Assert.assertEquals(false, activityService.checkExistName(EXPECTED_ACTIVITY_DETAIL_DTO.getName()));
+        Assert.assertEquals(null, activityService.checkExistNameForCreate(EXPECTED_ACTIVITY_DETAIL_DTO.getName()));
     }
 
     @Test
-    public void shouldReturnTrueIfNameExistWhenUpdate(){
-        Mockito.when(activityRepository.checkExistNameForUpdate(EXPECTED_ACTIVITY_DETAIL_DTO.getId(), EXPECTED_ACTIVITY_DETAIL_DTO.getName())).thenReturn(true);
-
-        Assert.assertEquals(true, activityService.checkExistNameForUpdate(EXPECTED_ACTIVITY_DETAIL_DTO.getId(), EXPECTED_ACTIVITY_DETAIL_DTO.getName()));
+    public void shouldReturnExistedActivityIfNameExistWhenUpdate() {
+        Mockito.when(activityRepository.findByName(EXIST_NAME)).thenReturn(EXISTED_ACTIVITY_DETAIL_DTO);
+        Assert.assertEquals(EXISTED_ACTIVITY_DETAIL_DTO, activityService.checkExistNameForUpdate(EXPECTED_ACTIVITY_DETAIL_DTO.getId(), EXIST_NAME));
     }
 
     @Test
-    public void shouldReturnFalseIfNameExistWhenUpdate(){
-        Mockito.when(activityRepository.checkExistNameForUpdate(EXPECTED_ACTIVITY_DETAIL_DTO.getId(), EXPECTED_ACTIVITY_DETAIL_DTO.getName())).thenReturn(false);
+    public void shouldReturnNullIfNameNotExistWhenUpdate() {
+        Mockito.when(activityRepository.findByName(EXPECTED_ACTIVITY_DETAIL_DTO.getName())).thenReturn(null);
 
-        Assert.assertEquals(false, activityService.checkExistNameForUpdate(EXPECTED_ACTIVITY_DETAIL_DTO.getId(), EXPECTED_ACTIVITY_DETAIL_DTO.getName()));
+        Assert.assertEquals(null, activityService.checkExistNameForUpdate(EXPECTED_ACTIVITY_DETAIL_DTO.getId(), EXPECTED_ACTIVITY_DETAIL_DTO.getName()));
     }
 
     @Test
-    public void shouldReturnListActivitiesWhenKeySearchCorrect(){
-        Mockito.when(activityRepository.search(KEY_SEARCH)).thenReturn(EXPECTED_ACTIVITY_DTO);
+    public void shouldReturnListActivitiesWhenKeySearchCorrect() {
+        Mockito.when(activityRepository.search(KEY_SEARCH)).thenReturn(EXPECTED_LIST_ACTIVITY_DTO);
 
         List<ActivityDTO> actualListActivityDTO = activityService.search(KEY_SEARCH);
 
-        Assert.assertEquals(EXPECTED_ACTIVITY_DTO, actualListActivityDTO);
+        Assert.assertEquals(EXPECTED_LIST_ACTIVITY_DTO, actualListActivityDTO);
     }
 
     @Test
-    public void shouldReurnNullWhenKeySearchIncorrect(){
+    public void shouldReturnNullWhenKeySearchIncorrect() {
         Mockito.when(activityRepository.search(KEY_SEARCH)).thenReturn(null);
 
         List<ActivityDTO> actualListActivityDTO = activityService.search(KEY_SEARCH);

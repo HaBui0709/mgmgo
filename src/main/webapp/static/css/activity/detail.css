@@ -95,7 +95,12 @@ pre {
     white-space: pre-wrap;
     word-break: break-word;
 }
-.address-icon{
+
+.address-icon {
     width: 20px;
     height: 20px;
+}
+
+.activity-summary {
+    font-size: 16px;
 }
