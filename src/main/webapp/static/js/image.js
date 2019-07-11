@@ -2,6 +2,9 @@ $(document).ready(function () {
     $("#upload-image").change(function () {
         readImage(this);
     });
+    $('#btn-upload').click(function(){
+        $("#image-error").addClass("d-none");
+    });
 });
 
 function readImage(input) {
@@ -9,11 +12,10 @@ function readImage(input) {
         if (input.files[0].size > 10 * Math.pow(2, 20)) {
             $("#image-error").removeClass("d-none");
             $("#image-error").text("Your file size is over 10MB");
-
+            $('#upload-image').val("");
         } else {
             let reader = new FileReader();
             reader.onload = function (e) {
-
                 $('#image').attr('src', e.target.result);
             };
             reader.readAsDataURL(input.files[0]);
