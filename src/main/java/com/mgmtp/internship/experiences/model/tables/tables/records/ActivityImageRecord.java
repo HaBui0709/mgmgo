@@ -5,13 +5,12 @@ package com.mgmtp.internship.experiences.model.tables.tables.records;
 
 
 import com.mgmtp.internship.experiences.model.tables.tables.ActivityImage;
-
-import javax.annotation.Generated;
-
 import org.jooq.Field;
 import org.jooq.Record2;
 import org.jooq.Row2;
 import org.jooq.impl.TableRecordImpl;
+
+import javax.annotation.Generated;
 
 
 /**

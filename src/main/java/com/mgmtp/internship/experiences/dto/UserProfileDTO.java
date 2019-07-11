@@ -17,12 +17,15 @@ public class UserProfileDTO {
     @Size(max = 30, message = "You can't not write more than 30 characters")
     private String displayName;
 
+    private int reputationScore;
+
     public UserProfileDTO() {
     }
 
-    public UserProfileDTO(Long imageId, String displayName) {
+    public UserProfileDTO(Long imageId, String displayName, int reputationScore) {
         this.imageId = imageId;
         this.displayName = displayName;
+        this.reputationScore = reputationScore;
     }
 
     public Long getImageId() {
@@ -39,6 +42,14 @@ public class UserProfileDTO {
 
     public void setDisplayName(String displayName) {
         this.displayName = displayName;
+    }
+
+    public int getReputationScore() {
+        return reputationScore;
+    }
+
+    public void setReputatinScore(int reputationScore) {
+        this.reputationScore = reputationScore;
     }
 
     @Override

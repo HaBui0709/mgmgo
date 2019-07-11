@@ -22,7 +22,7 @@ import static com.mgmtp.internship.experiences.model.tables.tables.Image.IMAGE;
 public class ImageRepository {
 
     @Autowired
-    DSLContext dslContext;
+    private DSLContext dslContext;
 
     public ImageDTO findImageById(long imageId) {
         ImageRecord image = dslContext
@@ -75,5 +75,8 @@ public class ImageRepository {
         return dslContext.deleteFrom(IMAGE)
                 .where(IMAGE.ID.eq(oldImageId))
                 .execute();
+    }
+    public boolean checkExistedImageOfActitvity(Long activityId){
+        return dslContext.fetchExists(dslContext.selectFrom(ACTIVITY_IMAGE).where(ACTIVITY_IMAGE.ACTIVITY_ID.eq(activityId)));
     }
 }

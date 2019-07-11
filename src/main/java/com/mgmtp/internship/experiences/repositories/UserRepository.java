@@ -45,7 +45,22 @@ public class UserRepository {
         return dslContext
                 .fetchExists(dslContext.selectFrom(USER)
                 .where(USER.DISPLAY_NAME.likeIgnoreCase(displayName)
-                .and(USER.ID.notEqual(id))));
+                        .and(USER.ID.notEqual(id))));
+    }
+
+    public UserRecord getReputationScoreById(Long id) {
+        return dslContext
+                .selectFrom(USER)
+                .where(USER.ID.eq(id))
+                .fetchOne();
+    }
+
+    public int updateReputationScoreById(Long id, int reputationScore) {
+        return dslContext
+                .update(USER)
+                .set(USER.REPUTATION_SCORE, reputationScore)
+                .where(USER.ID.eq(id))
+                .execute();
     }
 
 

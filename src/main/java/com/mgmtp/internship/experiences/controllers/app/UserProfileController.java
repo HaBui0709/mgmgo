@@ -62,6 +62,7 @@ public class UserProfileController {
             }
         }
         profile.setImageId(user.getUserProfileDTO().getImageId());
+        profile.setReputatinScore(user.getUserProfileDTO().getReputationScore());
         model.addAttribute(USER_PROFILE_MODEL_TAG, profile);
         model.addAttribute(USERNAME_MODEL_TAG, userService.getCurrentUser().getUsername());
         return "user/profile";

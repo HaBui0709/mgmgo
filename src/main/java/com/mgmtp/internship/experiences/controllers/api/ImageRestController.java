@@ -1,6 +1,7 @@
 package com.mgmtp.internship.experiences.controllers.api;
 
 import com.mgmtp.internship.experiences.config.security.CustomLdapUserDetails;
+import com.mgmtp.internship.experiences.constants.ApplicationConstant;
 import com.mgmtp.internship.experiences.dto.ImageDTO;
 import com.mgmtp.internship.experiences.exceptions.ApiException;
 import com.mgmtp.internship.experiences.services.ImageService;
@@ -77,9 +78,14 @@ public class ImageRestController extends BaseRestController {
     @ResponseBody
     public Object addImage(@PathVariable("activity_id") long activityId, @RequestParam("image_file") MultipartFile photo) throws IOException {
         byte[] imageData = photo.getBytes();
+        Long userId = userService.getCurrentUser().getId();
+        boolean checkExistedImageOfActivity = imageService.checkExistedImageOfActivity(activityId);
         Long imageId = imageService.updateActivityImage(activityId, imageData);
         if (imageId == null) {
             throw new ApiException(BAD_REQUEST, "Server error.");
+        }
+        if (!checkExistedImageOfActivity) {
+            userService.calculateAndUpdateRepulationScore(userId, ApplicationConstant.REPUTATION_SCORE_UPLOAD_FIRST_PICTURE);
         }
         JSONObject jsonObject = new JSONObject();
         String url = "api/image/" + imageId;

@@ -27,6 +27,7 @@ public class ImageServiceImplTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(ImageServiceImplTest.class);
     private static final byte[] IMAGE_DATA = {1, 2, 3};
     private static final long USER_ID = 1;
+    private static final long ACTIVITY_ID = 1L;
 
     @Mock
     private ImageRepository imageRepository;
@@ -126,6 +127,7 @@ public class ImageServiceImplTest {
         }
         return new ByteArrayInputStream(outputStream.toByteArray());
     }
+
     public void shouldReturnImageById() {
         long imageId = 1;
         ImageDTO expectedImageDTO = new ImageDTO(imageId, new byte[]{(byte) 0xe0, 0x4f});
@@ -138,24 +140,38 @@ public class ImageServiceImplTest {
 
     @Test
     public void shouldReturnTrueIfAddImageSuccessfully() {
-        long activityId = 1;
         Long expectedImageId = 1L;
-        Mockito.when(imageRepository.updateActivityImage(activityId, new byte[]{(byte) 0xe0, 0x4f})).thenReturn(expectedImageId);
+        Mockito.when(imageRepository.updateActivityImage(ACTIVITY_ID, new byte[]{(byte) 0xe0, 0x4f})).thenReturn(expectedImageId);
 
-        Long actualImageId = imageService.updateActivityImage(activityId, new byte[]{(byte) 0xe0, 0x4f});
+        Long actualImageId = imageService.updateActivityImage(ACTIVITY_ID, new byte[]{(byte) 0xe0, 0x4f});
 
         Assert.assertEquals(expectedImageId, actualImageId);
     }
 
     @Test
     public void shouldReturnFalseIfAddImageFaile() {
-        long activityId = 1L;
+        Mockito.when(imageRepository.updateActivityImage(ACTIVITY_ID, new byte[]{(byte) 0xe0, 0x4f})).thenReturn(null);
 
-        Mockito.when(imageRepository.updateActivityImage(activityId, new byte[]{(byte) 0xe0, 0x4f})).thenReturn(null);
-
-        Long actualResult = imageService.updateActivityImage(activityId, new byte[]{(byte) 0xe0, 0x4f});
+        Long actualResult = imageService.updateActivityImage(ACTIVITY_ID, new byte[]{(byte) 0xe0, 0x4f});
 
         Assert.assertNull(actualResult);
     }
 
+    @Test
+    public void shouldReturnFalseIfNotExistedImage() {
+        Mockito.when(imageRepository.checkExistedImageOfActitvity(ACTIVITY_ID)).thenReturn(false);
+
+        boolean actualResult = imageService.checkExistedImageOfActivity(ACTIVITY_ID);
+
+        Assert.assertEquals(false, actualResult);
+    }
+
+    @Test
+    public void shouldReturnTrueIfExistedImage() {
+        Mockito.when(imageRepository.checkExistedImageOfActitvity(ACTIVITY_ID)).thenReturn(true);
+
+        boolean actualResult = imageService.checkExistedImageOfActivity(ACTIVITY_ID);
+
+        Assert.assertEquals(true, actualResult);
+    }
 }
