@@ -28,7 +28,7 @@ public class CustomLdapUserDetailMapper extends LdapUserDetailsMapper {
             userService.insertUser(username);
         }
         UserRecord userRecord = userService.findUserByUserName(username);
-        UserProfileDTO userProfileDTO = new UserProfileDTO(userRecord.getImageId(), username);
+        UserProfileDTO userProfileDTO = new UserProfileDTO(userRecord.getImageId(), userRecord.getDisplayName());
         return new CustomLdapUserDetails(userRecord.getId(), userProfileDTO, (LdapUserDetails) details);
     }
 }
