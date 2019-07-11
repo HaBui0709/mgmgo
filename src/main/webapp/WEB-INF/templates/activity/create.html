@@ -5,14 +5,31 @@
       layout:decorate="~{layout/default-layout}">
 <head>
     <title>mgm go</title>
-    <link rel="stylesheet" type="text/css" th:href="@{/static/css/main.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/static/css/home/index.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/static/css/activity/detail.css}"/>
 </head>
 <body>
 <div layout:fragment="main-content">
+    <h3>Create new activity</h3>
     <div th:if="${error != null}">
         <div class="alert-danger alert" th:text="${error}"></div>
     </div>
-    <h3>Create a new activity</h3>
+    <div th:if="${existedActivity != null}">
+        <a class="activity-item" target="_blank" th:href="@{/activity/{id}(id=${existedActivity.id})}" id="activity-link">
+            <div class="activity-img--wrapper col-lg-2 col-4 mr-1 pl-0">
+                <img id="image-on-home-page"
+                     th:src="${existedActivity.imageId!=null}?@{/api/image/}+${existedActivity.imageId}:@{/static/images/no-img.png}"
+                     alt=""/>
+            </div>
+            <div>
+                <p class="activity-name activity-summary mb-0 font-weight-bold " th:text="${existedActivity.name}"></p>
+                <div th:if="${existedActivity.address != null && existedActivity.address != ''}"
+                     class="d-flex text-dark"><img src="/static/icons/location.png" class="address-icon" alt="mgm-go"><span
+                        class="ml-2" th:text="${existedActivity.address}"></span></div>
+            </div>
+
+        </a>
+    </div>
     <div class="card text-left p-3">
         <form method="post" action="/activity/create" name="createForm" th:object="${activityDetailDTO}"
               id="createForm">
@@ -22,8 +39,7 @@
                 <input type="text" name="name" class="form-control" id="title"
                        th:value="${activityDetailDTO.getName()}">
                 <div id="alertName" class="text-danger text-alert-mes"></div>
-                <div class="text-danger text-alert-mes" th:if="${#fields.hasErrors('name')}"
-                     th:errors="*{name}"></div>
+                <div class="text-danger text-alert-mes" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
             </div>
             <div class="form-group">
                 <label for="description">Description</label>

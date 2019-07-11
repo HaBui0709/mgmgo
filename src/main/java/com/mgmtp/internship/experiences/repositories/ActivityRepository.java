@@ -4,6 +4,7 @@ import com.mgmtp.internship.experiences.dto.ActivityDTO;
 import com.mgmtp.internship.experiences.dto.ActivityDetailDTO;
 import org.jooq.DSLContext;
 import org.jooq.Field;
+import org.jooq.Record5;
 import org.jooq.Record6;
 import org.jooq.impl.DSL;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,8 +31,10 @@ public class ActivityRepository {
     @Autowired
     private DSLContext dslContext;
 
+    private static final String IMAGE_ID_PROPERTY = "imageId";
+
     public List<ActivityDTO> findAll() {
-        return dslContext.select(ACTIVITY.ID, ACTIVITY.NAME, IMAGE.ID.as("imageId"), ACTIVITY.ADDRESS)
+        return dslContext.select(ACTIVITY.ID, ACTIVITY.NAME, IMAGE.ID.as(IMAGE_ID_PROPERTY), ACTIVITY.ADDRESS)
                 .from(ACTIVITY)
                 .leftJoin(ACTIVITY_IMAGE)
                 .on(ACTIVITY.ID.eq(ACTIVITY_IMAGE.ACTIVITY_ID))
@@ -41,6 +44,7 @@ public class ActivityRepository {
     }
 
     public ActivityDetailDTO findById(long activityId) {
+
         Record6<Long, String, String, String, BigDecimal, Long> activity = dslContext.select(ACTIVITY.ID,
                 ACTIVITY.NAME, ACTIVITY.DESCRIPTION, ACTIVITY.ADDRESS, round(avg(RATING.VALUE), 1).as("rating"), IMAGE.ID.as("imageId"))
                 .from(ACTIVITY)
@@ -69,14 +73,17 @@ public class ActivityRepository {
                 .execute();
     }
 
-    public boolean checkExistName(String activityName) {
-        return dslContext.fetchExists(dslContext.selectFrom(ACTIVITY)
-                .where(ACTIVITY.NAME.likeIgnoreCase(activityName)));
-    }
-
-    public boolean checkExistNameForUpdate(long activityId, String activityName) {
-        return dslContext.fetchExists(dslContext.selectFrom(ACTIVITY)
-                .where(ACTIVITY.NAME.likeIgnoreCase(activityName).and(ACTIVITY.ID.notEqual(activityId))));
+    public ActivityDetailDTO findByName(String activityName) {
+        Record5<Long, String, String, Long, String> existedActivity = dslContext.select(ACTIVITY.ID,
+                ACTIVITY.NAME, ACTIVITY.DESCRIPTION, IMAGE.ID.as(IMAGE_ID_PROPERTY), ACTIVITY.ADDRESS)
+                .from(ACTIVITY)
+                .leftJoin(ACTIVITY_IMAGE)
+                .on(ACTIVITY.ID.eq(ACTIVITY_IMAGE.ACTIVITY_ID))
+                .leftJoin(IMAGE)
+                .on(ACTIVITY_IMAGE.IMAGE_ID.eq(IMAGE.ID))
+                .where(ACTIVITY.NAME.likeIgnoreCase(activityName))
+                .fetchOne();
+        return existedActivity == null ? null : existedActivity.into(ActivityDetailDTO.class);
     }
 
     public List<ActivityDTO> search(String text) {

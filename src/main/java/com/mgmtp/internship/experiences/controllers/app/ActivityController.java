@@ -80,14 +80,17 @@ public class ActivityController {
         try {
             CustomLdapUserDetails user = userService.getCurrentUser();
             activityDetailDTO.setUpdatedByUserId(user.getId());
-            if (activityService.checkExistNameForUpdate(activityDetailDTO.getId(), activityDetailDTO.getName())) {
-                redirectAttributes.addFlashAttribute(ERROR_VIEW, "This name already exists");
-                redirectAttributes.addFlashAttribute(ACTIVITY_INFO_ATTRIBUTE, activityDetailDTO);
-                return REDIRECT_UPDATE_URL + activityDetailDTO.getId();
+            ActivityDetailDTO existedActivity = activityService.checkExistNameForCreate(activityDetailDTO.getName());
+            if (activityService.checkExistNameForUpdate(activityDetailDTO.getId(), activityDetailDTO.getName()) == null) {
+                activityService.update(activityDetailDTO);
+                redirectAttributes.addFlashAttribute("success", "Update activity success!");
+                return "redirect:/activity/" + activityDetailDTO.getId();
             }
-            activityService.update(activityDetailDTO);
-            redirectAttributes.addFlashAttribute("success", "Edit activity success!");
-            return "redirect:/activity/" + activityDetailDTO.getId();
+            redirectAttributes.addFlashAttribute(ERROR_VIEW, "This name already exists. Please choose a difference name from the activity below!");
+            redirectAttributes.addFlashAttribute(ACTIVITY_INFO_ATTRIBUTE, activityDetailDTO);
+            redirectAttributes.addFlashAttribute("existedActivity", existedActivity);
+            return REDIRECT_UPDATE_URL + activityDetailDTO.getId();
+
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute(ERROR_VIEW, "Can't update Activity. Try again!");
             redirectAttributes.addFlashAttribute(ACTIVITY_INFO_ATTRIBUTE, activityDetailDTO);
@@ -115,8 +118,10 @@ public class ActivityController {
         try {
             CustomLdapUserDetails user = userService.getCurrentUser();
             activityDetailDTO.setCreatedByUserId(user.getId());
-            if (activityService.checkExistName(activityDetailDTO.getName())) {
-                redirectAttributes.addFlashAttribute(ERROR_VIEW, "This name already exists");
+            ActivityDetailDTO existedActivity = activityService.checkExistNameForCreate(activityDetailDTO.getName());
+            if (existedActivity != null) {
+                redirectAttributes.addFlashAttribute("existedActivity", existedActivity);
+                redirectAttributes.addFlashAttribute(ERROR_VIEW, "This name already exists. Please check existed activity before create the new one!");
                 redirectAttributes.addFlashAttribute(ACTIVITY_INFO_ATTRIBUTE, activityDetailDTO);
                 return REDIRECT_CREATE_URL;
             }

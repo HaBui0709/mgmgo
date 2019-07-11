@@ -42,15 +42,18 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     @Override
-    public boolean checkExistName(String activityName) {
-        return activityRepository.checkExistName(activityName);
+    public ActivityDetailDTO checkExistNameForCreate(String activityName) {
+        return activityRepository.findByName(activityName);
     }
 
     @Override
-    public boolean checkExistNameForUpdate(long activityId, String activityName) {
-        return activityRepository.checkExistNameForUpdate(activityId, activityName);
+    public ActivityDetailDTO checkExistNameForUpdate(long activityId, String activityName) {
+        ActivityDetailDTO existedActivity = activityRepository.findByName(activityName);
+        if (existedActivity != null && existedActivity.getId() == activityId){
+                return null;
+            }
+        return existedActivity;
     }
-
 
 
     @Override
