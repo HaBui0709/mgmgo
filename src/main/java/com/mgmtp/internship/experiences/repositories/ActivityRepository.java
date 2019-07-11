@@ -86,7 +86,7 @@ public class ActivityRepository {
         return existedActivity == null ? null : existedActivity.into(ActivityDetailDTO.class);
     }
 
-    public List<ActivityDTO> search(String text) {
+    public List<ActivityDTO> search(String text, int currentPage) {
         final String unaccentFunc = "unaccent";
         Field<String> keySearch = DSL.function(unaccentFunc, String.class, DSL.val(text.trim()));
         return dslContext.select(ACTIVITY.ID, ACTIVITY.NAME, IMAGE.ID.as(IMAGE_ID_PROPERTY))
@@ -98,7 +98,19 @@ public class ActivityRepository {
                 .or(DSL.function(unaccentFunc, String.class, ACTIVITY.DESCRIPTION).containsIgnoreCase(keySearch))
                 .or(DSL.function(unaccentFunc, String.class, ACTIVITY.ADDRESS).containsIgnoreCase(keySearch))
                 .orderBy(ACTIVITY.ID)
+                .offset((currentPage - 1) * RECORD_OF_LIST)
+                .limit(RECORD_OF_LIST)
                 .fetchInto(ActivityDTO.class);
+    }
+
+    public int countTotalRecordSearch(String text) {
+        final String unaccentFunc = "unaccent";
+        Field<String> keySearch = DSL.function(unaccentFunc, String.class, DSL.val(text.trim()));
+        return dslContext.selectCount()
+                .from(ACTIVITY)
+                .where(DSL.function(unaccentFunc, String.class, ACTIVITY.NAME).containsIgnoreCase(keySearch))
+                .or(DSL.function(unaccentFunc, String.class, ACTIVITY.DESCRIPTION).containsIgnoreCase(keySearch))
+                .fetchAny(0, Integer.class);
     }
 
     public List<ActivityDTO> getActivities(int currentPage) {
@@ -113,9 +125,9 @@ public class ActivityRepository {
                 .fetchInto(ActivityDTO.class);
     }
 
-    public int countPages() {
-        return (int) Math.ceil(dslContext.selectCount()
+    public int countTotalRecordActivity() {
+        return dslContext.selectCount()
                 .from(ACTIVITY)
-                .fetchAny(0, Integer.class) * 1.0 / RECORD_OF_LIST);
+                .fetchAny(0, Integer.class);
     }
 }

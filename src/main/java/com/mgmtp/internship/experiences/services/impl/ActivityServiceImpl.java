@@ -57,8 +57,16 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     @Override
-    public List<ActivityDTO> search(String text) {
-        return activityRepository.search(text);
+    public List<ActivityDTO> search(String text, int currentPage) {
+        if (currentPage < 1) {
+            return Collections.emptyList();
+        }
+        return activityRepository.search(text, currentPage);
+    }
+
+    @Override
+    public int countTotalRecordSearch(String text) {
+        return activityRepository.countTotalRecordSearch(text);
     }
 
     @Override
@@ -70,7 +78,7 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     @Override
-    public int countPages() {
-        return activityRepository.countPages();
+    public int countTotalRecordActivity() {
+        return activityRepository.countTotalRecordActivity();
     }
 }

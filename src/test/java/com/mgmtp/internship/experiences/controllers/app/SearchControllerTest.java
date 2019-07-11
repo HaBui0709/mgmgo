@@ -2,6 +2,7 @@ package com.mgmtp.internship.experiences.controllers.app;
 
 import com.mgmtp.internship.experiences.dto.ActivityDTO;
 import com.mgmtp.internship.experiences.services.impl.ActivityServiceImpl;
+import com.mgmtp.internship.experiences.utils.LazyLoading;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,6 +20,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.util.Collections;
 import java.util.List;
 
+import static com.mgmtp.internship.experiences.utils.LazyLoading.countPages;
+
 /**
  * Unit Test for Search Controller.
  *
@@ -32,10 +35,16 @@ public class SearchControllerTest {
     private static final String URL_VIEW = "search";
     private static final String KEY_SEARCH = "abc";
     private static final List<ActivityDTO> EXPECTED_ACTIVITY_DTO = Collections.singletonList(new ActivityDTO(1L, "name", null));
+    private static final int CURRENT_PAGE = 1;
+    private static final int TOTAL_RECORD = 10;
+    private static final int PAGE_SIZE = countPages(TOTAL_RECORD);
+    private static final String URL_SEE_MORE = "/search/more/1";
+    private static final String VIEW_LIST_ACTIVITIES = "activity/fragments/list-activities";
 
     private MockMvc mockMvc;
     @Mock
     private ActivityServiceImpl activityService;
+
     @InjectMocks
     private SearchController searchController;
 
@@ -45,14 +54,17 @@ public class SearchControllerTest {
     }
 
     @Test
-    public void shouldGetListActivitiesShowOnSearchPage() {
-        Mockito.when(activityService.search(KEY_SEARCH)).thenReturn(EXPECTED_ACTIVITY_DTO);
-
+    public void shouldGetListActivitiesShowOnSearchPageIfKeySearchCorrect() {
+        Mockito.when(activityService.search(KEY_SEARCH, CURRENT_PAGE)).thenReturn(EXPECTED_ACTIVITY_DTO);
+        Mockito.when(activityService.countTotalRecordSearch(KEY_SEARCH)).thenReturn(TOTAL_RECORD);
         try {
             mockMvc.perform(MockMvcRequestBuilders.get(URL).param("searchInfor", KEY_SEARCH))
                     .andExpect(MockMvcResultMatchers.status().isOk())
                     .andExpect(MockMvcResultMatchers.model().attribute("keySearch", KEY_SEARCH))
                     .andExpect(MockMvcResultMatchers.model().attribute("activities", EXPECTED_ACTIVITY_DTO))
+                    .andExpect(MockMvcResultMatchers.model().attribute("sizeOfPages", PAGE_SIZE))
+                    .andExpect(MockMvcResultMatchers.model().attribute("totalRecord", TOTAL_RECORD))
+                    .andExpect(MockMvcResultMatchers.model().attribute("currentPage", CURRENT_PAGE))
                     .andExpect(MockMvcResultMatchers.view().name(URL_VIEW));
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
@@ -60,15 +72,67 @@ public class SearchControllerTest {
     }
 
     @Test
-    public void shouldGetNullActivityShowOnSearchPage() {
-        Mockito.when(activityService.search(KEY_SEARCH)).thenReturn(null);
-
+    public void shouldGetNullActivityShowOnSearchPageIfKeySearchIncorrect() {
+        Mockito.when(activityService.search(KEY_SEARCH, CURRENT_PAGE)).thenReturn(null);
+        Mockito.when(activityService.countTotalRecordSearch(KEY_SEARCH)).thenReturn(0);
         try {
             mockMvc.perform(MockMvcRequestBuilders.get(URL).param("searchInfor", KEY_SEARCH))
                     .andExpect(MockMvcResultMatchers.status().isOk())
                     .andExpect(MockMvcResultMatchers.model().attribute("keySearch", KEY_SEARCH))
                     .andExpect(MockMvcResultMatchers.model().attribute("activities", null))
+                    .andExpect(MockMvcResultMatchers.model().attribute("sizeOfPages", countPages(0)))
+                    .andExpect(MockMvcResultMatchers.model().attribute("totalRecord", 0))
+                    .andExpect(MockMvcResultMatchers.model().attribute("currentPage", 0))
                     .andExpect(MockMvcResultMatchers.view().name(URL_VIEW));
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage());
+        }
+    }
+
+    @Test
+    public void shouldGetListActivitiesShowOnSearchPageIfKeySearchEmpty() {
+        Mockito.when(activityService.getActivities(CURRENT_PAGE)).thenReturn(EXPECTED_ACTIVITY_DTO);
+        Mockito.when(activityService.countTotalRecordActivity()).thenReturn(TOTAL_RECORD);
+
+        try {
+            mockMvc.perform(MockMvcRequestBuilders.get(URL).param("searchInfor", ""))
+                    .andExpect(MockMvcResultMatchers.status().isOk())
+                    .andExpect(MockMvcResultMatchers.model().attribute("activities", EXPECTED_ACTIVITY_DTO))
+                    .andExpect(MockMvcResultMatchers.model().attribute("sizeOfPages", PAGE_SIZE))
+                    .andExpect(MockMvcResultMatchers.model().attribute("totalRecord", TOTAL_RECORD))
+                    .andExpect(MockMvcResultMatchers.model().attribute("currentPage", CURRENT_PAGE))
+                    .andExpect(MockMvcResultMatchers.view().name(URL_VIEW));
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage());
+        }
+    }
+
+    @Test
+    public void shouldSearchActivitiesShowOnFragmentListActivitiesIfKeySearchCorrect() {
+        Mockito.when(activityService.search(KEY_SEARCH, CURRENT_PAGE)).thenReturn(EXPECTED_ACTIVITY_DTO);
+        try {
+            mockMvc.perform(MockMvcRequestBuilders.get(URL_SEE_MORE)
+                    .param("currentPage", String.valueOf(CURRENT_PAGE))
+                    .param("searchInfor", KEY_SEARCH))
+                    .andExpect(MockMvcResultMatchers.status().isOk())
+                    .andExpect(MockMvcResultMatchers.model().attribute("activities", EXPECTED_ACTIVITY_DTO))
+                    .andExpect(MockMvcResultMatchers.view().name(VIEW_LIST_ACTIVITIES));
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage());
+        }
+    }
+
+    @Test
+    public void shouldReturnEmptyLisIfKeySearchInCorrect() {
+        List<ActivityDTO> expectedActivities = Collections.emptyList();
+        Mockito.when(activityService.search(KEY_SEARCH, CURRENT_PAGE)).thenReturn(expectedActivities);
+        try {
+            mockMvc.perform(MockMvcRequestBuilders.get(URL_SEE_MORE)
+                    .param("currentPage", String.valueOf(CURRENT_PAGE))
+                    .param("searchInfor", KEY_SEARCH))
+                    .andExpect(MockMvcResultMatchers.status().isOk())
+                    .andExpect(MockMvcResultMatchers.model().attribute("activities", expectedActivities))
+                    .andExpect(MockMvcResultMatchers.view().name(VIEW_LIST_ACTIVITIES));
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
         }

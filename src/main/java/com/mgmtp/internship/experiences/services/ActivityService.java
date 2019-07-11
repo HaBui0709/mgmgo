@@ -23,9 +23,11 @@ public interface ActivityService {
 
     ActivityDetailDTO checkExistNameForUpdate(long activityId, String activityName);
 
-    List<ActivityDTO> search(String text);
+    List<ActivityDTO> search(String text, int currentPage);
+
+    int countTotalRecordSearch(String text);
 
     List<ActivityDTO> getActivities(int currentPage);
 
-    int countPages();
+    int countTotalRecordActivity();
 }

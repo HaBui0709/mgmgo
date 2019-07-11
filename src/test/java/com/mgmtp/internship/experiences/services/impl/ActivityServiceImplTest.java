@@ -125,20 +125,40 @@ public class ActivityServiceImplTest {
 
     @Test
     public void shouldReturnListActivitiesWhenKeySearchCorrect() {
-        Mockito.when(activityRepository.search(KEY_SEARCH)).thenReturn(EXPECTED_LIST_ACTIVITY_DTO);
+        Mockito.when(activityRepository.search(KEY_SEARCH, CURRENT_PAGE)).thenReturn(EXPECTED_LIST_ACTIVITY_DTO);
 
-        List<ActivityDTO> actualListActivityDTO = activityService.search(KEY_SEARCH);
+        List<ActivityDTO> actualListActivityDTO = activityService.search(KEY_SEARCH, CURRENT_PAGE);
 
         Assert.assertEquals(EXPECTED_LIST_ACTIVITY_DTO, actualListActivityDTO);
     }
 
     @Test
     public void shouldReturnNullWhenKeySearchIncorrect() {
-        Mockito.when(activityRepository.search(KEY_SEARCH)).thenReturn(null);
+        Mockito.when(activityRepository.search(KEY_SEARCH, CURRENT_PAGE)).thenReturn(null);
 
-        List<ActivityDTO> actualListActivityDTO = activityService.search(KEY_SEARCH);
+        List<ActivityDTO> actualListActivityDTO = activityService.search(KEY_SEARCH, CURRENT_PAGE);
 
         Assert.assertEquals(null, actualListActivityDTO);
+    }
+
+    @Test
+    public void shouldReturnTotalRecordActivitiesIfKeySearchCorrect() {
+        int expectedRecord = 3;
+        Mockito.when(activityRepository.countTotalRecordSearch(KEY_SEARCH)).thenReturn(expectedRecord);
+
+        int actualRecord = activityService.countTotalRecordSearch(KEY_SEARCH);
+
+        Assert.assertEquals(expectedRecord, actualRecord);
+    }
+
+    @Test
+    public void shouldReturnZeroRecordActivitiesIfKeySearchIncorrect() {
+        int expectedRecord = 0;
+        Mockito.when(activityRepository.countTotalRecordSearch(KEY_SEARCH)).thenReturn(expectedRecord);
+
+        int actualRecord = activityService.countTotalRecordSearch(KEY_SEARCH);
+
+        Assert.assertEquals(expectedRecord, actualRecord);
     }
 
     @Test
@@ -160,22 +180,22 @@ public class ActivityServiceImplTest {
     }
 
     @Test
-    public void shouldReturnPageSizeOfActivities() {
-        int expectedPageSize = 3;
-        Mockito.when(activityRepository.countPages()).thenReturn(expectedPageSize);
+    public void shouldReturnTotalRecordOfActivities() {
+        int expectedRecord = 3;
+        Mockito.when(activityRepository.countTotalRecordActivity()).thenReturn(expectedRecord);
 
-        int actualPageSize = activityService.countPages();
+        int actualPageSize = activityService.countTotalRecordActivity();
 
-        Assert.assertEquals(expectedPageSize, actualPageSize);
+        Assert.assertEquals(expectedRecord, actualPageSize);
     }
 
     @Test
-    public void shouldReturnZeroIfHaveNotActivity() {
-        int expectedPageSize = 0;
-        Mockito.when(activityRepository.countPages()).thenReturn(expectedPageSize);
+    public void shouldReturnZeroRecordIfHaveNotActivity() {
+        int expectedRecord = 0;
+        Mockito.when(activityRepository.countTotalRecordActivity()).thenReturn(expectedRecord);
 
-        int actualPageSize = activityService.countPages();
+        int actualPageSize = activityService.countTotalRecordActivity();
 
-        Assert.assertEquals(expectedPageSize, actualPageSize);
+        Assert.assertEquals(expectedRecord, actualPageSize);
     }
 }
