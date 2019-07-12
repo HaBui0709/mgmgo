@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 import java.util.List;
 
+import static com.mgmtp.internship.experiences.constants.ApplicationConstant.RECORD_OF_LIST;
 import static com.mgmtp.internship.experiences.model.tables.tables.Activity.ACTIVITY;
 import static com.mgmtp.internship.experiences.model.tables.tables.ActivityImage.ACTIVITY_IMAGE;
 import static com.mgmtp.internship.experiences.model.tables.tables.Image.IMAGE;
@@ -28,10 +29,10 @@ import static org.jooq.impl.DSL.round;
 @Component
 public class ActivityRepository {
 
+    private static final String IMAGE_ID_PROPERTY = "imageId";
+
     @Autowired
     private DSLContext dslContext;
-
-    private static final String IMAGE_ID_PROPERTY = "imageId";
 
     public List<ActivityDTO> findAll() {
         return dslContext.select(ACTIVITY.ID, ACTIVITY.NAME, IMAGE.ID.as(IMAGE_ID_PROPERTY), ACTIVITY.ADDRESS)
@@ -44,7 +45,6 @@ public class ActivityRepository {
     }
 
     public ActivityDetailDTO findById(long activityId) {
-
         Record6<Long, String, String, String, BigDecimal, Long> activity = dslContext.select(ACTIVITY.ID,
                 ACTIVITY.NAME, ACTIVITY.DESCRIPTION, ACTIVITY.ADDRESS, round(avg(RATING.VALUE), 1).as("rating"), IMAGE.ID.as(IMAGE_ID_PROPERTY))
                 .from(ACTIVITY)
@@ -86,7 +86,7 @@ public class ActivityRepository {
         return existedActivity == null ? null : existedActivity.into(ActivityDetailDTO.class);
     }
 
-    public List<ActivityDTO> search(String text) {
+    public List<ActivityDTO> search(String text, int currentPage) {
         final String unaccentFunc = "unaccent";
         Field<String> keySearch = DSL.function(unaccentFunc, String.class, DSL.val(text.trim()));
         return dslContext.select(ACTIVITY.ID, ACTIVITY.NAME, IMAGE.ID.as(IMAGE_ID_PROPERTY))
@@ -98,6 +98,36 @@ public class ActivityRepository {
                 .or(DSL.function(unaccentFunc, String.class, ACTIVITY.DESCRIPTION).containsIgnoreCase(keySearch))
                 .or(DSL.function(unaccentFunc, String.class, ACTIVITY.ADDRESS).containsIgnoreCase(keySearch))
                 .orderBy(ACTIVITY.ID)
+                .offset((currentPage - 1) * RECORD_OF_LIST)
+                .limit(RECORD_OF_LIST)
                 .fetchInto(ActivityDTO.class);
+    }
+
+    public int countTotalRecordSearch(String text) {
+        final String unaccentFunc = "unaccent";
+        Field<String> keySearch = DSL.function(unaccentFunc, String.class, DSL.val(text.trim()));
+        return dslContext.selectCount()
+                .from(ACTIVITY)
+                .where(DSL.function(unaccentFunc, String.class, ACTIVITY.NAME).containsIgnoreCase(keySearch))
+                .or(DSL.function(unaccentFunc, String.class, ACTIVITY.DESCRIPTION).containsIgnoreCase(keySearch))
+                .fetchAny(0, Integer.class);
+    }
+
+    public List<ActivityDTO> getActivities(int currentPage) {
+        return dslContext.select(ACTIVITY.ID, ACTIVITY.NAME, IMAGE.ID.as(IMAGE_ID_PROPERTY))
+                .from(ACTIVITY)
+                .leftJoin(ACTIVITY_IMAGE)
+                .on(ACTIVITY.ID.eq(ACTIVITY_IMAGE.ACTIVITY_ID))
+                .leftJoin(IMAGE).on(ACTIVITY_IMAGE.IMAGE_ID.eq(IMAGE.ID))
+                .orderBy(ACTIVITY.ID)
+                .offset((currentPage - 1) * RECORD_OF_LIST)
+                .limit(RECORD_OF_LIST)
+                .fetchInto(ActivityDTO.class);
+    }
+
+    public int countTotalRecordActivity() {
+        return dslContext.selectCount()
+                .from(ACTIVITY)
+                .fetchAny(0, Integer.class);
     }
 }

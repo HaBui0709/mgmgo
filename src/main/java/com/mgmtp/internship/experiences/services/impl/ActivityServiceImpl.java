@@ -8,6 +8,7 @@ import com.mgmtp.internship.experiences.services.ActivityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -55,9 +56,29 @@ public class ActivityServiceImpl implements ActivityService {
         return existedActivity;
     }
 
+    @Override
+    public List<ActivityDTO> search(String text, int currentPage) {
+        if (currentPage < 1) {
+            return Collections.emptyList();
+        }
+        return activityRepository.search(text, currentPage);
+    }
 
     @Override
-    public List<ActivityDTO> search(String text) {
-        return activityRepository.search(text);
+    public int countTotalRecordSearch(String text) {
+        return activityRepository.countTotalRecordSearch(text);
+    }
+
+    @Override
+    public List<ActivityDTO> getActivities(int currentPage) {
+        if (currentPage < 1) {
+            return Collections.emptyList();
+        }
+        return activityRepository.getActivities(currentPage);
+    }
+
+    @Override
+    public int countTotalRecordActivity() {
+        return activityRepository.countTotalRecordActivity();
     }
 }

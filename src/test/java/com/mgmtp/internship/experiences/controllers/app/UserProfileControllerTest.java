@@ -28,8 +28,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @RunWith(MockitoJUnitRunner.class)
 public class UserProfileControllerTest {
-    private static final Logger LOGGER = LoggerFactory.getLogger(UserProfileControllerTest.class);
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserProfileControllerTest.class);
     private static final long USER_ID = 1L;
     private static final long IMAGE_ID = 1l;
     private static final String DISPLAY_NAME = "name";
