@@ -30,4 +30,6 @@ public interface ActivityService {
     List<ActivityDTO> getActivities(int currentPage);
 
     int countTotalRecordActivity();
+
+    long getIdActivity(String name);
 }

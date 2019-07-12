@@ -50,9 +50,9 @@ public class ActivityServiceImpl implements ActivityService {
     @Override
     public ActivityDetailDTO checkExistNameForUpdate(long activityId, String activityName) {
         ActivityDetailDTO existedActivity = activityRepository.findByName(activityName);
-        if (existedActivity != null && existedActivity.getId() == activityId){
-                return null;
-            }
+        if (existedActivity != null && existedActivity.getId() == activityId) {
+            return null;
+        }
         return existedActivity;
     }
 
@@ -80,5 +80,10 @@ public class ActivityServiceImpl implements ActivityService {
     @Override
     public int countTotalRecordActivity() {
         return activityRepository.countTotalRecordActivity();
+    }
+
+    @Override
+    public long getIdActivity(String name) {
+        return activityRepository.getIdActivity(name);
     }
 }

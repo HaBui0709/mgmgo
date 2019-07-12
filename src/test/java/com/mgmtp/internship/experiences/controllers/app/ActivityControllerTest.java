@@ -188,6 +188,7 @@ public class ActivityControllerTest {
         EXPECTED_ACTIVITY_DETAIL_DTO.setCreatedByUserId(EXPECTED_CUSTOM_USER_DETAIL.getId());
 
         Mockito.when(activityService.create(EXPECTED_ACTIVITY_DETAIL_DTO)).thenReturn(insertSuccess);
+        Mockito.when(activityService.getIdActivity(EXPECTED_ACTIVITY_DETAIL_DTO.getName())).thenReturn(EXPECTED_ACTIVITY_DETAIL_DTO.getId());
 
         try {
             mockMvc.perform(post(CREATE_URL)
@@ -196,8 +197,8 @@ public class ActivityControllerTest {
                     .param(DESC_PARAM, EXPECTED_ACTIVITY_DETAIL_DTO.getDescription()))
                     .andDo(MockMvcResultHandlers.print())
                     .andExpect(status().is3xxRedirection())
-                    .andExpect(view().name("redirect:/"))
-                    .andExpect(redirectedUrl("/"));
+                    .andExpect(view().name("redirect:/activity/" + EXPECTED_ACTIVITY_DETAIL_DTO.getId()))
+                    .andExpect(redirectedUrl("/activity/" + EXPECTED_ACTIVITY_DETAIL_DTO.getId()));
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
         }

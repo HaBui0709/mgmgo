@@ -28,9 +28,6 @@ public class HomeController {
         model.addAttribute("activities", activityService.getActivities(1));
         model.addAttribute("sizeOfPages", countPages(activityService.countTotalRecordActivity()));
         model.addAttribute("currentPage", 1);
-        if (model.containsAttribute("successTemp")) {
-            model.addAttribute("success", "Created activity successfully!");
-        }
         return "home/index";
     }
 

@@ -16,8 +16,8 @@
         <div layout:fragment="main-content" class="content-wrapper container py-2"></div>
 
         <!-- Message when create successfull default-layout-->
-        <th:block th:if="${success != null}">
-            <div id="message-success" class="alert-success alert create-message-success" th:text="${success}"></div>
+        <th:block th:if="${successCrud != null}">
+            <div id="message-success" class="alert-success alert create-message-success" th:text="${successCrud}"></div>
         </th:block>
 
         <!-- footer -->

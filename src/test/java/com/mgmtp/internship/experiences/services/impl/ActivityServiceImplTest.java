@@ -198,4 +198,11 @@ public class ActivityServiceImplTest {
 
         Assert.assertEquals(expectedRecord, actualPageSize);
     }
+
+    @Test
+    public void shouldReturnActivityIdIfGetByName() {
+        Mockito.when(activityRepository.getIdActivity(EXPECTED_ACTIVITY_DETAIL_DTO.getName())).thenReturn(ACTIVITY_ID);
+
+        Assert.assertEquals(ACTIVITY_ID, activityService.getIdActivity(EXPECTED_ACTIVITY_DETAIL_DTO.getName()));
+    }
 }

@@ -15,7 +15,8 @@
         <div class="alert-danger alert" th:text="${error}"></div>
     </div>
     <div th:if="${existedActivity != null}">
-        <a class="activity-item" target="_blank" th:href="@{/activity/{id}(id=${existedActivity.id})}" id="activity-link">
+        <a class="activity-item" target="_blank" th:href="@{/activity/{id}(id=${existedActivity.id})}"
+           id="activity-link">
             <div class="activity-img--wrapper col-lg-2 col-4 mr-1 pl-0">
                 <img id="image-on-home-page"
                      th:src="${existedActivity.imageId!=null}?@{/api/image/}+${existedActivity.imageId}:@{/static/images/no-img.png}"
@@ -24,7 +25,8 @@
             <div>
                 <p class="activity-name activity-summary mb-0 font-weight-bold " th:text="${existedActivity.name}"></p>
                 <div th:if="${existedActivity.address != null && existedActivity.address != ''}"
-                     class="d-flex text-dark"><img src="/static/icons/location.png" class="address-icon" alt="mgm-go"><span
+                     class="d-flex text-dark"><img src="/static/icons/location.png" class="address-icon"
+                                                   alt="mgm-go"><span
                         class="ml-2" th:text="${existedActivity.address}"></span></div>
             </div>
 
