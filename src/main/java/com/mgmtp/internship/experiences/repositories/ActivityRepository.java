@@ -80,6 +80,8 @@ public class ActivityRepository {
     }
 
     public ActivityDetailDTO findByName(String activityName) {
+        final String unaccentFunc = "unaccent";
+        Field<String> keyName = DSL.function(unaccentFunc, String.class, DSL.val(activityName));
         Record5<Long, String, String, Long, String> existedActivity = dslContext.select(ACTIVITY.ID,
                 ACTIVITY.NAME, ACTIVITY.DESCRIPTION, IMAGE.ID.as(IMAGE_ID_PROPERTY), ACTIVITY.ADDRESS)
                 .from(ACTIVITY)
@@ -87,7 +89,7 @@ public class ActivityRepository {
                 .on(ACTIVITY.ID.eq(ACTIVITY_IMAGE.ACTIVITY_ID))
                 .leftJoin(IMAGE)
                 .on(ACTIVITY_IMAGE.IMAGE_ID.eq(IMAGE.ID))
-                .where(ACTIVITY.NAME.likeIgnoreCase(activityName))
+                .where(DSL.function(unaccentFunc, String.class, ACTIVITY.NAME).likeIgnoreCase(keyName))
                 .fetchOne();
         return existedActivity == null ? null : existedActivity.into(ActivityDetailDTO.class);
     }
