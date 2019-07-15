@@ -82,7 +82,7 @@ public class ActivityController {
             ActivityDetailDTO existedActivity = activityService.checkExistNameForCreate(activityDetailDTO.getName());
             if (activityService.checkExistNameForUpdate(activityDetailDTO.getId(), activityDetailDTO.getName()) == null) {
                 activityService.update(activityDetailDTO);
-                redirectAttributes.addFlashAttribute("success", "Update activity success!");
+                redirectAttributes.addFlashAttribute("successCrud", "Update activity success!");
                 return "redirect:/activity/" + activityDetailDTO.getId();
             }
             redirectAttributes.addFlashAttribute(ERROR_VIEW, "This name already exists. Please choose a difference name from the activity below!");
@@ -126,8 +126,8 @@ public class ActivityController {
             }
             activityService.create(activityDetailDTO);
             userService.calculateAndUpdateRepulationScore(activityDetailDTO.getCreatedByUserId(), ApplicationConstant.REPUTATION_SCORE_CREATE_ACTIVITY);
-            redirectAttributes.addFlashAttribute("successTemp", "");
-            return "redirect:/";
+            redirectAttributes.addFlashAttribute("successCrud", "Create activity success!");
+            return "redirect:/activity/" + activityService.getIdActivity(activityDetailDTO.getName());
 
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute(ERROR_VIEW, "Can't create Activity. Try again!");

@@ -73,6 +73,12 @@ public class ActivityRepository {
                 .execute();
     }
 
+    public long getIdActivity(String name) {
+        return dslContext.select(ACTIVITY.ID)
+                .from(ACTIVITY)
+                .where(ACTIVITY.NAME.eq(name)).fetchOneInto(Integer.class);
+    }
+
     public ActivityDetailDTO findByName(String activityName) {
         Record5<Long, String, String, Long, String> existedActivity = dslContext.select(ACTIVITY.ID,
                 ACTIVITY.NAME, ACTIVITY.DESCRIPTION, IMAGE.ID.as(IMAGE_ID_PROPERTY), ACTIVITY.ADDRESS)
