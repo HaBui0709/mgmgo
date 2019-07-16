@@ -1,6 +1,8 @@
 package com.mgmtp.internship.experiences.controllers.app;
 
+import com.mgmtp.internship.experiences.dto.PageDTO;
 import com.mgmtp.internship.experiences.services.ActivityService;
+import com.mgmtp.internship.experiences.utils.LazyLoading;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -8,8 +10,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
-import static com.mgmtp.internship.experiences.utils.LazyLoading.countPages;
 
 /**
  * Search Controller.
@@ -27,18 +27,17 @@ public class SearchController {
 
     @GetMapping
     public String search(Model model, @RequestParam(name = "searchInfor", required = false, defaultValue = "") String searchInfor) {
-        int totalRecord;
+        PageDTO pagingInfo = new PageDTO();
         if (searchInfor.isEmpty()) {
             model.addAttribute(ACTIVITIES_ATTRIBUTE, activityService.getActivities(1));
-            totalRecord = activityService.countTotalRecordActivity();
+            pagingInfo.setTotalRecord(activityService.countTotalRecordActivity());
         } else {
             model.addAttribute("keySearch", searchInfor.trim());
             model.addAttribute(ACTIVITIES_ATTRIBUTE, activityService.search(searchInfor, 1));
-            totalRecord = activityService.countTotalRecordSearch(searchInfor);
+            pagingInfo.setTotalRecord(activityService.countTotalRecordSearch(searchInfor));
         }
-        model.addAttribute("currentPage", 1);
-        model.addAttribute("sizeOfPages", countPages(totalRecord));
-        model.addAttribute("totalRecord", totalRecord);
+        pagingInfo.setSizeOfPages(LazyLoading.countPages(pagingInfo.getTotalRecord()));
+        model.addAttribute("pagingInfo", pagingInfo);
         return "search";
     }
 

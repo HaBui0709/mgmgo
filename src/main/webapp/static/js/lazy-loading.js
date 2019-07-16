@@ -5,16 +5,19 @@ $(document).ready(function () {
 });
 
 function seeMore() {
+    $('.btn-loading').removeClass('d-none');
+    $('#see-more').addClass('d-none');
     let listWrapper = $('.lazy-loading');
     let currentPage = +listWrapper.attr('current-page') + 1;
     $.ajax({
         type: 'GET',
         url: rebuildLink(listWrapper.attr('link'), currentPage),
         success: function (res) {
+            $('.btn-loading').addClass('d-none');
             listWrapper.append(res);
             listWrapper.attr('current-page', currentPage);
-            if (listWrapper.attr('current-page') == listWrapper.attr('size-of-pages')) {
-                $('#see-more').addClass('d-none');
+            if (listWrapper.attr('current-page') < listWrapper.attr('size-of-pages')) {
+                $('#see-more').removeClass('d-none');
             }
         }
     })

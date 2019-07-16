@@ -1,7 +1,9 @@
 package com.mgmtp.internship.experiences.controllers.app;
 
 import com.mgmtp.internship.experiences.dto.ActivityDTO;
+import com.mgmtp.internship.experiences.dto.PageDTO;
 import com.mgmtp.internship.experiences.services.impl.ActivityServiceImpl;
+import com.mgmtp.internship.experiences.utils.LazyLoading;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,8 +21,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.util.Collections;
 import java.util.List;
 
-import static com.mgmtp.internship.experiences.utils.LazyLoading.countPages;
-
 /**
  * Unit test for home controller.
  *
@@ -34,10 +34,10 @@ public class HomeControllerTest {
     private static final String URL_SEE_MORE = "/more/1";
     private static final String VIEW_LIST_ACTIVITIES = "activity/fragments/list-activities";
     private static final String ACTIVITIES_ATTRIBUTE = "activities";
-    private static final String CURRENT_ATTRIBUTE = "currentPage";
     private static final int TOTAL_RECORD = 30;
     private static final int CURRENT_PAGE = 1;
-    private static final int PAGE_SIZE = countPages(TOTAL_RECORD);
+    private static final int PAGE_SIZE = LazyLoading.countPages(TOTAL_RECORD);
+    private static final PageDTO PAGING_INFO_DTO = new PageDTO(CURRENT_PAGE, PAGE_SIZE, TOTAL_RECORD);
     private MockMvc mockMvc;
 
     @Mock
@@ -54,13 +54,12 @@ public class HomeControllerTest {
     @Test
     public void shouldGetActivitiesShowOnHomePage() {
         Mockito.when(activityService.getActivities(CURRENT_PAGE)).thenReturn(EXPECTED_ACTIVITIES);
-        Mockito.when(activityService.countTotalRecordActivity()).thenReturn(TOTAL_RECORD);
+        Mockito.when(activityService.countTotalRecordActivity()).thenReturn(PAGING_INFO_DTO.getTotalRecord());
         try {
             mockMvc.perform(MockMvcRequestBuilders.get("/"))
                     .andExpect(MockMvcResultMatchers.status().isOk())
                     .andExpect(MockMvcResultMatchers.model().attribute(ACTIVITIES_ATTRIBUTE, EXPECTED_ACTIVITIES))
-                    .andExpect(MockMvcResultMatchers.model().attribute("sizeOfPages", PAGE_SIZE))
-                    .andExpect(MockMvcResultMatchers.model().attribute(CURRENT_ATTRIBUTE, 1))
+                    .andExpect(MockMvcResultMatchers.model().attribute("pagingInfo", PAGING_INFO_DTO))
                     .andExpect(MockMvcResultMatchers.view().name("home/index"));
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
@@ -72,7 +71,7 @@ public class HomeControllerTest {
         Mockito.when(activityService.getActivities(CURRENT_PAGE)).thenReturn(EXPECTED_ACTIVITIES);
         try {
             mockMvc.perform(MockMvcRequestBuilders.get(URL_SEE_MORE)
-                    .param(CURRENT_ATTRIBUTE, String.valueOf(CURRENT_PAGE)))
+                    .param("currentPage", String.valueOf(CURRENT_PAGE)))
                     .andExpect(MockMvcResultMatchers.status().isOk())
                     .andExpect(MockMvcResultMatchers.model().attribute(ACTIVITIES_ATTRIBUTE, EXPECTED_ACTIVITIES))
                     .andExpect(MockMvcResultMatchers.view().name(VIEW_LIST_ACTIVITIES));
@@ -87,7 +86,7 @@ public class HomeControllerTest {
         Mockito.when(activityService.getActivities(CURRENT_PAGE)).thenReturn(expectedActivities);
         try {
             mockMvc.perform(MockMvcRequestBuilders.get(URL_SEE_MORE)
-                    .param(CURRENT_ATTRIBUTE, String.valueOf(CURRENT_PAGE)))
+                    .param("currentPage", String.valueOf(CURRENT_PAGE)))
                     .andExpect(MockMvcResultMatchers.status().isOk())
                     .andExpect(MockMvcResultMatchers.model().attribute(ACTIVITIES_ATTRIBUTE, expectedActivities))
                     .andExpect(MockMvcResultMatchers.view().name(VIEW_LIST_ACTIVITIES));

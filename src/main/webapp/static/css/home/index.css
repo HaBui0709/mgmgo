@@ -84,3 +84,9 @@
 #see-more:focus {
     box-shadow: none;
 }
+
+.loading {
+    width: 3.5em;
+    height: 3.5em;
+    border-width: 5px;
+}

@@ -22,7 +22,7 @@
         <jooq.version>3.11.11</jooq.version>
         <thymeleaf-version>3.0.9.RELEASE</thymeleaf-version>
         <thymeleaf-layout-version>2.3.0</thymeleaf-layout-version>
-        <bootstrap-version>4.0.0</bootstrap-version>
+        <bootstrap-version>4.3.0</bootstrap-version>
         <jquery-version>3.1.1</jquery-version>
         <spring-security-version>5.1.5.RELEASE</spring-security-version>
         <jacoco-version>0.8.2</jacoco-version>
