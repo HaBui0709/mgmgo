@@ -14,6 +14,8 @@ public class ApplicationConstant {
     public static final int REPUTATION_SCORE_RATING_ACTIVITY_FIRST = 1;
     public static final int REPUTATION_SCORE_WRITING_COMMENT = 1;
 
+    public static final String FUNC_UNACCENT = "unaccent";
+
     public static final int RECORD_OF_LIST = 10;
 
     private ApplicationConstant() {

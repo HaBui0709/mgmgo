@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 import java.util.List;
 
+import static com.mgmtp.internship.experiences.constants.ApplicationConstant.FUNC_UNACCENT;
 import static com.mgmtp.internship.experiences.constants.ApplicationConstant.RECORD_OF_LIST;
 import static com.mgmtp.internship.experiences.model.tables.tables.Activity.ACTIVITY;
 import static com.mgmtp.internship.experiences.model.tables.tables.ActivityImage.ACTIVITY_IMAGE;
@@ -80,8 +81,7 @@ public class ActivityRepository {
     }
 
     public ActivityDetailDTO findByName(String activityName) {
-        final String unaccentFunc = "unaccent";
-        Field<String> keyName = DSL.function(unaccentFunc, String.class, DSL.val(activityName));
+        Field<String> keyName = DSL.function(FUNC_UNACCENT, String.class, DSL.val(activityName));
         Record5<Long, String, String, Long, String> existedActivity = dslContext.select(ACTIVITY.ID,
                 ACTIVITY.NAME, ACTIVITY.DESCRIPTION, IMAGE.ID.as(IMAGE_ID_PROPERTY), ACTIVITY.ADDRESS)
                 .from(ACTIVITY)
@@ -89,22 +89,21 @@ public class ActivityRepository {
                 .on(ACTIVITY.ID.eq(ACTIVITY_IMAGE.ACTIVITY_ID))
                 .leftJoin(IMAGE)
                 .on(ACTIVITY_IMAGE.IMAGE_ID.eq(IMAGE.ID))
-                .where(DSL.function(unaccentFunc, String.class, ACTIVITY.NAME).likeIgnoreCase(keyName))
+                .where(DSL.function(FUNC_UNACCENT, String.class, ACTIVITY.NAME).likeIgnoreCase(keyName))
                 .fetchOne();
         return existedActivity == null ? null : existedActivity.into(ActivityDetailDTO.class);
     }
 
     public List<ActivityDTO> search(String text, int currentPage) {
-        final String unaccentFunc = "unaccent";
-        Field<String> keySearch = DSL.function(unaccentFunc, String.class, DSL.val(text.trim()));
+        Field<String> keySearch = DSL.function(FUNC_UNACCENT, String.class, DSL.val(text.trim()));
         return dslContext.select(ACTIVITY.ID, ACTIVITY.NAME, IMAGE.ID.as(IMAGE_ID_PROPERTY))
                 .from(ACTIVITY)
                 .leftJoin(ACTIVITY_IMAGE)
                 .on(ACTIVITY.ID.eq(ACTIVITY_IMAGE.ACTIVITY_ID))
                 .leftJoin(IMAGE).on(ACTIVITY_IMAGE.IMAGE_ID.eq(IMAGE.ID))
-                .where(DSL.function(unaccentFunc, String.class, ACTIVITY.NAME).containsIgnoreCase(keySearch))
-                .or(DSL.function(unaccentFunc, String.class, ACTIVITY.DESCRIPTION).containsIgnoreCase(keySearch))
-                .or(DSL.function(unaccentFunc, String.class, ACTIVITY.ADDRESS).containsIgnoreCase(keySearch))
+                .where(DSL.function(FUNC_UNACCENT, String.class, ACTIVITY.NAME).containsIgnoreCase(keySearch))
+                .or(DSL.function(FUNC_UNACCENT, String.class, ACTIVITY.DESCRIPTION).containsIgnoreCase(keySearch))
+                .or(DSL.function(FUNC_UNACCENT, String.class, ACTIVITY.ADDRESS).containsIgnoreCase(keySearch))
                 .orderBy(ACTIVITY.ID)
                 .offset((currentPage - 1) * RECORD_OF_LIST)
                 .limit(RECORD_OF_LIST)
@@ -112,12 +111,11 @@ public class ActivityRepository {
     }
 
     public int countTotalRecordSearch(String text) {
-        final String unaccentFunc = "unaccent";
-        Field<String> keySearch = DSL.function(unaccentFunc, String.class, DSL.val(text.trim()));
+        Field<String> keySearch = DSL.function(FUNC_UNACCENT, String.class, DSL.val(text.trim()));
         return dslContext.selectCount()
                 .from(ACTIVITY)
-                .where(DSL.function(unaccentFunc, String.class, ACTIVITY.NAME).containsIgnoreCase(keySearch))
-                .or(DSL.function(unaccentFunc, String.class, ACTIVITY.DESCRIPTION).containsIgnoreCase(keySearch))
+                .where(DSL.function(FUNC_UNACCENT, String.class, ACTIVITY.NAME).containsIgnoreCase(keySearch))
+                .or(DSL.function(FUNC_UNACCENT, String.class, ACTIVITY.DESCRIPTION).containsIgnoreCase(keySearch))
                 .fetchAny(0, Integer.class);
     }
 

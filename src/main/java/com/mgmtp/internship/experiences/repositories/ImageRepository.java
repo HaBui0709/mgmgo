@@ -76,7 +76,8 @@ public class ImageRepository {
                 .where(IMAGE.ID.eq(oldImageId))
                 .execute();
     }
-    public boolean checkExistedImageOfActitvity(Long activityId){
-        return dslContext.fetchExists(dslContext.selectFrom(ACTIVITY_IMAGE).where(ACTIVITY_IMAGE.ACTIVITY_ID.eq(activityId)));
+
+    public boolean checkExistedImageOfActitvity(Long activityId) {
+        return dslContext.fetchExists(ACTIVITY_IMAGE, ACTIVITY_IMAGE.ACTIVITY_ID.eq(activityId));
     }
 }

@@ -26,6 +26,8 @@ public class StringReplaceByRegexEditor extends StringTrimmerEditor {
     @Override
     public void setAsText(@Nullable String text) {
         super.setAsText(text);
-        setValue(text.replaceAll(regex, " "));
+        if (this.getValue() != null) {
+            setValue(this.getValue().toString().replaceAll(regex, " "));
+        }
     }
 }

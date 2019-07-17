@@ -3,9 +3,12 @@ package com.mgmtp.internship.experiences.repositories;
 import com.mgmtp.internship.experiences.dto.UserProfileDTO;
 import com.mgmtp.internship.experiences.model.tables.tables.records.UserRecord;
 import org.jooq.DSLContext;
+import org.jooq.Field;
+import org.jooq.impl.DSL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import static com.mgmtp.internship.experiences.constants.ApplicationConstant.FUNC_UNACCENT;
 import static com.mgmtp.internship.experiences.model.tables.tables.User.USER;
 
 /**
@@ -42,10 +45,10 @@ public class UserRepository {
     }
 
     public boolean checkExitDisplayName(String displayName, long id) {
+        Field<String> keyName = DSL.function(FUNC_UNACCENT, String.class, DSL.val(displayName));
         return dslContext
-                .fetchExists(dslContext.selectFrom(USER)
-                .where(USER.DISPLAY_NAME.likeIgnoreCase(displayName)
-                        .and(USER.ID.notEqual(id))));
+                .fetchExists(USER, DSL.function(FUNC_UNACCENT, String.class, USER.DISPLAY_NAME).equalIgnoreCase(keyName)
+                        .and(USER.ID.notEqual(id)));
     }
 
     public UserRecord getReputationScoreById(Long id) {
@@ -77,6 +80,4 @@ public class UserRepository {
                 .where(USER.USERNAME.eq(username))
                 .fetchOne() != null;
     }
-
 }
-
