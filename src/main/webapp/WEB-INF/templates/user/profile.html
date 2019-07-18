@@ -12,19 +12,13 @@
 
     <meta type="text" name="csrf-token" th:content="${_csrf!=null?_csrf.token:''}"/>
     <meta type="text" name="csrf-header" th:content="${_csrf!=null?_csrf.headerName:'X-CSRF-Token'}"/>
-    <link rel="stylesheet" href="../../../static/css/user/profile.css">
 </head>
 <body>
+
 <div layout:fragment="main-content">
-    <!-- Nav tabs -->
-    <ul class="nav nav-tabs">
-        <li class="nav-item">
-            <a class="nav-link active" th:href="@{/profile}">Profile</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" th:href="@{/profile/favorite}">Favorite activities</a>
-        </li>
-    </ul>
+    <div class="profile-nav">
+        <th:block th:replace="user/fragments/nav-profile"></th:block>
+    </div>
     <div id="profile-container" class="col-12 row mx-auto">
         <div>
             <div id="picture-container">
@@ -38,12 +32,11 @@
                 <span id="reputation-score-text" class="text-primary ml-1"> REPUTATION</span>
             </p>
         </div>
-        <form method="POST" id="profile-form" class="col-12 col-lg-6" th:action="@{/profile}"
+        <form method="POST" id="profile-form" class="col-12 col-lg-6" th:action="@{/profile/userprofile}"
               th:object="${userProfileDTO}">
             <div th:if="${success!=null}" class="alert alert-success" th:text="${success}"></div>
             <div class="alert alert-danger" th:if="${error!=null}" th:text="${error}"></div>
             <div class="form-group row">
-
                 <label class="col-12" for="username">Username:</label>
                 <div class="col-12 px-0">
                     <input type="text" class="form-control" id="username" th:value="${username}" readonly/>
@@ -52,7 +45,8 @@
             <div class="form-group row">
                 <label class="col-12" for="displayName">Display name:</label>
                 <div class="col-12 px-0">
-                    <input th:class="'form-control'+${#fields.hasErrors('displayName')?' is-invalid':''}" type="text"
+                    <input th:class="'form-control'+${#fields.hasErrors('displayName')?' is-invalid':''}"
+                           type="text"
                            name="displayName" id="displayName" th:value="*{displayName}"
                            required>
                     <div class="invalid-feedback" th:if="${#fields.hasErrors('displayName')}"
@@ -65,7 +59,8 @@
         </form>
     </div>
 
-    <div class="modal" id="crop-modal" tabindex="-1" role="dialog" aria-labelledby="cropModalLabel" aria-hidden="true">
+    <div class="modal" id="crop-modal" tabindex="-1" role="dialog" aria-labelledby="cropModalLabel"
+         aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">

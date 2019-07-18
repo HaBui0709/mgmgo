@@ -31,5 +31,9 @@ public interface ActivityService {
 
     int countTotalRecordActivity();
 
+    List<ActivityDTO> getListActivityByUserId(long id, int currentPage);
+
     long getIdActivity(String name);
+
+    public int countTotalRecordActivitybyUserId(long id);
 }

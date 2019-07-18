@@ -83,7 +83,21 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     @Override
+    public List<ActivityDTO> getListActivityByUserId(long id, int currentPage) {
+        List<ActivityDTO> activityDTOList = activityRepository.getListActivityByUserId(id, currentPage);
+        if (activityDTOList.isEmpty()|| currentPage < 1) {
+            return Collections.emptyList();
+        }
+        return activityDTOList;
+    }
+
+    @Override
     public long getIdActivity(String name) {
         return activityRepository.getIdActivity(name);
+    }
+
+    @Override
+    public int countTotalRecordActivitybyUserId(long id) {
+        return activityRepository.countTotalRecordActivitybyUserId(id);
     }
 }

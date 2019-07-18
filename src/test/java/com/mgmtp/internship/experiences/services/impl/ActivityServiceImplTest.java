@@ -28,6 +28,9 @@ public class ActivityServiceImplTest {
     private static final String KEY_SEARCH = "abc";
     private static final List<ActivityDTO> EXPECTED_LIST_ACTIVITY_DTO = Collections.singletonList(new ActivityDTO(1L, "name", 1L));
     private static final int CURRENT_PAGE = 1;
+    private static final int USER_ID = 1;
+    private static final int EXPECTED_RECORD = 3;
+
 
     @Mock
     private ActivityRepository activityRepository;
@@ -181,12 +184,11 @@ public class ActivityServiceImplTest {
 
     @Test
     public void shouldReturnTotalRecordOfActivities() {
-        int expectedRecord = 3;
-        Mockito.when(activityRepository.countTotalRecordActivity()).thenReturn(expectedRecord);
+        Mockito.when(activityRepository.countTotalRecordActivity()).thenReturn(EXPECTED_RECORD);
 
         int actualPageSize = activityService.countTotalRecordActivity();
 
-        Assert.assertEquals(expectedRecord, actualPageSize);
+        Assert.assertEquals(EXPECTED_RECORD, actualPageSize);
     }
 
     @Test
@@ -204,5 +206,46 @@ public class ActivityServiceImplTest {
         Mockito.when(activityRepository.getIdActivity(EXPECTED_ACTIVITY_DETAIL_DTO.getName())).thenReturn(ACTIVITY_ID);
 
         Assert.assertEquals(ACTIVITY_ID, activityService.getIdActivity(EXPECTED_ACTIVITY_DETAIL_DTO.getName()));
+    }
+
+    @Test
+    public void shouldReturnListActivityIfGetByUserId() {
+        Mockito.when(activityRepository.getListActivityByUserId(USER_ID, CURRENT_PAGE)).thenReturn(EXPECTED_LIST_ACTIVITY_DTO);
+
+        List<ActivityDTO> actualListActivityDTO = activityService.getListActivityByUserId(USER_ID, CURRENT_PAGE);
+
+        Assert.assertEquals(EXPECTED_LIST_ACTIVITY_DTO, actualListActivityDTO);
+    }
+
+    @Test
+    public void shouldReturnEmptyListIfCurrentPageLessThanOne() {
+        Mockito.when(activityRepository.getListActivityByUserId(USER_ID, 0)).thenReturn(EXPECTED_LIST_ACTIVITY_DTO);
+
+        Assert.assertEquals(0, activityService.getListActivityByUserId(USER_ID, 0).size());
+    }
+
+    @Test
+    public void shouldReturnEmptyListIfNotFindUserId() {
+        Mockito.when(activityRepository.getListActivityByUserId(USER_ID, CURRENT_PAGE)).thenReturn(Collections.emptyList());
+
+        Assert.assertEquals(0, activityService.getListActivityByUserId(USER_ID, 1).size());
+    }
+
+    @Test
+    public void shouldReturnZeroRecordIfHaveNoActivityByUserId() {
+        Mockito.when(activityRepository.countTotalRecordActivitybyUserId(USER_ID)).thenReturn(0);
+
+        int actualResult = activityService.countTotalRecordActivitybyUserId(USER_ID);
+
+        Assert.assertEquals(0, actualResult);
+    }
+
+    @Test
+    public void shouldReturnRecordIfHaveActivitiesByUserId() {
+        Mockito.when(activityRepository.countTotalRecordActivitybyUserId(USER_ID)).thenReturn(EXPECTED_RECORD);
+
+        int actualResult = activityService.countTotalRecordActivitybyUserId(USER_ID);
+
+        Assert.assertEquals(EXPECTED_RECORD, actualResult);
     }
 }

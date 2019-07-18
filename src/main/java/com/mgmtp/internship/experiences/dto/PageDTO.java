@@ -1,5 +1,7 @@
 package com.mgmtp.internship.experiences.dto;
 
+import com.mgmtp.internship.experiences.utils.LazyLoading;
+
 import java.util.Objects;
 
 public class PageDTO {
@@ -17,6 +19,12 @@ public class PageDTO {
         this.currentPage = currentPage;
         this.sizeOfPages = sizeOfPages;
         this.totalRecord = totalRecord;
+    }
+
+    public PageDTO(int totalRecord){
+        this.currentPage = 1;
+        this.totalRecord = totalRecord;
+        this.sizeOfPages = LazyLoading.countPages(totalRecord);
     }
 
     public int getCurrentPage() {

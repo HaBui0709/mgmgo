@@ -5,13 +5,12 @@ package com.mgmtp.internship.experiences.model.tables.routines;
 
 
 import com.mgmtp.internship.experiences.model.tables.Public;
-
-import javax.annotation.Generated;
-
 import org.jooq.Field;
 import org.jooq.Parameter;
 import org.jooq.impl.AbstractRoutine;
 import org.jooq.impl.Internal;
+
+import javax.annotation.Generated;
 
 
 /**

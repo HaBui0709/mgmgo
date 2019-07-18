@@ -19,6 +19,7 @@ import static com.mgmtp.internship.experiences.model.tables.tables.Activity.ACTI
 import static com.mgmtp.internship.experiences.model.tables.tables.ActivityImage.ACTIVITY_IMAGE;
 import static com.mgmtp.internship.experiences.model.tables.tables.Image.IMAGE;
 import static com.mgmtp.internship.experiences.model.tables.tables.Rating.RATING;
+import static com.mgmtp.internship.experiences.model.tables.tables.User.USER;
 import static org.jooq.impl.DSL.avg;
 import static org.jooq.impl.DSL.round;
 
@@ -134,6 +135,29 @@ public class ActivityRepository {
     public int countTotalRecordActivity() {
         return dslContext.selectCount()
                 .from(ACTIVITY)
+                .fetchAny(0, Integer.class);
+    }
+
+    public List<ActivityDTO> getListActivityByUserId(long id, int currentPage) {
+        return dslContext
+                .select(ACTIVITY.ID, ACTIVITY.NAME, ACTIVITY_IMAGE.IMAGE_ID)
+                .from(ACTIVITY)
+                .leftJoin(USER)
+                .on(ACTIVITY.CREATED_BY_USER_ID.eq(USER.ID))
+                .leftJoin(ACTIVITY_IMAGE)
+                .on(ACTIVITY.ID.eq(ACTIVITY_IMAGE.ACTIVITY_ID))
+                .where(USER.ID.eq(id))
+                .orderBy(ACTIVITY.CREATED_DATE.desc())
+                .offset((currentPage - 1) * RECORD_OF_LIST)
+                .limit(RECORD_OF_LIST)
+                .fetchInto(ActivityDTO.class);
+    }
+
+    public int countTotalRecordActivitybyUserId(long id) {
+        return dslContext.selectCount()
+                .from(ACTIVITY)
+                .join(USER).on(ACTIVITY.CREATED_BY_USER_ID.eq(USER.ID))
+                .where(USER.ID.eq(id))
                 .fetchAny(0, Integer.class);
     }
 }

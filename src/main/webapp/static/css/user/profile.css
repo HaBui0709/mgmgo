@@ -1,35 +1,36 @@
-#crop-modal .modal-body{
+#crop-modal .modal-body {
     min-height: 350px;
     margin-bottom: 60px;
 }
-#crop-modal #crop-container{
+
+#crop-modal #crop-container {
     height: 300px;
 }
 
-#profile-container{
+#profile-container {
     align-items: center;
     margin-top: 20px;
     justify-content: space-around;
 }
 
-#profile-container > .col-12, #profile-container form label{
+#profile-container > .col-12, #profile-container form label {
     padding-left: 0;
     padding-right: 0;
 }
 
-#profile-container .row{
+#profile-container .row {
     margin-left: 0;
     margin-right: 0;
 }
 
-#picture-container{
+#picture-container {
     position: relative;
     font-size: 1.4rem;
     margin-bottom: 2em;
     flex-shrink: 0;
 }
 
-#picture-container img{
+#picture-container img {
     position: relative;
     background-color: #fff;
     border: 1px solid #aaa;
@@ -39,7 +40,7 @@
     padding: 8px;
 }
 
-#picture-container label{
+#picture-container label {
     position: absolute;
     text-align: center;
     line-height: 2em;
@@ -60,20 +61,37 @@
     cursor: pointer;
 }
 
-#profile-container form{
+#profile-container form {
     display: flex;
     flex-direction: column;
 }
 
-#profile-container form button{
+#profile-container form button {
     align-self: flex-end;
 }
 
-#reputation-score{
+#reputation-score {
     font-size: 18px;
     font-weight: bold;
 }
 
-#reputation-score-text{
+#reputation-score-text {
     font-size: 12px
+}
+
+.nav-tabs .nav-link {
+    border: 2px transparent;
+}
+
+.nav-item:hover {
+    border-bottom: 2px solid #1d76bb;
+}
+
+.nav-item.active {
+    border-bottom: 2px solid #1d76bb;
+}
+
+.nav-item.active > a
+{
+    color: #1d76bb;
 }

@@ -15,15 +15,9 @@
 </head>
 <body>
 <div layout:fragment="main-content">
-    <!-- Nav tabs -->
-    <ul class="nav nav-tabs">
-        <li class="nav-item">
-            <a class="nav-link" th:href="@{/profile}">Profile</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link active" th:href="@{/profile/favorite}">Favorite activities</a>
-        </li>
-    </ul>
+    <div class="profile-nav">
+        <th:block th:replace="user/fragments/nav-profile"></th:block>
+    </div>
     <!--Favorite activities-->
     <div class="lazy-loading activities py-3"
          th:attr="current-page=${pagingInfo.currentPage},size-of-pages=${pagingInfo.sizeOfPages},link=@{/profile/favorite/more/}">

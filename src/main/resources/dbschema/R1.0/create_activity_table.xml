@@ -14,7 +14,7 @@
             <column name="name" type="varchar(255)">
                 <constraints nullable="false"/>
             </column>
-            
+
             <column name="address" type="varchar(255)">
             </column>
 
@@ -26,6 +26,9 @@
             </column>
             <column name="updated_by_user_id" type="bigint">
                 <constraints foreignKeyName="fk_activity_user_updated_by" references="public.user(id)"/>
+            </column>
+            <column name="created_date" type="TIMESTAMP"  defaultValueDate="CURRENT_TIMESTAMP">
+                <constraints nullable="false"></constraints>
             </column>
         </createTable>
 

@@ -4,9 +4,9 @@ import com.mgmtp.internship.experiences.config.security.CustomLdapUserDetails;
 import com.mgmtp.internship.experiences.constants.ApplicationConstant;
 import com.mgmtp.internship.experiences.dto.PageDTO;
 import com.mgmtp.internship.experiences.dto.UserProfileDTO;
+import com.mgmtp.internship.experiences.services.ActivityService;
 import com.mgmtp.internship.experiences.services.FavoriteService;
 import com.mgmtp.internship.experiences.services.UserService;
-import com.mgmtp.internship.experiences.utils.LazyLoading;
 import com.mgmtp.internship.experiences.utils.StringReplaceByRegexEditor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -30,6 +30,8 @@ public class UserProfileController {
     private static final String USER_PROFILE_MODEL_TAG = "userProfileDTO";
     private static final String USERNAME_MODEL_TAG = "username";
     private static final String REDIRECT_LOGIN_URL = "redirect:/login";
+    private static final String VIEW_NAME = "viewName";
+    private static final String ACTIVITIES = "activities";
 
     @Autowired
     private UserService userService;
@@ -37,14 +39,19 @@ public class UserProfileController {
     @Autowired
     private FavoriteService favoriteService;
 
-    @GetMapping()
+    @Autowired
+    ActivityService activityService;
+
+    @GetMapping("/userprofile")
     public String profile(Model model) {
         CustomLdapUserDetails user = userService.getCurrentUser();
         if (user == null) {
             return REDIRECT_LOGIN_URL;
         }
+        user.getUserProfileDTO().setReputatinScore(userService.getReputationScoreById(user.getId()));
         model.addAttribute(USER_PROFILE_MODEL_TAG, user.getUserProfileDTO());
         model.addAttribute(USERNAME_MODEL_TAG, user.getUsername());
+        model.addAttribute(VIEW_NAME, "userProfile");
         return "user/profile";
     }
 
@@ -53,7 +60,7 @@ public class UserProfileController {
         dataBinder.registerCustomEditor(String.class, new StringReplaceByRegexEditor(true, ApplicationConstant.REGEX_ALL_WHITESPACE_ENTER_TAB));
     }
 
-    @PostMapping()
+    @PostMapping("/userprofile")
     public String updateProfile(@ModelAttribute(USER_PROFILE_MODEL_TAG) @Valid UserProfileDTO profile, final BindingResult bindingResult, Model model) {
         CustomLdapUserDetails user = userService.getCurrentUser();
         if (user == null) {
@@ -72,7 +79,25 @@ public class UserProfileController {
         profile.setReputatinScore(user.getUserProfileDTO().getReputationScore());
         model.addAttribute(USER_PROFILE_MODEL_TAG, profile);
         model.addAttribute(USERNAME_MODEL_TAG, userService.getCurrentUser().getUsername());
+        model.addAttribute(VIEW_NAME, "userProfile");
         return "user/profile";
+    }
+
+    @GetMapping("/myactivities")
+    public String showListMyActivity(Model model) {
+        CustomLdapUserDetails user = userService.getCurrentUser();
+        model.addAttribute(ACTIVITIES, activityService.getListActivityByUserId(user.getId(), 1));
+        model.addAttribute("pagingInfo", new PageDTO(activityService.countTotalRecordActivitybyUserId(user.getId())));
+        model.addAttribute(VIEW_NAME, "myActivities");
+        return "user/myactivities";
+    }
+
+    @GetMapping("/myactivities/more/{currentPage}")
+    public String getActivities(@PathVariable("currentPage") int currentPage, Model model) {
+        CustomLdapUserDetails user = userService.getCurrentUser();
+        model.addAttribute(ACTIVITIES, activityService.getListActivityByUserId(user.getId(), currentPage));
+        model.addAttribute(VIEW_NAME, "myActivities");
+        return "activity/fragments/list-activities";
     }
 
     @GetMapping("/favorite")
@@ -81,11 +106,9 @@ public class UserProfileController {
         if (user == null) {
             return REDIRECT_LOGIN_URL;
         }
-        PageDTO pagingInfo = new PageDTO();
-        pagingInfo.setTotalRecord(favoriteService.countTotalRecord(user.getId()));
-        pagingInfo.setSizeOfPages(LazyLoading.countPages(pagingInfo.getTotalRecord()));
-        model.addAttribute("pagingInfo", pagingInfo);
-        model.addAttribute("activities", favoriteService.getFavoriteActivitiesByUserId(user.getId(), 1));
+        model.addAttribute("pagingInfo", new PageDTO(favoriteService.countTotalRecord(user.getId())));
+        model.addAttribute(ACTIVITIES, favoriteService.getFavoriteActivitiesByUserId(user.getId(), 1));
+        model.addAttribute(VIEW_NAME, "favorite");
         return "user/favorite-activities";
     }
 
@@ -95,7 +118,8 @@ public class UserProfileController {
         if (user == null) {
             return REDIRECT_LOGIN_URL;
         }
-        model.addAttribute("activities", favoriteService.getFavoriteActivitiesByUserId(user.getId(), currentPage));
+        model.addAttribute(ACTIVITIES, favoriteService.getFavoriteActivitiesByUserId(user.getId(), currentPage));
+        model.addAttribute(VIEW_NAME, "favorite");
         return "activity/fragments/list-activities";
     }
 }

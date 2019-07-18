@@ -9,6 +9,7 @@ import com.mgmtp.internship.experiences.model.tables.Keys;
 import com.mgmtp.internship.experiences.model.tables.Public;
 import com.mgmtp.internship.experiences.model.tables.tables.records.ActivityRecord;
 
+import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.List;
 
@@ -41,7 +42,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Activity extends TableImpl<ActivityRecord> {
 
-    private static final long serialVersionUID = 1878868549;
+    private static final long serialVersionUID = 1653717024;
 
     /**
      * The reference instance of <code>public.activity</code>
@@ -85,6 +86,11 @@ public class Activity extends TableImpl<ActivityRecord> {
      * The column <code>public.activity.updated_by_user_id</code>.
      */
     public final TableField<ActivityRecord, Long> UPDATED_BY_USER_ID = createField("updated_by_user_id", org.jooq.impl.SQLDataType.BIGINT, this, "");
+
+    /**
+     * The column <code>public.activity.created_date</code>.
+     */
+    public final TableField<ActivityRecord, Timestamp> CREATED_DATE = createField("created_date", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false).defaultValue(org.jooq.impl.DSL.field("now()", org.jooq.impl.SQLDataType.TIMESTAMP)), this, "");
 
     /**
      * Create a <code>public.activity</code> table reference

@@ -43,7 +43,7 @@ public class UserProfileControllerTest {
     private static final long IMAGE_ID = 1l;
     private static final String DISPLAY_NAME = "name";
     private static final int USER_REPUTATION_SCORE = 1;
-    private static final String PROFILE_URL = "/profile";
+    private static final String PROFILE_URL = "/profile/userprofile";
     private static final String USER_PROFILE_MODEL_TAG = "userProfileDTO";
     private static final String USERNAME_MODEL_TAG = "username";
     private static final String DISPLAY_NAME_FIELD = "displayName";
