@@ -79,6 +79,7 @@ body {
 }
 
 .bg-primary, .btn-primary {
+    border: none !important;
     background-color: #1d76bb !important;
 }
 

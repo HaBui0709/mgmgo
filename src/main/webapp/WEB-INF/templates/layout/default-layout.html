@@ -17,8 +17,10 @@
 
         <!-- Message when create successfull default-layout-->
         <th:block th:if="${successCrud != null}">
-            <div id="message-success" class="alert-success alert create-message-success" th:text="${successCrud}"></div>
+            <div id="message-success-crud" class="alert-success alert create-message-success" th:text="${successCrud}"></div>
         </th:block>
+
+        <div id="message-success"></div>
 
         <!-- footer -->
         <footer th:replace="fragments/footer :: footer" class="footer"></footer>

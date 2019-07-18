@@ -244,4 +244,20 @@ public class ActivityServiceImplTest {
 
         Assert.assertEquals(EXPECTED_RECORD, actualResult);
     }
+
+    @Test
+    public void shouldReturn0IfDeleteActivityFail(){
+        int deleteSuccess = 0;
+        Mockito.when(activityRepository.deleteActivity(ACTIVITY_ID)).thenReturn(deleteSuccess);
+
+        Assert.assertEquals(deleteSuccess, activityService.deleteActivity(ACTIVITY_ID));
+    }
+
+    @Test
+    public void shouldReturn1IfDeleteActivityFail(){
+        int deleteFailed = 0;
+        Mockito.when(activityRepository.deleteActivity(ACTIVITY_ID)).thenReturn(deleteFailed);
+
+        Assert.assertEquals(deleteFailed, activityService.deleteActivity(ACTIVITY_ID));
+    }
 }

@@ -12,7 +12,7 @@
             </column>
 
             <column name="activity_id" type="bigint">
-                <constraints nullable="false" foreignKeyName="fk_rating_activity" references="activity(id)"/>
+                <constraints nullable="false" foreignKeyName="fk_rating_activity" references="activity(id)" deleteCascade="true"/>
             </column>
 
             <column name="user_id" type="bigint">

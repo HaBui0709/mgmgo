@@ -96,6 +96,7 @@ public class ActivityControllerTest {
         try {
             mockMvc.perform(get("/activity/1"))
                     .andExpect(status().isOk())
+                    .andExpect(model().attribute("errorMessage", "Activity Not Found"))
                     .andExpect(view().name(errorPageName));
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
@@ -241,6 +242,7 @@ public class ActivityControllerTest {
     public void shouldShowMessageIfCreateFail() {
         Mockito.when(userService.getCurrentUser()).thenReturn(EXPECTED_CUSTOM_USER_DETAIL);
         Mockito.when(activityService.create(EXPECTED_ACTIVITY_DETAIL_DTO)).thenThrow(DataIntegrityViolationException.class);
+
         try {
             mockMvc.perform(post(CREATE_URL)
                     .param("id", ACTIVITY_ID + "")

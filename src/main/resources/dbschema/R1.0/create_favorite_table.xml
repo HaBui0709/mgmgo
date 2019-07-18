@@ -9,7 +9,7 @@
         <createTable tableName="favorite" remarks="favorite table">
 
             <column name="activity_id" type="bigint">
-                <constraints nullable="false" foreignKeyName="fk_favorite_activity" references="activity(id)"/>
+                <constraints nullable="false" foreignKeyName="fk_favorite_activity" references="activity(id)" deleteCascade="true"/>
             </column>
 
             <column name="user_id" type="bigint">

@@ -3,9 +3,9 @@ $(document).ready(function () {
         $('#icon-toggle').toggleClass('fa-bars fa-times');
     })
 
-    if ($("#message-success")) {
+    if ($("#message-success-crud")) {
         setTimeout(function () {
-            $("#message-success").remove();
+            $("#message-success-crud").remove();
         }, 4000)
     }
 })

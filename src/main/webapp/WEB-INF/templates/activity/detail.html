@@ -43,11 +43,14 @@
                       th:text="${userCreatedInfo.getDisplayName()}"></span>
             </p>
             <th:block th:replace="activity/fragments/upload-picture"></th:block>
-            <div th:if="${activityDetailDTO.address != null && activityDetailDTO.address != ''}"
+            <div th:if="${activityDetailDTO.address != null && activityDetailDTO.address.trim().length() != 0}"
                  class="d-flex mt-3 mb-3"><img src="/static/icons/location.png" class="address-icon" alt="mgm-go"><span
                     class="ml-2" th:text="${activityDetailDTO.address}"></span></div>
             <pre th:text="${activityDetailDTO.description}" class="card-text"></pre>
             <div class="d-flex justify-content-end">
+                <button class="row px-0 mx-0 btn btn-light mr-2" data-toggle="modal" id="report-button" data-target="#reportModal">
+                    <img src="/static/icons/flag_report.png" class="address-icon" alt="mgm-go">
+                </button>
                 <a th:href="@{/activity/update/{activityId}(activityId=${activityId})}"
                    class="btn btn-primary text-right">Edit</a>
             </div>
@@ -82,12 +85,44 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="reportModal" tabindex="-1" role="dialog" aria-labelledby="reportModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="reportModalLabel">Report this activity</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input id="activity-id-report" type="text" th:value="${activityDetailDTO.getId()}" hidden/>
+
+                    <div class="alert d-none" id="report-return"></div>
+
+                    <div id="message-log-report" class="justify-content-center">
+                        <ul>
+                            <li>This activity will be deleted if it has 5 reports.</li>
+                            <li>You need at least 20 reputation to use report feature.</li>
+                            <li>You can only report once and can not undo!</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" id="report-confirm">Report</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <div id="favorite-return" class="alert create-message-success"></div>
+
 </div>
 <th:block layout:fragment="custom-script">
     <script src="/static/js/image.js?n=1"></script>
     <script type="text/javascript" src="/static/js/rate.js"></script>
     <script type="text/javascript" src="/static/js/favorite.js"></script>
+    <script type="text/javascript" src="/static/js/report.js"></script>
 </th:block>
 
 </body>

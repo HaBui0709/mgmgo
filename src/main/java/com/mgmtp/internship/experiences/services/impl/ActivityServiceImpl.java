@@ -101,4 +101,9 @@ public class ActivityServiceImpl implements ActivityService {
     public int countTotalRecordActivitybyUserId(long id) {
         return activityRepository.countTotalRecordActivitybyUserId(id);
     }
+
+    @Override
+    public int deleteActivity(long activityId) {
+        return activityRepository.deleteActivity(activityId);
+    }
 }

@@ -37,4 +37,6 @@ public interface ActivityService {
     int updatedActiveDate(Long activityId);
 
     public int countTotalRecordActivitybyUserId(long id);
+
+    int deleteActivity(long activityId);
 }

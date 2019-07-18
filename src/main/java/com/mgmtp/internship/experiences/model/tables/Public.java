@@ -9,6 +9,7 @@ import com.mgmtp.internship.experiences.model.tables.tables.ActivityImage;
 import com.mgmtp.internship.experiences.model.tables.tables.Favorite;
 import com.mgmtp.internship.experiences.model.tables.tables.Image;
 import com.mgmtp.internship.experiences.model.tables.tables.Rating;
+import com.mgmtp.internship.experiences.model.tables.tables.ReportActivity;
 import com.mgmtp.internship.experiences.model.tables.tables.User;
 
 import java.util.ArrayList;
@@ -36,7 +37,7 @@ import org.jooq.impl.SchemaImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Public extends SchemaImpl {
 
-    private static final long serialVersionUID = 86737650;
+    private static final long serialVersionUID = -1013987866;
 
     /**
      * The reference instance of <code>public</code>
@@ -67,6 +68,11 @@ public class Public extends SchemaImpl {
      * rating table
      */
     public final Rating RATING = com.mgmtp.internship.experiences.model.tables.tables.Rating.RATING;
+
+    /**
+     * report activity table
+     */
+    public final ReportActivity REPORT_ACTIVITY = com.mgmtp.internship.experiences.model.tables.tables.ReportActivity.REPORT_ACTIVITY;
 
     /**
      * user table
@@ -118,6 +124,7 @@ public class Public extends SchemaImpl {
             Favorite.FAVORITE,
             Image.IMAGE,
             Rating.RATING,
+            ReportActivity.REPORT_ACTIVITY,
             User.USER);
     }
 }

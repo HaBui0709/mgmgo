@@ -9,6 +9,7 @@ import org.jooq.Field;
 import org.jooq.impl.DSL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -188,5 +189,15 @@ public class ActivityRepository {
                 .join(USER).on(ACTIVITY.CREATED_BY_USER_ID.eq(USER.ID))
                 .where(USER.ID.eq(id))
                 .fetchAny(0, Integer.class);
+    }
+
+    @Transactional
+    public int deleteActivity(long activityId) {
+        dslContext.deleteFrom(IMAGE)
+                .where(IMAGE.ID.in(dslContext.select(ACTIVITY_IMAGE.IMAGE_ID)
+                        .from(ACTIVITY_IMAGE)
+                        .where(ACTIVITY_IMAGE.ACTIVITY_ID.eq(activityId)))).execute();
+
+        return dslContext.deleteFrom(ACTIVITY).where(ACTIVITY.ID.eq(activityId)).execute();
     }
 }

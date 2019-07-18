@@ -15,6 +15,9 @@ public class ApplicationConstant {
     public static final int REPUTATION_SCORE_WRITING_COMMENT = 1;
     private static final long[] REPUTATION_LEVEL_SCORES = new long[]{0, 25, 50, 100, 250, 500};
 
+    public static final int MAX_NUMBER_REPORT = 5;
+    public static final int REQUIRED_REPUTATION_REPORT = 20;
+
     public static final String FUNC_UNACCENT = "unaccent";
 
     public static final int RECORD_OF_LIST = 10;

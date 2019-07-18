@@ -32,8 +32,9 @@ import static org.mockito.Mockito.mock;
 public class RatingRestControllerTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RatingRestControllerTest.class);
+
     private static final long USER_ID = 1L;
-    private static final long IMAGE_ID = 1l;
+    private static final long IMAGE_ID = 1L;
     private static final String DISPLAY_NAME = "name";
     private static final int USER_REPUTATION_SCORE = 1;
     private static final int ACTIVITY_ID = 1;

@@ -9,6 +9,7 @@ import com.mgmtp.internship.experiences.model.tables.tables.ActivityImage;
 import com.mgmtp.internship.experiences.model.tables.tables.Favorite;
 import com.mgmtp.internship.experiences.model.tables.tables.Image;
 import com.mgmtp.internship.experiences.model.tables.tables.Rating;
+import com.mgmtp.internship.experiences.model.tables.tables.ReportActivity;
 import com.mgmtp.internship.experiences.model.tables.tables.User;
 
 import javax.annotation.Generated;
@@ -51,6 +52,11 @@ public class Tables {
      * rating table
      */
     public static final Rating RATING = com.mgmtp.internship.experiences.model.tables.tables.Rating.RATING;
+
+    /**
+     * report activity table
+     */
+    public static final ReportActivity REPORT_ACTIVITY = com.mgmtp.internship.experiences.model.tables.tables.ReportActivity.REPORT_ACTIVITY;
 
     /**
      * user table

@@ -31,6 +31,8 @@ public class ActivityController {
     private static final String ACTIVITY_INFO_ATTRIBUTE = "activityDetailDTO";
     private static final String USER_CREATED_INFO_ATTRIBUTE = "userCreatedInfo";
     private static final String ERROR_VIEW = "error";
+    private static final String ERROR_MESSAGE = "errorMessage";
+    private static final String ACTIVITY_NOT_FOUND = "Activity Not Found";
     private static final String REDIRECT_UPDATE_URL = "redirect:/activity/update/";
     private static final String REDIRECT_CREATE_URL = "redirect:/activity/create";
 
@@ -54,6 +56,7 @@ public class ActivityController {
             model.addAttribute(USER_CREATED_INFO_ATTRIBUTE, userProfileDTO);
             return "activity/detail";
         }
+        model.addAttribute(ERROR_MESSAGE, ACTIVITY_NOT_FOUND);
         return ERROR_VIEW;
     }
 
@@ -62,6 +65,7 @@ public class ActivityController {
         if (!model.containsAttribute(ACTIVITY_INFO_ATTRIBUTE)) {
             ActivityDetailDTO activityDetailDTO = activityService.findById(activityId);
             if (activityDetailDTO == null) {
+                model.addAttribute(ERROR_MESSAGE, ACTIVITY_NOT_FOUND);
                 return ERROR_VIEW;
             }
             model.addAttribute(ACTIVITY_INFO_ATTRIBUTE, activityDetailDTO);

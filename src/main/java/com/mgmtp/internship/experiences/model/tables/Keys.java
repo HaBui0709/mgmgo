@@ -9,12 +9,14 @@ import com.mgmtp.internship.experiences.model.tables.tables.ActivityImage;
 import com.mgmtp.internship.experiences.model.tables.tables.Favorite;
 import com.mgmtp.internship.experiences.model.tables.tables.Image;
 import com.mgmtp.internship.experiences.model.tables.tables.Rating;
+import com.mgmtp.internship.experiences.model.tables.tables.ReportActivity;
 import com.mgmtp.internship.experiences.model.tables.tables.User;
 import com.mgmtp.internship.experiences.model.tables.tables.records.ActivityImageRecord;
 import com.mgmtp.internship.experiences.model.tables.tables.records.ActivityRecord;
 import com.mgmtp.internship.experiences.model.tables.tables.records.FavoriteRecord;
 import com.mgmtp.internship.experiences.model.tables.tables.records.ImageRecord;
 import com.mgmtp.internship.experiences.model.tables.tables.records.RatingRecord;
+import com.mgmtp.internship.experiences.model.tables.tables.records.ReportActivityRecord;
 import com.mgmtp.internship.experiences.model.tables.tables.records.UserRecord;
 
 import javax.annotation.Generated;
@@ -70,6 +72,8 @@ public class Keys {
     public static final ForeignKey<FavoriteRecord, UserRecord> FAVORITE__FK_FAVORITE_USER = ForeignKeys0.FAVORITE__FK_FAVORITE_USER;
     public static final ForeignKey<RatingRecord, ActivityRecord> RATING__FK_RATING_ACTIVITY = ForeignKeys0.RATING__FK_RATING_ACTIVITY;
     public static final ForeignKey<RatingRecord, UserRecord> RATING__FK_RATING_USER = ForeignKeys0.RATING__FK_RATING_USER;
+    public static final ForeignKey<ReportActivityRecord, ActivityRecord> REPORT_ACTIVITY__FK_REPORT_ACTIVITY_ACTIVITY = ForeignKeys0.REPORT_ACTIVITY__FK_REPORT_ACTIVITY_ACTIVITY;
+    public static final ForeignKey<ReportActivityRecord, UserRecord> REPORT_ACTIVITY__FK_ACTIVITY_IMAGE_USER = ForeignKeys0.REPORT_ACTIVITY__FK_ACTIVITY_IMAGE_USER;
     public static final ForeignKey<UserRecord, ImageRecord> USER__FK_USER_IMAGE = ForeignKeys0.USER__FK_USER_IMAGE;
 
     // -------------------------------------------------------------------------
@@ -100,6 +104,8 @@ public class Keys {
         public static final ForeignKey<FavoriteRecord, UserRecord> FAVORITE__FK_FAVORITE_USER = Internal.createForeignKey(com.mgmtp.internship.experiences.model.tables.Keys.PK_USER, Favorite.FAVORITE, "favorite__fk_favorite_user", Favorite.FAVORITE.USER_ID);
         public static final ForeignKey<RatingRecord, ActivityRecord> RATING__FK_RATING_ACTIVITY = Internal.createForeignKey(com.mgmtp.internship.experiences.model.tables.Keys.PK_ACTIVITY, Rating.RATING, "rating__fk_rating_activity", Rating.RATING.ACTIVITY_ID);
         public static final ForeignKey<RatingRecord, UserRecord> RATING__FK_RATING_USER = Internal.createForeignKey(com.mgmtp.internship.experiences.model.tables.Keys.PK_USER, Rating.RATING, "rating__fk_rating_user", Rating.RATING.USER_ID);
+        public static final ForeignKey<ReportActivityRecord, ActivityRecord> REPORT_ACTIVITY__FK_REPORT_ACTIVITY_ACTIVITY = Internal.createForeignKey(com.mgmtp.internship.experiences.model.tables.Keys.PK_ACTIVITY, ReportActivity.REPORT_ACTIVITY, "report_activity__fk_report_activity_activity", ReportActivity.REPORT_ACTIVITY.ACTIVITY_ID);
+        public static final ForeignKey<ReportActivityRecord, UserRecord> REPORT_ACTIVITY__FK_ACTIVITY_IMAGE_USER = Internal.createForeignKey(com.mgmtp.internship.experiences.model.tables.Keys.PK_USER, ReportActivity.REPORT_ACTIVITY, "report_activity__fk_activity_image_user", ReportActivity.REPORT_ACTIVITY.USER_ID);
         public static final ForeignKey<UserRecord, ImageRecord> USER__FK_USER_IMAGE = Internal.createForeignKey(com.mgmtp.internship.experiences.model.tables.Keys.PK_IMAGE, User.USER, "user__fk_user_image", User.USER.IMAGE_ID);
     }
 }
