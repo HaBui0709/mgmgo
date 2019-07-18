@@ -1,5 +1,6 @@
 package com.mgmtp.internship.experiences.controllers.app;
 
+import com.mgmtp.internship.experiences.constants.EnumSort;
 import com.mgmtp.internship.experiences.dto.ActivityDTO;
 import com.mgmtp.internship.experiences.dto.PageDTO;
 import com.mgmtp.internship.experiences.services.impl.ActivityServiceImpl;
@@ -38,6 +39,7 @@ public class HomeControllerTest {
     private static final int CURRENT_PAGE = 1;
     private static final int PAGE_SIZE = LazyLoading.countPages(TOTAL_RECORD);
     private static final PageDTO PAGING_INFO_DTO = new PageDTO(CURRENT_PAGE, PAGE_SIZE, TOTAL_RECORD);
+    private static final String SORT_TYPE = "NEWEST_FIRST";
     private MockMvc mockMvc;
 
     @Mock
@@ -53,13 +55,14 @@ public class HomeControllerTest {
 
     @Test
     public void shouldGetActivitiesShowOnHomePage() {
-        Mockito.when(activityService.getActivities(CURRENT_PAGE)).thenReturn(EXPECTED_ACTIVITIES);
+        Mockito.when(activityService.getActivities(CURRENT_PAGE, EnumSort.valueOf(SORT_TYPE))).thenReturn(EXPECTED_ACTIVITIES);
         Mockito.when(activityService.countTotalRecordActivity()).thenReturn(PAGING_INFO_DTO.getTotalRecord());
         try {
             mockMvc.perform(MockMvcRequestBuilders.get("/"))
                     .andExpect(MockMvcResultMatchers.status().isOk())
                     .andExpect(MockMvcResultMatchers.model().attribute(ACTIVITIES_ATTRIBUTE, EXPECTED_ACTIVITIES))
                     .andExpect(MockMvcResultMatchers.model().attribute("pagingInfo", PAGING_INFO_DTO))
+                    .andExpect(MockMvcResultMatchers.model().attribute("sortType", SORT_TYPE))
                     .andExpect(MockMvcResultMatchers.view().name("home/index"));
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
@@ -68,7 +71,7 @@ public class HomeControllerTest {
 
     @Test
     public void shouldGetActivitiesShowOnFragmentListActivities() {
-        Mockito.when(activityService.getActivities(CURRENT_PAGE)).thenReturn(EXPECTED_ACTIVITIES);
+        Mockito.when(activityService.getActivities(CURRENT_PAGE, EnumSort.valueOf(SORT_TYPE))).thenReturn(EXPECTED_ACTIVITIES);
         try {
             mockMvc.perform(MockMvcRequestBuilders.get(URL_SEE_MORE)
                     .param("currentPage", String.valueOf(CURRENT_PAGE)))
@@ -83,7 +86,7 @@ public class HomeControllerTest {
     @Test
     public void shouldReturnEmptyLisIfCurrentPageInCorrect() {
         List<ActivityDTO> expectedActivities = Collections.emptyList();
-        Mockito.when(activityService.getActivities(CURRENT_PAGE)).thenReturn(expectedActivities);
+        Mockito.when(activityService.getActivities(CURRENT_PAGE, EnumSort.valueOf(SORT_TYPE))).thenReturn(expectedActivities);
         try {
             mockMvc.perform(MockMvcRequestBuilders.get(URL_SEE_MORE)
                     .param("currentPage", String.valueOf(CURRENT_PAGE)))

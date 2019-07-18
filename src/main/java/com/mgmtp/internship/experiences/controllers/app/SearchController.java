@@ -1,5 +1,6 @@
 package com.mgmtp.internship.experiences.controllers.app;
 
+import com.mgmtp.internship.experiences.constants.EnumSort;
 import com.mgmtp.internship.experiences.dto.PageDTO;
 import com.mgmtp.internship.experiences.services.ActivityService;
 import com.mgmtp.internship.experiences.utils.LazyLoading;
@@ -26,24 +27,27 @@ public class SearchController {
     private ActivityService activityService;
 
     @GetMapping
-    public String search(Model model, @RequestParam(name = "searchInfor", required = false, defaultValue = "") String searchInfor) {
+    public String search(Model model, @RequestParam(name = "searchInfor", required = false, defaultValue = "") String searchInfor,
+                         @RequestParam(name = "sortType", required = false, defaultValue = "NEWEST_FIRST") String sortType) {
         PageDTO pagingInfo = new PageDTO();
         if (searchInfor.isEmpty()) {
-            model.addAttribute(ACTIVITIES_ATTRIBUTE, activityService.getActivities(1));
+            model.addAttribute(ACTIVITIES_ATTRIBUTE, activityService.getActivities(1, EnumSort.valueOf(sortType)));
             pagingInfo.setTotalRecord(activityService.countTotalRecordActivity());
         } else {
-            model.addAttribute("keySearch", searchInfor.trim());
-            model.addAttribute(ACTIVITIES_ATTRIBUTE, activityService.search(searchInfor, 1));
+            model.addAttribute(ACTIVITIES_ATTRIBUTE, activityService.search(searchInfor, 1, EnumSort.valueOf(sortType)));
             pagingInfo.setTotalRecord(activityService.countTotalRecordSearch(searchInfor));
+            model.addAttribute("keySearch", searchInfor.trim());
         }
         pagingInfo.setSizeOfPages(LazyLoading.countPages(pagingInfo.getTotalRecord()));
         model.addAttribute("pagingInfo", pagingInfo);
+        model.addAttribute("sortType", sortType);
         return "search";
     }
 
     @GetMapping("/more/{currentPage}")
-    public String searchMoreActivities(@PathVariable int currentPage, Model model, @RequestParam(name = "searchInfor", required = false, defaultValue = "") String searchInfor) {
-        model.addAttribute(ACTIVITIES_ATTRIBUTE, activityService.search(searchInfor, currentPage));
+    public String searchMoreActivities(@PathVariable int currentPage, Model model, @RequestParam(name = "searchInfor", required = false, defaultValue = "") String searchInfor,
+                                       @RequestParam(name = "sortType", required = false, defaultValue = "NEWEST_FIRST") String sortType) {
+        model.addAttribute(ACTIVITIES_ATTRIBUTE, activityService.search(searchInfor, currentPage, EnumSort.valueOf(sortType)));
         return "activity/fragments/list-activities";
     }
 }

@@ -1,5 +1,6 @@
 package com.mgmtp.internship.experiences.services;
 
+import com.mgmtp.internship.experiences.constants.EnumSort;
 import com.mgmtp.internship.experiences.dto.ActivityDTO;
 import com.mgmtp.internship.experiences.dto.ActivityDetailDTO;
 
@@ -11,8 +12,6 @@ import java.util.List;
  * @author thuynh
  */
 public interface ActivityService {
-    List<ActivityDTO> findAll();
-
     ActivityDetailDTO findById(long activityId);
 
     int update(ActivityDetailDTO activityDetailDTO);
@@ -23,17 +22,19 @@ public interface ActivityService {
 
     ActivityDetailDTO checkExistNameForUpdate(long activityId, String activityName);
 
-    List<ActivityDTO> search(String text, int currentPage);
+    List<ActivityDTO> search(String text, int currentPage, EnumSort sortType);
 
     int countTotalRecordSearch(String text);
 
-    List<ActivityDTO> getActivities(int currentPage);
+    List<ActivityDTO> getActivities(int currentPage, EnumSort sortType);
 
     int countTotalRecordActivity();
 
     List<ActivityDTO> getListActivityByUserId(long id, int currentPage);
 
     long getIdActivity(String name);
+
+    int updatedActiveDate(Long activityId);
 
     public int countTotalRecordActivitybyUserId(long id);
 }

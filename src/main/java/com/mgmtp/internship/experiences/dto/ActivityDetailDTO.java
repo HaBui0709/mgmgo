@@ -2,6 +2,7 @@ package com.mgmtp.internship.experiences.dto;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.sql.Timestamp;
 import java.util.Objects;
 
 /**
@@ -25,6 +26,9 @@ public class ActivityDetailDTO {
     private double rating;
     private long createdByUserId;
     private long updatedByUserId;
+    private Timestamp createdDate;
+    private Timestamp updatedDate;
+    private Timestamp activeDate;
     private boolean isFavorite;
 
     public ActivityDetailDTO() {
@@ -114,6 +118,17 @@ public class ActivityDetailDTO {
         this.address = address;
     }
 
+    public Timestamp getCreatedDate() { return createdDate; }
+
+    public void setCreatedDate(Timestamp createdDate) { this.createdDate = createdDate; }
+
+    public Timestamp getUpdatedDate() { return updatedDate; }
+
+    public void setUpdatedDate(Timestamp updatedDate) { this.updatedDate = updatedDate; }
+
+    public Timestamp getActiveDate() { return activeDate; }
+
+    public void setActiveDate(Timestamp activeDate) { this.activeDate = activeDate; }
     public boolean isFavorite() {
         return isFavorite;
     }

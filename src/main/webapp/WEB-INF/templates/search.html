@@ -18,8 +18,18 @@
     <h6><span th:text="${pagingInfo.totalRecord}">1</span> result(s) <strong class="text-primary"
                                                                              th:text="${#strings.isEmpty(keySearch)} ? '' :  '&quot;' + ${keySearch} + '&quot;'"></strong>
         for activities </h6>
+    <form  th:action="@{/search}" method="get" id="sort" name="sort">
+        <select name="sortType" id="sortType" class="custom-select custom-select-sm col-6 col-lg-2">
+            <option th:selected="${sortType=='NEWEST_FIRST'}" value="NEWEST_FIRST">Newest first</option>
+            <option th:selected="${sortType=='ACTIVE_FIRST'}" value="ACTIVE_FIRST">Most active first</option>
+            <option th:selected="${sortType=='RATING_FIRST'}"value="RATING_FIRST">Best rating first</option>
+        </select>
+        <input type="hidden"name="searchInfor" th:value="${keySearch}">
+    </form>
+    <br>
     <div class="lazy-loading activities" id="activities"
-         th:attr="current-page=${pagingInfo.currentPage},size-of-pages=${pagingInfo.sizeOfPages},link=@{/search/more/?searchInfor={keySearch}(keySearch=${keySearch})}">
+         th:attr="current-page=${pagingInfo.currentPage},size-of-pages=${pagingInfo.sizeOfPages},
+         link=@{/search/more/?searchInfor={keySearch}&sortType={sortType}(keySearch=${keySearch},sortType=${sortType})}">
         <th:block th:replace="activity/fragments/list-activities"></th:block>
     </div>
     <button th:if="${not #lists.isEmpty(activities) and pagingInfo.currentPage lt pagingInfo.sizeOfPages}" type="button"
@@ -32,6 +42,7 @@
 </div>
 <th:block layout:fragment="custom-script">
     <script type="text/javascript" src="/static/js/lazy-loading.js"></script>
+    <script type="text/javascript" src="/static/js/sort.js"></script>
 </th:block>
 </body>
 </html>

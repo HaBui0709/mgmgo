@@ -115,7 +115,7 @@ public class Public extends SchemaImpl {
         return Arrays.<Table<?>>asList(
             Activity.ACTIVITY,
             ActivityImage.ACTIVITY_IMAGE,
-                Favorite.FAVORITE,
+            Favorite.FAVORITE,
             Image.IMAGE,
             Rating.RATING,
             User.USER);

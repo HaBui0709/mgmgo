@@ -3,6 +3,7 @@ package com.mgmtp.internship.experiences.controllers.api;
 import com.mgmtp.internship.experiences.constants.ApplicationConstant;
 import com.mgmtp.internship.experiences.config.security.CustomLdapUserDetails;
 import com.mgmtp.internship.experiences.exceptions.ApiException;
+import com.mgmtp.internship.experiences.services.ActivityService;
 import com.mgmtp.internship.experiences.services.RatingService;
 import com.mgmtp.internship.experiences.services.UserService;
 import org.jooq.tools.json.JSONObject;
@@ -27,6 +28,9 @@ public class RatingRestController extends BaseRestController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private ActivityService activityService;
 
     @GetMapping("/activity/{activityId}")
     public Object getRate(@PathVariable("activityId") long activityId) {
@@ -56,6 +60,7 @@ public class RatingRestController extends BaseRestController {
             }
             JSONObject result = new JSONObject();
             result.put("rating", ratingService.getRate(activityId));
+            activityService.updatedActiveDate(activityId);
             return result;
         }
         throw new ApiException(HttpStatus.BAD_REQUEST, "Something went wrong! Please try again.");

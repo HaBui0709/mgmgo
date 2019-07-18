@@ -1,5 +1,6 @@
 package com.mgmtp.internship.experiences.services.impl;
 
+import com.mgmtp.internship.experiences.constants.EnumSort;
 import com.mgmtp.internship.experiences.dto.ActivityDTO;
 import com.mgmtp.internship.experiences.dto.ActivityDetailDTO;
 import com.mgmtp.internship.experiences.repositories.ActivityRepository;
@@ -32,6 +33,7 @@ public class ActivityServiceImplTest {
     private static final String KEY_SEARCH = "abc";
     private static final List<ActivityDTO> EXPECTED_LIST_ACTIVITY_DTO = Collections.singletonList(new ActivityDTO(1L, "name", IMAGE_ID));
     private static final int CURRENT_PAGE = 1;
+    private static final String SORT_TYPE = "NEWEST_FIRST";
     private static final int USER_ID = 1;
     private static final int EXPECTED_RECORD = 3;
 
@@ -41,16 +43,6 @@ public class ActivityServiceImplTest {
 
     @InjectMocks
     private ActivityServiceImpl activityService;
-
-    @Test
-    public void shouldReturnAllActivities() {
-        List<ActivityDTO> expectedListActivityDTO = Collections.singletonList(new ActivityDTO(ACTIVITY_ID, "name", IMAGE_ID));
-        Mockito.when(activityRepository.findAll()).thenReturn(expectedListActivityDTO);
-
-        List<ActivityDTO> actualListActivityDTO = activityService.findAll();
-
-        Assert.assertEquals(expectedListActivityDTO, actualListActivityDTO);
-    }
 
     @Test
     public void shouldReturnActivityById() {
@@ -132,18 +124,18 @@ public class ActivityServiceImplTest {
 
     @Test
     public void shouldReturnListActivitiesWhenKeySearchCorrect() {
-        Mockito.when(activityRepository.search(KEY_SEARCH, CURRENT_PAGE)).thenReturn(EXPECTED_LIST_ACTIVITY_DTO);
+        Mockito.when(activityRepository.search(KEY_SEARCH, CURRENT_PAGE, EnumSort.valueOf(SORT_TYPE))).thenReturn(EXPECTED_LIST_ACTIVITY_DTO);
 
-        List<ActivityDTO> actualListActivityDTO = activityService.search(KEY_SEARCH, CURRENT_PAGE);
+        List<ActivityDTO> actualListActivityDTO = activityService.search(KEY_SEARCH, CURRENT_PAGE, EnumSort.valueOf(SORT_TYPE));
 
         Assert.assertEquals(EXPECTED_LIST_ACTIVITY_DTO, actualListActivityDTO);
     }
 
     @Test
     public void shouldReturnNullWhenKeySearchIncorrect() {
-        Mockito.when(activityRepository.search(KEY_SEARCH, CURRENT_PAGE)).thenReturn(null);
+        Mockito.when(activityRepository.search(KEY_SEARCH, CURRENT_PAGE, EnumSort.valueOf(SORT_TYPE))).thenReturn(null);
 
-        List<ActivityDTO> actualListActivityDTO = activityService.search(KEY_SEARCH, CURRENT_PAGE);
+        List<ActivityDTO> actualListActivityDTO = activityService.search(KEY_SEARCH, CURRENT_PAGE, EnumSort.valueOf(SORT_TYPE));
 
         Assert.assertEquals(null, actualListActivityDTO);
     }
@@ -170,9 +162,9 @@ public class ActivityServiceImplTest {
 
     @Test
     public void shouldReturnActivitiesOfPage() {
-        Mockito.when(activityRepository.getActivities(CURRENT_PAGE)).thenReturn(EXPECTED_LIST_ACTIVITY_DTO);
+        Mockito.when(activityRepository.getActivities(CURRENT_PAGE, EnumSort.valueOf(SORT_TYPE))).thenReturn(EXPECTED_LIST_ACTIVITY_DTO);
 
-        List<ActivityDTO> actualActivities = activityService.getActivities(CURRENT_PAGE);
+        List<ActivityDTO> actualActivities = activityService.getActivities(CURRENT_PAGE, EnumSort.valueOf(SORT_TYPE));
 
         Assert.assertEquals(EXPECTED_LIST_ACTIVITY_DTO, actualActivities);
     }
@@ -181,7 +173,7 @@ public class ActivityServiceImplTest {
     public void shouldReturnEmptyListActivitiesIfPageIncorrect() {
         List<ActivityDTO> expectedActivities = Collections.emptyList();
 
-        List<ActivityDTO> actualActivities = activityService.getActivities(-1);
+        List<ActivityDTO> actualActivities = activityService.getActivities(-1, EnumSort.valueOf(SORT_TYPE));
 
         Assert.assertEquals(expectedActivities, actualActivities);
     }

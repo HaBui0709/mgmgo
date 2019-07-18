@@ -1,5 +1,6 @@
 package com.mgmtp.internship.experiences.controllers.app;
 
+import com.mgmtp.internship.experiences.constants.EnumSort;
 import com.mgmtp.internship.experiences.dto.ActivityDTO;
 import com.mgmtp.internship.experiences.dto.PageDTO;
 import com.mgmtp.internship.experiences.services.impl.ActivityServiceImpl;
@@ -42,6 +43,7 @@ public class SearchControllerTest {
     private static final String SEARCH_PARAM = "searchInfor";
     private static final String ACTIVITIES_ATTRIBUTE = "activities";
     private static final PageDTO PAGING_INFO_DTO = new PageDTO(CURRENT_PAGE, PAGE_SIZE, TOTAL_RECORD);
+    private static final String SORT_TYPE = "NEWEST_FIRST";
 
 
     private MockMvc mockMvc;
@@ -58,7 +60,7 @@ public class SearchControllerTest {
 
     @Test
     public void shouldGetListActivitiesShowOnSearchPageIfKeySearchCorrect() {
-        Mockito.when(activityService.search(KEY_SEARCH, CURRENT_PAGE)).thenReturn(EXPECTED_ACTIVITY_DTO);
+        Mockito.when(activityService.search(KEY_SEARCH, CURRENT_PAGE, EnumSort.valueOf(SORT_TYPE))).thenReturn(EXPECTED_ACTIVITY_DTO);
         Mockito.when(activityService.countTotalRecordSearch(KEY_SEARCH)).thenReturn(PAGING_INFO_DTO.getTotalRecord());
         try {
             mockMvc.perform(MockMvcRequestBuilders.get(URL).param(SEARCH_PARAM, KEY_SEARCH))
@@ -66,6 +68,7 @@ public class SearchControllerTest {
                     .andExpect(MockMvcResultMatchers.model().attribute("keySearch", KEY_SEARCH))
                     .andExpect(MockMvcResultMatchers.model().attribute(ACTIVITIES_ATTRIBUTE, EXPECTED_ACTIVITY_DTO))
                     .andExpect(MockMvcResultMatchers.model().attribute("pagingInfo", PAGING_INFO_DTO))
+                    .andExpect(MockMvcResultMatchers.model().attribute("sortType", SORT_TYPE))
                     .andExpect(MockMvcResultMatchers.view().name(URL_VIEW));
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
@@ -75,7 +78,7 @@ public class SearchControllerTest {
     @Test
     public void shouldGetNullActivityShowOnSearchPageIfKeySearchIncorrect() {
         PageDTO expectedPagingInfo = new PageDTO(0, 0, 0);
-        Mockito.when(activityService.search(KEY_SEARCH, CURRENT_PAGE)).thenReturn(null);
+        Mockito.when(activityService.search(KEY_SEARCH, CURRENT_PAGE, EnumSort.valueOf(SORT_TYPE))).thenReturn(null);
         Mockito.when(activityService.countTotalRecordSearch(KEY_SEARCH)).thenReturn(expectedPagingInfo.getTotalRecord());
         try {
             mockMvc.perform(MockMvcRequestBuilders.get(URL).param(SEARCH_PARAM, KEY_SEARCH))
@@ -83,6 +86,7 @@ public class SearchControllerTest {
                     .andExpect(MockMvcResultMatchers.model().attribute("keySearch", KEY_SEARCH))
                     .andExpect(MockMvcResultMatchers.model().attribute(ACTIVITIES_ATTRIBUTE, null))
                     .andExpect(MockMvcResultMatchers.model().attribute("pagingInfo", PAGING_INFO_DTO))
+                    .andExpect(MockMvcResultMatchers.model().attribute("sortType", SORT_TYPE))
                     .andExpect(MockMvcResultMatchers.view().name(URL_VIEW));
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
@@ -91,7 +95,7 @@ public class SearchControllerTest {
 
     @Test
     public void shouldGetListActivitiesShowOnSearchPageIfKeySearchEmpty() {
-        Mockito.when(activityService.getActivities(CURRENT_PAGE)).thenReturn(EXPECTED_ACTIVITY_DTO);
+        Mockito.when(activityService.getActivities(CURRENT_PAGE, EnumSort.valueOf(SORT_TYPE))).thenReturn(EXPECTED_ACTIVITY_DTO);
         Mockito.when(activityService.countTotalRecordActivity()).thenReturn(PAGING_INFO_DTO.getTotalRecord());
 
         try {
@@ -99,6 +103,7 @@ public class SearchControllerTest {
                     .andExpect(MockMvcResultMatchers.status().isOk())
                     .andExpect(MockMvcResultMatchers.model().attribute(ACTIVITIES_ATTRIBUTE, EXPECTED_ACTIVITY_DTO))
                     .andExpect(MockMvcResultMatchers.model().attribute("pagingInfo", PAGING_INFO_DTO))
+                    .andExpect(MockMvcResultMatchers.model().attribute("sortType", SORT_TYPE))
                     .andExpect(MockMvcResultMatchers.view().name(URL_VIEW));
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
@@ -107,7 +112,7 @@ public class SearchControllerTest {
 
     @Test
     public void shouldSearchActivitiesShowOnFragmentListActivitiesIfKeySearchCorrect() {
-        Mockito.when(activityService.search(KEY_SEARCH, CURRENT_PAGE)).thenReturn(EXPECTED_ACTIVITY_DTO);
+        Mockito.when(activityService.search(KEY_SEARCH, CURRENT_PAGE, EnumSort.valueOf(SORT_TYPE))).thenReturn(EXPECTED_ACTIVITY_DTO);
         try {
             mockMvc.perform(MockMvcRequestBuilders.get(URL_SEE_MORE)
                     .param("currentPage", String.valueOf(CURRENT_PAGE))
@@ -123,7 +128,7 @@ public class SearchControllerTest {
     @Test
     public void shouldReturnEmptyLisIfKeySearchInCorrect() {
         List<ActivityDTO> expectedActivities = Collections.emptyList();
-        Mockito.when(activityService.search(KEY_SEARCH, CURRENT_PAGE)).thenReturn(expectedActivities);
+        Mockito.when(activityService.search(KEY_SEARCH, CURRENT_PAGE, EnumSort.valueOf(SORT_TYPE))).thenReturn(expectedActivities);
         try {
             mockMvc.perform(MockMvcRequestBuilders.get(URL_SEE_MORE)
                     .param("currentPage", String.valueOf(CURRENT_PAGE))

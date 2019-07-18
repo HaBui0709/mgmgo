@@ -1,13 +1,19 @@
 package com.mgmtp.internship.experiences.repositories;
 
+import com.mgmtp.internship.experiences.constants.EnumSort;
 import com.mgmtp.internship.experiences.dto.ActivityDTO;
 import com.mgmtp.internship.experiences.dto.ActivityDetailDTO;
+import org.jooq.*;
 import org.jooq.DSLContext;
 import org.jooq.Field;
 import org.jooq.impl.DSL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.EnumMap;
 import java.util.List;
 
 import static com.mgmtp.internship.experiences.constants.ApplicationConstant.FUNC_UNACCENT;
@@ -16,6 +22,7 @@ import static com.mgmtp.internship.experiences.model.tables.tables.Activity.ACTI
 import static com.mgmtp.internship.experiences.model.tables.tables.ActivityImage.ACTIVITY_IMAGE;
 import static com.mgmtp.internship.experiences.model.tables.tables.Image.IMAGE;
 import static com.mgmtp.internship.experiences.model.tables.tables.Rating.RATING;
+import static org.jooq.impl.DSL.*;
 import static com.mgmtp.internship.experiences.model.tables.tables.User.USER;
 import static org.jooq.impl.DSL.avg;
 import static org.jooq.impl.DSL.round;
@@ -32,16 +39,6 @@ public class ActivityRepository {
 
     @Autowired
     private DSLContext dslContext;
-
-    public List<ActivityDTO> findAll() {
-        return dslContext.select(ACTIVITY.ID, ACTIVITY.NAME, IMAGE.ID.as(IMAGE_ID_PROPERTY), ACTIVITY.ADDRESS)
-                .from(ACTIVITY)
-                .leftJoin(ACTIVITY_IMAGE)
-                .on(ACTIVITY.ID.eq(ACTIVITY_IMAGE.ACTIVITY_ID))
-                .leftJoin(IMAGE).on(ACTIVITY_IMAGE.IMAGE_ID.eq(IMAGE.ID))
-                .orderBy(ACTIVITY.ID)
-                .fetchInto(ActivityDTO.class);
-    }
 
     public ActivityDetailDTO findById(long activityId) {
         return dslContext
@@ -69,6 +66,7 @@ public class ActivityRepository {
                 .set(ACTIVITY.DESCRIPTION, activityDetailDTO.getDescription())
                 .set(ACTIVITY.UPDATED_BY_USER_ID, activityDetailDTO.getUpdatedByUserId())
                 .set(ACTIVITY.ADDRESS, activityDetailDTO.getAddress())
+                .set(ACTIVITY.UPDATED_DATE, currentTimestamp())
                 .where(ACTIVITY.ID.eq(activityDetailDTO.getId())).execute();
     }
 
@@ -101,7 +99,7 @@ public class ActivityRepository {
                 .fetchOneInto(ActivityDetailDTO.class);
     }
 
-    public List<ActivityDTO> search(String text, int currentPage) {
+    public List<ActivityDTO> search(String text, int currentPage, EnumSort sortType) {
         Field<String> keySearch = DSL.function(FUNC_UNACCENT, String.class, DSL.val(text.trim()));
         return dslContext
                 .select(ACTIVITY.ID,
@@ -111,10 +109,12 @@ public class ActivityRepository {
                 .leftJoin(ACTIVITY_IMAGE)
                 .on(ACTIVITY.ID.eq(ACTIVITY_IMAGE.ACTIVITY_ID))
                 .leftJoin(IMAGE).on(ACTIVITY_IMAGE.IMAGE_ID.eq(IMAGE.ID))
+                .leftJoin(RATING).on(ACTIVITY.ID.eq(RATING.ACTIVITY_ID))
                 .where(DSL.function(FUNC_UNACCENT, String.class, ACTIVITY.NAME).containsIgnoreCase(keySearch))
                 .or(DSL.function(FUNC_UNACCENT, String.class, ACTIVITY.DESCRIPTION).containsIgnoreCase(keySearch))
                 .or(DSL.function(FUNC_UNACCENT, String.class, ACTIVITY.ADDRESS).containsIgnoreCase(keySearch))
-                .orderBy(ACTIVITY.ID)
+                .groupBy(ACTIVITY.ID, IMAGE.ID)
+                .orderBy(hashMapSortType(sortType))
                 .offset((currentPage - 1) * RECORD_OF_LIST)
                 .limit(RECORD_OF_LIST)
                 .fetchInto(ActivityDTO.class);
@@ -129,13 +129,15 @@ public class ActivityRepository {
                 .fetchAny(0, Integer.class);
     }
 
-    public List<ActivityDTO> getActivities(int currentPage) {
+    public List<ActivityDTO> getActivities(int currentPage, EnumSort sortType) {
         return dslContext.select(ACTIVITY.ID, ACTIVITY.NAME, IMAGE.ID.as(IMAGE_ID_PROPERTY))
                 .from(ACTIVITY)
                 .leftJoin(ACTIVITY_IMAGE)
                 .on(ACTIVITY.ID.eq(ACTIVITY_IMAGE.ACTIVITY_ID))
                 .leftJoin(IMAGE).on(ACTIVITY_IMAGE.IMAGE_ID.eq(IMAGE.ID))
-                .orderBy(ACTIVITY.ID)
+                .leftJoin(RATING).on(ACTIVITY.ID.eq(RATING.ACTIVITY_ID))
+                .groupBy(ACTIVITY.ID, IMAGE.ID)
+                .orderBy(hashMapSortType(sortType))
                 .offset((currentPage - 1) * RECORD_OF_LIST)
                 .limit(RECORD_OF_LIST)
                 .fetchInto(ActivityDTO.class);
@@ -145,6 +147,24 @@ public class ActivityRepository {
         return dslContext.selectCount()
                 .from(ACTIVITY)
                 .fetchAny(0, Integer.class);
+    }
+
+    private SortField[] hashMapSortType(EnumSort sortType) {
+        EnumMap<EnumSort, List<SortField>> enumMapSort = new EnumMap<>(EnumSort.class);
+
+        enumMapSort.put(EnumSort.NEWEST_FIRST, Collections.singletonList(DSL.field(ACTIVITY.CREATED_DATE).desc().nullsLast()));
+        enumMapSort.put(EnumSort.ACTIVE_FIRST, Arrays.asList(DSL.field(ACTIVITY.ACTIVE_DATE).desc().nullsLast(),
+                DSL.field(ACTIVITY.UPDATED_DATE).desc().nullsLast()));
+        enumMapSort.put(EnumSort.RATING_FIRST, Arrays.asList(DSL.field(round(avg(RATING.VALUE), 1)).desc().nullsLast(),
+                DSL.field(count(RATING.ID)).desc().nullsLast()));
+
+        return enumMapSort.get(sortType).toArray(new SortField[]{});
+    }
+
+    public int updatedActiveDate(Long activityId) {
+        return dslContext.update(ACTIVITY)
+                .set(ACTIVITY.ACTIVE_DATE, currentTimestamp())
+                .where(ACTIVITY.ID.eq(activityId)).execute();
     }
 
     public List<ActivityDTO> getListActivityByUserId(long id, int currentPage) {

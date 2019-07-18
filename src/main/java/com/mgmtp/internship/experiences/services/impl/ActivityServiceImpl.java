@@ -1,6 +1,7 @@
 package com.mgmtp.internship.experiences.services.impl;
 
 
+import com.mgmtp.internship.experiences.constants.EnumSort;
 import com.mgmtp.internship.experiences.dto.ActivityDTO;
 import com.mgmtp.internship.experiences.dto.ActivityDetailDTO;
 import com.mgmtp.internship.experiences.repositories.ActivityRepository;
@@ -21,11 +22,6 @@ public class ActivityServiceImpl implements ActivityService {
 
     @Autowired
     private ActivityRepository activityRepository;
-
-    @Override
-    public List<ActivityDTO> findAll() {
-        return activityRepository.findAll();
-    }
 
     @Override
     public ActivityDetailDTO findById(long activityId) {
@@ -57,11 +53,11 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     @Override
-    public List<ActivityDTO> search(String text, int currentPage) {
+    public List<ActivityDTO> search(String text, int currentPage, EnumSort sortType) {
         if (currentPage < 1) {
             return Collections.emptyList();
         }
-        return activityRepository.search(text, currentPage);
+        return activityRepository.search(text, currentPage, sortType);
     }
 
     @Override
@@ -70,11 +66,11 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     @Override
-    public List<ActivityDTO> getActivities(int currentPage) {
+    public List<ActivityDTO> getActivities(int currentPage, EnumSort sortType) {
         if (currentPage < 1) {
             return Collections.emptyList();
         }
-        return activityRepository.getActivities(currentPage);
+        return activityRepository.getActivities(currentPage, sortType);
     }
 
     @Override
@@ -94,6 +90,11 @@ public class ActivityServiceImpl implements ActivityService {
     @Override
     public long getIdActivity(String name) {
         return activityRepository.getIdActivity(name);
+    }
+
+    @Override
+    public int updatedActiveDate(Long activityId) {
+        return activityRepository.updatedActiveDate(activityId);
     }
 
     @Override

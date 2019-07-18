@@ -42,7 +42,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Activity extends TableImpl<ActivityRecord> {
 
-    private static final long serialVersionUID = 1653717024;
+    private static final long serialVersionUID = 1221524532;
 
     /**
      * The reference instance of <code>public.activity</code>
@@ -91,6 +91,16 @@ public class Activity extends TableImpl<ActivityRecord> {
      * The column <code>public.activity.created_date</code>.
      */
     public final TableField<ActivityRecord, Timestamp> CREATED_DATE = createField("created_date", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false).defaultValue(org.jooq.impl.DSL.field("now()", org.jooq.impl.SQLDataType.TIMESTAMP)), this, "");
+
+    /**
+     * The column <code>public.activity.updated_date</code>.
+     */
+    public final TableField<ActivityRecord, Timestamp> UPDATED_DATE = createField("updated_date", org.jooq.impl.SQLDataType.TIMESTAMP.nullable(false).defaultValue(org.jooq.impl.DSL.field("now()", org.jooq.impl.SQLDataType.TIMESTAMP)), this, "");
+
+    /**
+     * The column <code>public.activity.active_date</code>.
+     */
+    public final TableField<ActivityRecord, Timestamp> ACTIVE_DATE = createField("active_date", org.jooq.impl.SQLDataType.TIMESTAMP, this, "");
 
     /**
      * Create a <code>public.activity</code> table reference
