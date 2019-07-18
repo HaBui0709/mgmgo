@@ -25,6 +25,7 @@ public class ActivityDetailDTO {
     private double rating;
     private long createdByUserId;
     private long updatedByUserId;
+    private boolean isFavorite;
 
     public ActivityDetailDTO() {
 
@@ -109,6 +110,14 @@ public class ActivityDetailDTO {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public boolean isFavorite() {
+        return isFavorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        isFavorite = favorite;
     }
 
 

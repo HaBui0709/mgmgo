@@ -6,6 +6,7 @@ package com.mgmtp.internship.experiences.model.tables;
 
 import com.mgmtp.internship.experiences.model.tables.tables.Activity;
 import com.mgmtp.internship.experiences.model.tables.tables.ActivityImage;
+import com.mgmtp.internship.experiences.model.tables.tables.Favorite;
 import com.mgmtp.internship.experiences.model.tables.tables.Image;
 import com.mgmtp.internship.experiences.model.tables.tables.Rating;
 import com.mgmtp.internship.experiences.model.tables.tables.User;
@@ -35,7 +36,7 @@ import org.jooq.impl.SchemaImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Public extends SchemaImpl {
 
-    private static final long serialVersionUID = 2140725231;
+    private static final long serialVersionUID = 86737650;
 
     /**
      * The reference instance of <code>public</code>
@@ -51,6 +52,11 @@ public class Public extends SchemaImpl {
      * activity image table
      */
     public final ActivityImage ACTIVITY_IMAGE = com.mgmtp.internship.experiences.model.tables.tables.ActivityImage.ACTIVITY_IMAGE;
+
+    /**
+     * favorite table
+     */
+    public final Favorite FAVORITE = com.mgmtp.internship.experiences.model.tables.tables.Favorite.FAVORITE;
 
     /**
      * image table
@@ -109,6 +115,7 @@ public class Public extends SchemaImpl {
         return Arrays.<Table<?>>asList(
             Activity.ACTIVITY,
             ActivityImage.ACTIVITY_IMAGE,
+                Favorite.FAVORITE,
             Image.IMAGE,
             Rating.RATING,
             User.USER);

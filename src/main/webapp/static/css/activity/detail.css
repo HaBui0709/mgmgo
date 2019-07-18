@@ -104,3 +104,25 @@ pre {
 .activity-summary {
     font-size: 16px;
 }
+
+#favorite {
+    position: relative;
+    background: none;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    width: 1em;
+    height: 1em;
+    margin-right: 0.2em;
+    color: red;
+}
+
+.none-favorite {
+    color: #6c757d !important;
+}
+
+#favorite-icon {
+    position: absolute;
+    top: 0;
+    left: 0;
+}

@@ -22,6 +22,9 @@
         <div class="card-body px-0">
             <div id="detail-header" class="card-title col-12 row mx-0">
                 <h1 th:text="${activityDetailDTO.getName()}" id="detail-title"></h1>
+                <button id="favorite" th:class="${activityDetailDTO.isFavorite()}? '':'none-favorite'">
+                    <i class="fa fa-heart" id="favorite-icon"></i>
+                </button>
                 <div id="activity-rating">
                     <button class="row px-0 mx-0" data-toggle="modal" id="rate-button" data-target="#rateModal">
                         <div id="rating-star">
@@ -75,11 +78,12 @@
             </div>
         </div>
     </div>
+    <div id="favorite-return" class="alert create-message-success"></div>
 </div>
-
 <th:block layout:fragment="custom-script">
     <script src="/static/js/image.js?n=1"></script>
     <script type="text/javascript" src="/static/js/rate.js"></script>
+    <script type="text/javascript" src="/static/js/favorite.js"></script>
 </th:block>
 
 </body>

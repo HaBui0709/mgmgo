@@ -4,6 +4,7 @@ import com.mgmtp.internship.experiences.config.security.CustomLdapUserDetails;
 import com.mgmtp.internship.experiences.dto.ActivityDetailDTO;
 import com.mgmtp.internship.experiences.dto.UserProfileDTO;
 import com.mgmtp.internship.experiences.services.ActivityService;
+import com.mgmtp.internship.experiences.services.FavoriteService;
 import com.mgmtp.internship.experiences.services.UserService;
 import org.junit.Before;
 import org.junit.Test;
@@ -57,6 +58,9 @@ public class ActivityControllerTest {
     @Mock
     private UserService userService;
 
+    @Mock
+    private FavoriteService favoriteService;
+
     @InjectMocks
     private ActivityController activityController;
 
@@ -67,7 +71,10 @@ public class ActivityControllerTest {
 
     @Test
     public void shouldGetActivityShowOnActivityPage() {
+        Mockito.when(userService.getCurrentUser()).thenReturn(EXPECTED_CUSTOM_USER_DETAIL);
+        EXPECTED_ACTIVITY_DETAIL_DTO.setFavorite(true);
         Mockito.when(activityService.findById(ACTIVITY_ID)).thenReturn(EXPECTED_ACTIVITY_DETAIL_DTO);
+        Mockito.when(favoriteService.checkFavorite(ACTIVITY_ID, EXPECTED_CUSTOM_USER_DETAIL.getId())).thenReturn(EXPECTED_ACTIVITY_DETAIL_DTO.isFavorite());
 
         try {
             mockMvc.perform(get("/activity/1"))

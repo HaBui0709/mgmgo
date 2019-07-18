@@ -8,10 +8,11 @@ import com.mgmtp.internship.experiences.model.tables.routines.Unaccent1;
 import com.mgmtp.internship.experiences.model.tables.routines.Unaccent2;
 import com.mgmtp.internship.experiences.model.tables.routines.UnaccentInit;
 import com.mgmtp.internship.experiences.model.tables.routines.UnaccentLexize;
-import org.jooq.Configuration;
-import org.jooq.Field;
 
 import javax.annotation.Generated;
+
+import org.jooq.Configuration;
+import org.jooq.Field;
 
 
 /**

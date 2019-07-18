@@ -4,6 +4,7 @@ import com.mgmtp.internship.experiences.config.security.CustomLdapUserDetails;
 import com.mgmtp.internship.experiences.constants.ApplicationConstant;
 import com.mgmtp.internship.experiences.dto.ActivityDetailDTO;
 import com.mgmtp.internship.experiences.services.ActivityService;
+import com.mgmtp.internship.experiences.services.FavoriteService;
 import com.mgmtp.internship.experiences.services.UserService;
 import com.mgmtp.internship.experiences.utils.StringReplaceByRegexEditor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,12 +36,17 @@ public class ActivityController {
     private ActivityService activityService;
 
     @Autowired
+    private FavoriteService favoriteService;
+
+    @Autowired
     private UserService userService;
 
     @GetMapping("/{activityId}")
     public String getActivity(Model model, @PathVariable("activityId") long activityId) {
+        CustomLdapUserDetails user = userService.getCurrentUser();
         ActivityDetailDTO activityDetailDTO = activityService.findById(activityId);
         if (activityDetailDTO != null) {
+            activityDetailDTO.setFavorite(favoriteService.checkFavorite(activityId, user.getId()));
             model.addAttribute(ACTIVITY_INFO_ATTRIBUTE, activityDetailDTO);
             return "activity/detail";
         }

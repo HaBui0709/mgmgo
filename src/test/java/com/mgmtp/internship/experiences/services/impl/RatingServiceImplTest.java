@@ -24,10 +24,10 @@ public class RatingServiceImplTest {
     private static final int UPDATE_SUCCESS = 1;
 
     @Mock
-    RatingRepository ratingRepository;
+    private RatingRepository ratingRepository;
 
     @InjectMocks
-    RatingServiceImpl ratingService;
+    private RatingServiceImpl ratingService;
 
     @Test
     public void shouldReturnAverageRatingOfActivity() {
