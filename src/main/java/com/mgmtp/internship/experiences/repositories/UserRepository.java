@@ -29,6 +29,14 @@ public class UserRepository {
                 .fetchOne();
     }
 
+    public UserProfileDTO findUserProfileById(long userId) {
+        UserRecord userRecord = dslContext.selectFrom(USER)
+                .where(USER.ID.eq(userId))
+                .fetchOne();
+        return (userRecord == null) ? null : new UserProfileDTO(userRecord.getImageId(), userRecord.getDisplayName(), userRecord.getReputationScore());
+
+    }
+
     public boolean updateImage(long userId, Long imageId) {
         return dslContext
                 .update(USER)
@@ -80,4 +88,6 @@ public class UserRepository {
                 .where(USER.USERNAME.eq(username))
                 .fetchOne() != null;
     }
+
 }
+

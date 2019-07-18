@@ -157,5 +157,25 @@ public class UserServiceImplTest {
 
         Assert.assertEquals(false, actualResult);
     }
+
+    @Test
+    public void shouldReturnUserProfileWhenFindById() {
+        UserProfileDTO expectedUserProfileDTO = USER_PROFILE_DTO;
+        Mockito.when(userRepository.findUserProfileById(1)).thenReturn(USER_PROFILE_DTO);
+
+        UserProfileDTO actualUserProfileDTO = userService.findUserProfileById(1);
+
+        Assert.assertEquals(actualUserProfileDTO, expectedUserProfileDTO);
+    }
+
+    @Test
+    public void shouldReturnNullWhenFindUserProfileById() {
+        UserProfileDTO expectedUserProfileDTO = null;
+        Mockito.when(userRepository.findUserProfileById(1)).thenReturn(null);
+
+        UserProfileDTO actualUserProfileDTO = userService.findUserProfileById(1);
+
+        Assert.assertEquals(actualUserProfileDTO, expectedUserProfileDTO);
+    }
 }
 

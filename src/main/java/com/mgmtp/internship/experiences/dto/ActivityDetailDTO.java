@@ -31,12 +31,14 @@ public class ActivityDetailDTO {
 
     }
 
-    public ActivityDetailDTO(long id, String name, String description, double rating, Long imageId) {
+    public ActivityDetailDTO(long id, String name, String description, double rating, Long imageId, long createdByUserId, long updatedByUserId) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.imageId = imageId;
         this.rating = rating;
+        this.createdByUserId = createdByUserId;
+        this.updatedByUserId = updatedByUserId;
     }
 
     public ActivityDetailDTO(long id, String name, String description, String address, double rating, Long imageId) {

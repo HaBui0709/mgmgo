@@ -160,6 +160,45 @@ body {
     background-color: transparent;
 }
 
+
+#user_dropdown{
+    display: flex;
+    align-items: center;
+}
+.display-name{
+    font-size: 90%;
+}
+
+.lv1 {
+    color: #9e9e9e;
+    font-weight: bold;
+}
+
+.lv2 {
+    color: #16a9c0;
+    font-weight: bold;
+}
+
+.lv3 {
+    color: #fbbe0a;
+    font-weight: bold;
+}
+
+.lv4 {
+    color: #00e545;
+    font-weight: bold;
+}
+
+.lv5 {
+    color: #ff37f8;
+    font-weight: bold;
+}
+
+.lv6 {
+    color: #dc3545;
+    font-weight: bold;
+}
+
 .dropdown-menu{
     right: 0 !important;
 }

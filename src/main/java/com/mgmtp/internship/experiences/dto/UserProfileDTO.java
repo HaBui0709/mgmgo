@@ -1,5 +1,7 @@
 package com.mgmtp.internship.experiences.dto;
 
+import com.mgmtp.internship.experiences.constants.ApplicationConstant;
+
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.Objects;
@@ -18,6 +20,7 @@ public class UserProfileDTO {
     private String displayName;
 
     private int reputationScore;
+    private String levelName;
 
     public UserProfileDTO() {
     }
@@ -26,6 +29,7 @@ public class UserProfileDTO {
         this.imageId = imageId;
         this.displayName = displayName;
         this.reputationScore = reputationScore;
+        setLevelName(reputationScore);
     }
 
     public Long getImageId() {
@@ -50,7 +54,12 @@ public class UserProfileDTO {
 
     public void setReputatinScore(int reputationScore) {
         this.reputationScore = reputationScore;
+        setLevelName(reputationScore);
     }
+
+    public String getLevelName() { return levelName; }
+
+    public void setLevelName(int reputationScore) { this.levelName = ApplicationConstant.getLevelReputation(reputationScore); }
 
     @Override
     public boolean equals(Object o) {
@@ -61,8 +70,10 @@ public class UserProfileDTO {
                 Objects.equals(displayName, that.displayName);
     }
 
+
     @Override
     public int hashCode() {
         return Objects.hash(imageId, displayName);
     }
+
 }

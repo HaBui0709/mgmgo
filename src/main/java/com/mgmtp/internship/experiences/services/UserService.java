@@ -18,6 +18,8 @@ public interface UserService {
 
     UserRecord findUserByUserName(String username);
 
+    UserProfileDTO findUserProfileById(long userId);
+
     boolean updateProfile(long userId, UserProfileDTO profile);
 
     boolean checkExitDisplayName(String displayName, long id);

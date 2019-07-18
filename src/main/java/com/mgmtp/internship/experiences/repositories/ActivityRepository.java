@@ -4,13 +4,10 @@ import com.mgmtp.internship.experiences.dto.ActivityDTO;
 import com.mgmtp.internship.experiences.dto.ActivityDetailDTO;
 import org.jooq.DSLContext;
 import org.jooq.Field;
-import org.jooq.Record5;
-import org.jooq.Record6;
 import org.jooq.impl.DSL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import static com.mgmtp.internship.experiences.constants.ApplicationConstant.FUNC_UNACCENT;
@@ -47,8 +44,15 @@ public class ActivityRepository {
     }
 
     public ActivityDetailDTO findById(long activityId) {
-        Record6<Long, String, String, String, BigDecimal, Long> activity = dslContext.select(ACTIVITY.ID,
-                ACTIVITY.NAME, ACTIVITY.DESCRIPTION, ACTIVITY.ADDRESS, round(avg(RATING.VALUE), 1).as("rating"), IMAGE.ID.as(IMAGE_ID_PROPERTY))
+        return dslContext
+                .select(ACTIVITY.ID,
+                        ACTIVITY.NAME,
+                        ACTIVITY.DESCRIPTION,
+                        ACTIVITY.ADDRESS,
+                        round(avg(RATING.VALUE), 1).as("rating"),
+                        IMAGE.ID.as(IMAGE_ID_PROPERTY),
+                        ACTIVITY.CREATED_BY_USER_ID,
+                        ACTIVITY.UPDATED_BY_USER_ID)
                 .from(ACTIVITY)
                 .leftJoin(RATING)
                 .on(ACTIVITY.ID.eq(RATING.ACTIVITY_ID))
@@ -56,8 +60,7 @@ public class ActivityRepository {
                 .on(ACTIVITY.ID.eq(ACTIVITY_IMAGE.ACTIVITY_ID))
                 .leftJoin(IMAGE).on(ACTIVITY_IMAGE.IMAGE_ID.eq(IMAGE.ID))
                 .where(ACTIVITY.ID.eq(activityId))
-                .groupBy(ACTIVITY.ID, IMAGE.ID).fetchOne();
-        return activity == null ? null : activity.into(ActivityDetailDTO.class);
+                .groupBy(ACTIVITY.ID, IMAGE.ID).fetchOneInto(ActivityDetailDTO.class);
     }
 
     public int update(ActivityDetailDTO activityDetailDTO) {
@@ -83,21 +86,27 @@ public class ActivityRepository {
 
     public ActivityDetailDTO findByName(String activityName) {
         Field<String> keyName = DSL.function(FUNC_UNACCENT, String.class, DSL.val(activityName));
-        Record5<Long, String, String, Long, String> existedActivity = dslContext.select(ACTIVITY.ID,
-                ACTIVITY.NAME, ACTIVITY.DESCRIPTION, IMAGE.ID.as(IMAGE_ID_PROPERTY), ACTIVITY.ADDRESS)
+        return dslContext
+                .select(ACTIVITY.ID,
+                        ACTIVITY.NAME,
+                        ACTIVITY.DESCRIPTION,
+                        IMAGE.ID.as(IMAGE_ID_PROPERTY),
+                        ACTIVITY.ADDRESS)
                 .from(ACTIVITY)
                 .leftJoin(ACTIVITY_IMAGE)
                 .on(ACTIVITY.ID.eq(ACTIVITY_IMAGE.ACTIVITY_ID))
                 .leftJoin(IMAGE)
                 .on(ACTIVITY_IMAGE.IMAGE_ID.eq(IMAGE.ID))
                 .where(DSL.function(FUNC_UNACCENT, String.class, ACTIVITY.NAME).likeIgnoreCase(keyName))
-                .fetchOne();
-        return existedActivity == null ? null : existedActivity.into(ActivityDetailDTO.class);
+                .fetchOneInto(ActivityDetailDTO.class);
     }
 
     public List<ActivityDTO> search(String text, int currentPage) {
         Field<String> keySearch = DSL.function(FUNC_UNACCENT, String.class, DSL.val(text.trim()));
-        return dslContext.select(ACTIVITY.ID, ACTIVITY.NAME, IMAGE.ID.as(IMAGE_ID_PROPERTY))
+        return dslContext
+                .select(ACTIVITY.ID,
+                        ACTIVITY.NAME,
+                        IMAGE.ID.as(IMAGE_ID_PROPERTY))
                 .from(ACTIVITY)
                 .leftJoin(ACTIVITY_IMAGE)
                 .on(ACTIVITY.ID.eq(ACTIVITY_IMAGE.ACTIVITY_ID))

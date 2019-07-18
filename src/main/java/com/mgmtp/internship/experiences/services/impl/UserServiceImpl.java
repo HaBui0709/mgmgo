@@ -41,6 +41,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserProfileDTO findUserProfileById(long userId) {
+        return userRepository.findUserProfileById(userId);
+    }
+
+    @Override
     public CustomLdapUserDetails getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null) {

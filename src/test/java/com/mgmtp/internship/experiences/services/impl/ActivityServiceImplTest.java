@@ -23,10 +23,14 @@ import java.util.List;
 public class ActivityServiceImplTest {
     private static final long ACTIVITY_ID = 1;
     private static final String EXIST_NAME = "new name";
-    private static final ActivityDetailDTO EXPECTED_ACTIVITY_DETAIL_DTO = new ActivityDetailDTO(ACTIVITY_ID, "new", "Description", 5, 1L);
-    private static final ActivityDetailDTO EXISTED_ACTIVITY_DETAIL_DTO = new ActivityDetailDTO(2, "new", "Descriptionabc", 5, 1L);
+    private static final int CREATED_BY_USER_ID = 1;
+    private static final int UPDATED_BY_USER_ID = 1;
+    private static final long IMAGE_ID = 1;
+    private static final double RATING = 2.5;
+    private static final ActivityDetailDTO EXPECTED_ACTIVITY_DETAIL_DTO = new ActivityDetailDTO(ACTIVITY_ID, "new", "Description", RATING, IMAGE_ID, CREATED_BY_USER_ID, UPDATED_BY_USER_ID);
+    private static final ActivityDetailDTO EXISTED_ACTIVITY_DETAIL_DTO = new ActivityDetailDTO(2, "new", "Descriptionabc", RATING, IMAGE_ID, CREATED_BY_USER_ID, UPDATED_BY_USER_ID);
     private static final String KEY_SEARCH = "abc";
-    private static final List<ActivityDTO> EXPECTED_LIST_ACTIVITY_DTO = Collections.singletonList(new ActivityDTO(1L, "name", 1L));
+    private static final List<ActivityDTO> EXPECTED_LIST_ACTIVITY_DTO = Collections.singletonList(new ActivityDTO(1L, "name", IMAGE_ID));
     private static final int CURRENT_PAGE = 1;
     private static final int USER_ID = 1;
     private static final int EXPECTED_RECORD = 3;
@@ -40,7 +44,7 @@ public class ActivityServiceImplTest {
 
     @Test
     public void shouldReturnAllActivities() {
-        List<ActivityDTO> expectedListActivityDTO = Collections.singletonList(new ActivityDTO(ACTIVITY_ID, "name", 1L));
+        List<ActivityDTO> expectedListActivityDTO = Collections.singletonList(new ActivityDTO(ACTIVITY_ID, "name", IMAGE_ID));
         Mockito.when(activityRepository.findAll()).thenReturn(expectedListActivityDTO);
 
         List<ActivityDTO> actualListActivityDTO = activityService.findAll();

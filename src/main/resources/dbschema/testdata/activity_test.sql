@@ -2,21 +2,21 @@ INSERT INTO activity ( name, description, created_by_user_id, updated_by_user_id
 VALUES ('Dasushi - Ăn Nhậu Kiểu Nhật', 'Ẩm thực Nhật Bản dẫn trở nên quen thuộc với người dân Việt Nam, đặc biệt là ở các thành phố lớn như Hà Nội, TPHCM, và Đà Nẵng không thể thiếu rồi. Đà Nẵng nổi tiếng với nhà hàng Dasushi - Ăn Nhậu Kiểu Nhật nằm trên tuyến đường đông nhất thành phố, sẽ là nơi thu hút sự chú ý của thực khách mỗi khi ngang qua.', 1,1, 'Some where in Da Nang','2019-07-09 11:12:45.833856');
 
 INSERT INTO activity ( name, description, created_by_user_id, updated_by_user_id, created_date)
-VALUES ('King - Trà Bí Đao & Trà Tắc - Phan Đăng Lưu', 'Trà ở đây ngon lắm', 1,1, '2019-07-10 11:12:45.833856');
+VALUES ('King - Trà Bí Đao & Trà Tắc - Phan Đăng Lưu', 'Trà ở đây ngon lắm', 2, 2, '2019-07-10 11:12:45.833856');
 
 INSERT INTO activity ( name, description, created_by_user_id, updated_by_user_id, created_date)
 VALUES ('Nhà Hàng Khang Garden', 'Không gian siêu siêu đẹp, sang trọng
 Menu có rất nhiều món từ ăn sáng đến cơm gia đình đếm hải sản, đặc sản,..
-Đang giảm 20% tới 15/6 mừng khai trương',1,1, '2019-07-11 11:12:45.833856');
+Đang giảm 20% tới 15/6 mừng khai trương',3,3, '2019-07-10 11:12:45.833856');
 
 INSERT INTO activity ( name, description, created_by_user_id, updated_by_user_id, created_date)
-VALUES ('Trà Sữa Gong Cha - 貢茶 - Nguyễn Văn Linh', 'Trà sữa trung tâm, view đẹp lắm',1,1, '2019-07-12 11:12:45.833856');
+VALUES ('Trà Sữa Gong Cha - 貢茶 - Nguyễn Văn Linh', 'Trà sữa trung tâm, view đẹp lắm',4,4, '2019-07-10 11:12:45.833856');
 
 INSERT INTO activity ( name, description, created_by_user_id, updated_by_user_id, created_date)
-VALUES ('Biển Phạm Văn Đồng 1' , 'Bãi biển Phạm Văn Đồng thuộc địa phận quận Sơn Trà, nằm cuối đường Phạm Văn Đồng, ngay cạnh công viên Biển Đông.',1,1, '2019-07-13 11:12:45.833856');
+VALUES ('Biển Phạm Văn Đồng 1' , 'Bãi biển Phạm Văn Đồng thuộc địa phận quận Sơn Trà, nằm cuối đường Phạm Văn Đồng, ngay cạnh công viên Biển Đông.',5,5, '2019-07-10 11:12:45.833856');
 
 INSERT INTO activity ( name, description, created_by_user_id, updated_by_user_id, created_date)
-VALUES ('Velo Coffee', 'View khá đẹp. Không gian thoáng, rộng rãi, yên tĩnh, sạch sẽ. Nhân viên phục vụ rất tốt ,thân thiện.',1,1, '2019-07-14 11:12:45.833856');
+VALUES ('Velo Coffee', 'View khá đẹp. Không gian thoáng, rộng rãi, yên tĩnh, sạch sẽ. Nhân viên phục vụ rất tốt ,thân thiện.',6,6, '2019-07-10 11:12:45.833856');
 
 INSERT INTO activity ( name, description, created_by_user_id, updated_by_user_id, created_date)
 VALUES ('Biển Phạm Văn Đồng 2', 'Bãi biển Phạm Văn Đồng thuộc địa phận quận Sơn Trà, nằm cuối đường Phạm Văn Đồng, ngay cạnh công viên Biển Đông.',1,1, '2019-07-15 11:12:45.833856');
