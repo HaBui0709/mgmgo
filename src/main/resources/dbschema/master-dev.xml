@@ -13,5 +13,6 @@
     <include file="testdata/activity_image_test.sql" relativeToChangelogFile="true"/>
     <include file="testdata/report_activity_test.sql" relativeToChangelogFile="true"/>
     <include file="testdata/favorite_test.sql" relativeToChangelogFile="true"/>
+    <include file="testdata/comment_test.sql" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>

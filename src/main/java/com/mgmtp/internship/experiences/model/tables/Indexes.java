@@ -5,6 +5,7 @@ package com.mgmtp.internship.experiences.model.tables;
 
 
 import com.mgmtp.internship.experiences.model.tables.tables.Activity;
+import com.mgmtp.internship.experiences.model.tables.tables.Comment;
 import com.mgmtp.internship.experiences.model.tables.tables.Image;
 import com.mgmtp.internship.experiences.model.tables.tables.Rating;
 import com.mgmtp.internship.experiences.model.tables.tables.User;
@@ -34,6 +35,7 @@ public class Indexes {
     // -------------------------------------------------------------------------
 
     public static final Index PK_ACTIVITY = Indexes0.PK_ACTIVITY;
+    public static final Index PK_COMMENT = Indexes0.PK_COMMENT;
     public static final Index PK_IMAGE = Indexes0.PK_IMAGE;
     public static final Index PK_RATING = Indexes0.PK_RATING;
     public static final Index PK_USER = Indexes0.PK_USER;
@@ -45,6 +47,7 @@ public class Indexes {
 
     private static class Indexes0 {
         public static Index PK_ACTIVITY = Internal.createIndex("pk_activity", Activity.ACTIVITY, new OrderField[] { Activity.ACTIVITY.ID }, true);
+        public static Index PK_COMMENT = Internal.createIndex("pk_comment", Comment.COMMENT, new OrderField[] { Comment.COMMENT.ID }, true);
         public static Index PK_IMAGE = Internal.createIndex("pk_image", Image.IMAGE, new OrderField[] { Image.IMAGE.ID }, true);
         public static Index PK_RATING = Internal.createIndex("pk_rating", Rating.RATING, new OrderField[] { Rating.RATING.ID }, true);
         public static Index PK_USER = Internal.createIndex("pk_user", User.USER, new OrderField[] { User.USER.ID }, true);

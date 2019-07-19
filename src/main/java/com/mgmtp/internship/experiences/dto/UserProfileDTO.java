@@ -32,6 +32,11 @@ public class UserProfileDTO {
         setLevelName(reputationScore);
     }
 
+    public UserProfileDTO(Long imageId, String displayName) {
+        this.imageId = imageId;
+        this.displayName = displayName;
+    }
+
     public Long getImageId() {
         return imageId;
     }

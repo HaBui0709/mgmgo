@@ -3,7 +3,9 @@ package com.mgmtp.internship.experiences.services.impl;
 import com.mgmtp.internship.experiences.constants.EnumSort;
 import com.mgmtp.internship.experiences.dto.ActivityDTO;
 import com.mgmtp.internship.experiences.dto.ActivityDetailDTO;
+import com.mgmtp.internship.experiences.dto.CommentDTO;
 import com.mgmtp.internship.experiences.repositories.ActivityRepository;
+import com.mgmtp.internship.experiences.utils.DateTimeUtil;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,7 +24,10 @@ import java.util.List;
  */
 @RunWith(MockitoJUnitRunner.class)
 public class ActivityServiceImplTest {
-    private static final long ACTIVITY_ID = 1;
+    private static final long ACTIVITY_ID = 1L;
+    private static final long USER_ID = 1L;
+    private static final int ADD_SUCCESS = 1;
+    private static final int ADD_FAIL = 0;
     private static final String EXIST_NAME = "new name";
     private static final int CREATED_BY_USER_ID = 1;
     private static final int UPDATED_BY_USER_ID = 1;
@@ -32,9 +37,10 @@ public class ActivityServiceImplTest {
     private static final ActivityDetailDTO EXISTED_ACTIVITY_DETAIL_DTO = new ActivityDetailDTO(2, "new", "Descriptionabc", RATING, IMAGE_ID, CREATED_BY_USER_ID, UPDATED_BY_USER_ID);
     private static final String KEY_SEARCH = "abc";
     private static final List<ActivityDTO> EXPECTED_LIST_ACTIVITY_DTO = Collections.singletonList(new ActivityDTO(1L, "name", IMAGE_ID));
+    private static final List<CommentDTO> EXPECTED_LIST_COMMENT_DTO = Collections.singletonList(new CommentDTO(1L, 1L, "displayName", "content", DateTimeUtil.getCurrentDate()));
+    private static final CommentDTO COMMENT_DTO = new CommentDTO(1L, 1L, "displayName", "content", DateTimeUtil.getCurrentDate());
     private static final int CURRENT_PAGE = 1;
     private static final String SORT_TYPE = "NEWEST_FIRST";
-    private static final int USER_ID = 1;
     private static final int EXPECTED_RECORD = 3;
 
 
@@ -246,7 +252,7 @@ public class ActivityServiceImplTest {
     }
 
     @Test
-    public void shouldReturn0IfDeleteActivityFail(){
+    public void shouldReturn0IfDeleteActivityFail() {
         int deleteSuccess = 0;
         Mockito.when(activityRepository.deleteActivity(ACTIVITY_ID)).thenReturn(deleteSuccess);
 
@@ -254,10 +260,45 @@ public class ActivityServiceImplTest {
     }
 
     @Test
-    public void shouldReturn1IfDeleteActivityFail(){
+    public void shouldReturn1IfDeleteActivityFail() {
         int deleteFailed = 0;
         Mockito.when(activityRepository.deleteActivity(ACTIVITY_ID)).thenReturn(deleteFailed);
 
         Assert.assertEquals(deleteFailed, activityService.deleteActivity(ACTIVITY_ID));
+    }
+
+    @Test
+    public void shouldReturnAllCommentByActivityId() {
+        Mockito.when(activityRepository.getAllCommentById(ACTIVITY_ID)).thenReturn(EXPECTED_LIST_COMMENT_DTO);
+
+        List<CommentDTO> actualListCommentDTO = activityService.getAllCommentById(ACTIVITY_ID);
+
+        Assert.assertEquals(EXPECTED_LIST_COMMENT_DTO, actualListCommentDTO);
+    }
+
+    @Test
+    public void shouldReturnEmptyListCommentByActivityId() {
+        Mockito.when(activityRepository.getAllCommentById(ACTIVITY_ID)).thenReturn(Collections.emptyList());
+
+        List<CommentDTO> actualListCommentDTO = activityService.getAllCommentById(ACTIVITY_ID);
+
+        Assert.assertEquals(Collections.emptyList(), actualListCommentDTO);
+    }
+
+    @Test
+    public void shouldReturn1IfAddCommentSuccess() {
+        Mockito.when(activityRepository.addComment(COMMENT_DTO, ACTIVITY_ID, USER_ID)).thenReturn(ADD_SUCCESS);
+        int actualResult = activityService.addComment(COMMENT_DTO, ACTIVITY_ID, USER_ID);
+
+        Assert.assertEquals(ADD_SUCCESS, actualResult);
+    }
+
+    @Test
+    public void shouldReturn0IfAddCommentFail() {
+        Mockito.when(activityRepository.addComment(COMMENT_DTO, ACTIVITY_ID, USER_ID)).thenReturn(ADD_FAIL);
+
+        int actualResult = activityService.addComment(COMMENT_DTO, ACTIVITY_ID, USER_ID);
+
+        Assert.assertEquals(ADD_FAIL, actualResult);
     }
 }

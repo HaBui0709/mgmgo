@@ -64,7 +64,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.addFilterBefore(characterEncodingFilter(), CsrfFilter.class)
                 .authorizeRequests()
-                .antMatchers("/activity/**", "/api/image/activity/**", "/profile/**")
+                .antMatchers("/activity/**", "/api/image/activity/**", "/comment/**", "/profile/**")
                 .authenticated()
                 .anyRequest().permitAll()
                 .and()

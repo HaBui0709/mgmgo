@@ -85,6 +85,46 @@
     color: #fbbe0a !important;
 }
 
+.comment.user {
+    display: flex;
+}
+
+.display-name {
+    color: #1d76bb;
+
+}
+
+.date-create {
+    color: #6c757d;
+}
+
+.icon-user-comment {
+    width: 35px;
+    min-width: 35px;
+    height: 35px;
+    min-height: 35px;
+    border-radius: 50%;
+    background-color: #fff;
+    border: 1px solid #ccc;
+}
+
+.comment-box {
+    border-radius: 5px;
+    border:none;
+}
+.textarea-comment{
+    border-radius: 5px;
+    font-size: 100%;
+}
+
+.username-comment {
+    font-size: 14px;
+}
+
+.comment .user {
+    flex-direction: row;
+}
+
 pre {
     font-family: 'Open Sans', Arial, sans-serif;
     font-size: 100%;
@@ -122,4 +162,7 @@ pre {
     position: absolute;
     top: 0;
     left: 0;
+}
+.comment-form-input{
+    display: flex;
 }

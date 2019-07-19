@@ -6,6 +6,7 @@ package com.mgmtp.internship.experiences.model.tables;
 
 import com.mgmtp.internship.experiences.model.tables.tables.Activity;
 import com.mgmtp.internship.experiences.model.tables.tables.ActivityImage;
+import com.mgmtp.internship.experiences.model.tables.tables.Comment;
 import com.mgmtp.internship.experiences.model.tables.tables.Favorite;
 import com.mgmtp.internship.experiences.model.tables.tables.Image;
 import com.mgmtp.internship.experiences.model.tables.tables.Rating;
@@ -37,6 +38,11 @@ public class Tables {
      * activity image table
      */
     public static final ActivityImage ACTIVITY_IMAGE = com.mgmtp.internship.experiences.model.tables.tables.ActivityImage.ACTIVITY_IMAGE;
+
+    /**
+     * comment table
+     */
+    public static final Comment COMMENT = com.mgmtp.internship.experiences.model.tables.tables.Comment.COMMENT;
 
     /**
      * favorite table

@@ -3,15 +3,15 @@ package com.mgmtp.internship.experiences.repositories;
 import com.mgmtp.internship.experiences.constants.EnumSort;
 import com.mgmtp.internship.experiences.dto.ActivityDTO;
 import com.mgmtp.internship.experiences.dto.ActivityDetailDTO;
-import org.jooq.*;
+import com.mgmtp.internship.experiences.dto.CommentDTO;
 import org.jooq.DSLContext;
 import org.jooq.Field;
+import org.jooq.SortField;
 import org.jooq.impl.DSL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.EnumMap;
@@ -19,14 +19,13 @@ import java.util.List;
 
 import static com.mgmtp.internship.experiences.constants.ApplicationConstant.FUNC_UNACCENT;
 import static com.mgmtp.internship.experiences.constants.ApplicationConstant.RECORD_OF_LIST;
+import static com.mgmtp.internship.experiences.model.tables.Tables.COMMENT;
 import static com.mgmtp.internship.experiences.model.tables.tables.Activity.ACTIVITY;
 import static com.mgmtp.internship.experiences.model.tables.tables.ActivityImage.ACTIVITY_IMAGE;
 import static com.mgmtp.internship.experiences.model.tables.tables.Image.IMAGE;
 import static com.mgmtp.internship.experiences.model.tables.tables.Rating.RATING;
-import static org.jooq.impl.DSL.*;
 import static com.mgmtp.internship.experiences.model.tables.tables.User.USER;
-import static org.jooq.impl.DSL.avg;
-import static org.jooq.impl.DSL.round;
+import static org.jooq.impl.DSL.*;
 
 /**
  * Activity Repository.
@@ -199,5 +198,22 @@ public class ActivityRepository {
                         .where(ACTIVITY_IMAGE.ACTIVITY_ID.eq(activityId)))).execute();
 
         return dslContext.deleteFrom(ACTIVITY).where(ACTIVITY.ID.eq(activityId)).execute();
+    }
+
+    public List<CommentDTO> getAllCommentById(long activityId) {
+        return dslContext.select(COMMENT.ID, USER.IMAGE_ID, USER.DISPLAY_NAME, COMMENT.CONTENT, COMMENT.DATE_CREATE)
+                .from(COMMENT)
+                .join(USER)
+                .on(COMMENT.USER_ID.eq(USER.ID))
+                .where(COMMENT.ACTIVITY_ID.eq(activityId))
+                .orderBy(COMMENT.DATE_CREATE.desc(), COMMENT.ID.desc())
+                .fetch()
+                .map(record -> new CommentDTO(record.get(COMMENT.ID), record.get(USER.IMAGE_ID), record.get(USER.DISPLAY_NAME), record.get(COMMENT.CONTENT), record.get(COMMENT.DATE_CREATE)));
+    }
+
+    public int addComment(CommentDTO commentDTO, long activityId, long userId) {
+        return dslContext.insertInto(COMMENT, COMMENT.CONTENT, COMMENT.DATE_CREATE, COMMENT.ACTIVITY_ID, COMMENT.USER_ID)
+                .values(commentDTO.getContent(), commentDTO.getDateCreate(), activityId, userId)
+                .execute();
     }
 }

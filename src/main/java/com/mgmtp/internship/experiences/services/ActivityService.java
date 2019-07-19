@@ -3,6 +3,7 @@ package com.mgmtp.internship.experiences.services;
 import com.mgmtp.internship.experiences.constants.EnumSort;
 import com.mgmtp.internship.experiences.dto.ActivityDTO;
 import com.mgmtp.internship.experiences.dto.ActivityDetailDTO;
+import com.mgmtp.internship.experiences.dto.CommentDTO;
 
 import java.util.List;
 
@@ -39,4 +40,8 @@ public interface ActivityService {
     public int countTotalRecordActivitybyUserId(long id);
 
     int deleteActivity(long activityId);
+
+    List<CommentDTO> getAllCommentById(long activityID);
+
+    int addComment(CommentDTO commentDTO, long activityId, long userId);
 }

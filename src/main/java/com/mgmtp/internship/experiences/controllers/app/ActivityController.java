@@ -4,6 +4,7 @@ import com.mgmtp.internship.experiences.config.security.CustomLdapUserDetails;
 import com.mgmtp.internship.experiences.constants.ApplicationConstant;
 import com.mgmtp.internship.experiences.dto.ActivityDetailDTO;
 import com.mgmtp.internship.experiences.dto.UserProfileDTO;
+import com.mgmtp.internship.experiences.dto.CommentDTO;
 import com.mgmtp.internship.experiences.services.ActivityService;
 import com.mgmtp.internship.experiences.services.FavoriteService;
 import com.mgmtp.internship.experiences.services.UserService;
@@ -30,6 +31,7 @@ public class ActivityController {
 
     private static final String ACTIVITY_INFO_ATTRIBUTE = "activityDetailDTO";
     private static final String USER_CREATED_INFO_ATTRIBUTE = "userCreatedInfo";
+    private static final String COMMENT_INFO_ATTRIBUTE = "commentDTO";
     private static final String ERROR_VIEW = "error";
     private static final String ERROR_MESSAGE = "errorMessage";
     private static final String ACTIVITY_NOT_FOUND = "Activity Not Found";
@@ -54,6 +56,8 @@ public class ActivityController {
             UserProfileDTO userProfileDTO = userService.findUserProfileById(activityDetailDTO.getCreatedByUserId());
             model.addAttribute(ACTIVITY_INFO_ATTRIBUTE, activityDetailDTO);
             model.addAttribute(USER_CREATED_INFO_ATTRIBUTE, userProfileDTO);
+            model.addAttribute("comments", activityService.getAllCommentById(activityId));
+            model.addAttribute(COMMENT_INFO_ATTRIBUTE, new CommentDTO());
             return "activity/detail";
         }
         model.addAttribute(ERROR_MESSAGE, ACTIVITY_NOT_FOUND);

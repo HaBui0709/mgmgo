@@ -1,9 +1,9 @@
 package com.mgmtp.internship.experiences.services.impl;
 
-
 import com.mgmtp.internship.experiences.constants.EnumSort;
 import com.mgmtp.internship.experiences.dto.ActivityDTO;
 import com.mgmtp.internship.experiences.dto.ActivityDetailDTO;
+import com.mgmtp.internship.experiences.dto.CommentDTO;
 import com.mgmtp.internship.experiences.repositories.ActivityRepository;
 import com.mgmtp.internship.experiences.services.ActivityService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,7 +81,7 @@ public class ActivityServiceImpl implements ActivityService {
     @Override
     public List<ActivityDTO> getListActivityByUserId(long id, int currentPage) {
         List<ActivityDTO> activityDTOList = activityRepository.getListActivityByUserId(id, currentPage);
-        if (activityDTOList.isEmpty()|| currentPage < 1) {
+        if (activityDTOList.isEmpty() || currentPage < 1) {
             return Collections.emptyList();
         }
         return activityDTOList;
@@ -105,5 +105,15 @@ public class ActivityServiceImpl implements ActivityService {
     @Override
     public int deleteActivity(long activityId) {
         return activityRepository.deleteActivity(activityId);
+    }
+
+    @Override
+    public List<CommentDTO> getAllCommentById(long activityID) {
+        return activityRepository.getAllCommentById(activityID);
+    }
+
+    @Override
+    public int addComment(CommentDTO commentDTO, long activityId, long userId) {
+        return activityRepository.addComment(commentDTO, activityId, userId);
     }
 }

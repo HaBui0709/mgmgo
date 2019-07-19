@@ -48,7 +48,8 @@
                     class="ml-2" th:text="${activityDetailDTO.address}"></span></div>
             <pre th:text="${activityDetailDTO.description}" class="card-text"></pre>
             <div class="d-flex justify-content-end">
-                <button class="row px-0 mx-0 btn btn-light mr-2" data-toggle="modal" id="report-button" data-target="#reportModal">
+                <button class="row px-0 mx-0 btn btn-light mr-2" data-toggle="modal" id="report-button"
+                        data-target="#reportModal">
                     <img src="/static/icons/flag_report.png" class="address-icon" alt="mgm-go">
                 </button>
                 <a th:href="@{/activity/update/{activityId}(activityId=${activityId})}"
@@ -117,10 +118,34 @@
     </div>
     <div id="favorite-return" class="alert create-message-success"></div>
 
+    <form method="post" id="commentForm" th:object="${commentDTO}">
+        <h5 class="mb-3">Comment</h5>
+        <div class="comment-form-input">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                <div class="mr-1">
+                    <img id="user-thumbnail" class="img-thumbnail" width="35" height="35"
+                         th:src="${#authentication.principal.userProfileDTO.imageId!=null}?@{/api/image/}+${#authentication.principal.userProfileDTO.imageId}:@{/static/images/default_profile_picture.png}"
+                         th:alt="${#authentication.principal.userProfileDTO.displayName}">
+                </div>
+                <div  class="pl-2 pt-1 pb-1 pr-2 mb-2 w-100">
+                    <textarea class="form-control textarea-comment"
+                              th:field="*{content}"
+                              id="comment__content"
+                              placeholder="Comment for activities"></textarea>
+                    <div class="mb-2">
+                        <div id="alertComment" class="text-danger text-alert-mes mb-2"></div>
+                        <button class="btn btn-success" type="button" id="send__comment__btn">Comment</button>
+                    </div>
+                </div>
+        </div>
+    </form>
+    <div class="mb-3"></div>
+    <th:block th:replace="activity/fragments/comment"></th:block>
 </div>
 <th:block layout:fragment="custom-script">
     <script src="/static/js/image.js?n=1"></script>
     <script type="text/javascript" src="/static/js/rate.js"></script>
+    <script type="text/javascript" src="/static/js/comment.js"></script>
     <script type="text/javascript" src="/static/js/favorite.js"></script>
     <script type="text/javascript" src="/static/js/report.js"></script>
 </th:block>
