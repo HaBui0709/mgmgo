@@ -44,4 +44,6 @@ public interface ActivityService {
     List<CommentDTO> getAllCommentById(long activityID);
 
     int addComment(CommentDTO commentDTO, long activityId, long userId);
+
+    boolean checkExistedCommentOfUserByInActivity(long userId, long activityId);
 }

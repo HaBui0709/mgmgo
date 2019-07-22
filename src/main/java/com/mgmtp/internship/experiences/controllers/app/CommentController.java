@@ -51,8 +51,12 @@ public class CommentController {
         }
         CustomLdapUserDetails currentUser = userService.getCurrentUser();
         commentDTO.setDateCreate(DateTimeUtil.getCurrentDate());
+        boolean checkExistedCommentOfUserByInActivity = activityService.checkExistedCommentOfUserByInActivity(currentUser.getId(), activityId);
         if (activityService.addComment(commentDTO, activityId, currentUser.getId()) != 0) {
             model.addAttribute("comments", activityService.getAllCommentById(activityId));
+            if (!checkExistedCommentOfUserByInActivity) {
+                userService.calculateAndUpdateRepulationScore(currentUser.getId(), ApplicationConstant.REPUTATION_SCORE_WRITING_COMMENT);
+            }
             activityService.updatedActiveDate(activityId);
             return "activity/fragments/comment";
         }

@@ -301,4 +301,22 @@ public class ActivityServiceImplTest {
 
         Assert.assertEquals(ADD_FAIL, actualResult);
     }
+
+    @Test
+    public void shouldReturnTrueIfHaveCommented(){
+        Mockito.when(activityRepository.checkExistedCommentOfUserInActitvity(USER_ID, ACTIVITY_ID)).thenReturn(true);
+
+        Boolean actualResult = activityService.checkExistedCommentOfUserByInActivity(USER_ID, ACTIVITY_ID);
+
+        Assert.assertEquals(true, actualResult);
+    }
+
+    @Test
+    public void shouldReturnFalseIfHaveNotCommented(){
+        Mockito.when(activityRepository.checkExistedCommentOfUserInActitvity(USER_ID, ACTIVITY_ID)).thenReturn(false);
+
+        Boolean actualResult = activityService.checkExistedCommentOfUserByInActivity(USER_ID, ACTIVITY_ID);
+
+        Assert.assertEquals(false, actualResult);
+    }
 }

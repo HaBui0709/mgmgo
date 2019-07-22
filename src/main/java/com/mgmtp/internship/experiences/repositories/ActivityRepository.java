@@ -216,4 +216,8 @@ public class ActivityRepository {
                 .values(commentDTO.getContent(), commentDTO.getDateCreate(), activityId, userId)
                 .execute();
     }
+
+    public boolean checkExistedCommentOfUserInActitvity(long userId, long activityId) {
+        return dslContext.fetchExists(COMMENT, COMMENT.ACTIVITY_ID.eq(activityId).and(COMMENT.USER_ID.eq(userId)));
+    }
 }

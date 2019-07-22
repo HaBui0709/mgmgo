@@ -83,7 +83,7 @@
     border: 2px transparent;
 }
 
-.nav-item:hover {
+.nav.nav-tabs .nav-item:hover {
     border-bottom: 2px solid #1d76bb;
 }
 

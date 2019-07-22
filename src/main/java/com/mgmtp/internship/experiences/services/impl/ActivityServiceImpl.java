@@ -116,4 +116,9 @@ public class ActivityServiceImpl implements ActivityService {
     public int addComment(CommentDTO commentDTO, long activityId, long userId) {
         return activityRepository.addComment(commentDTO, activityId, userId);
     }
+
+    @Override
+    public boolean checkExistedCommentOfUserByInActivity(long userId, long activityId) {
+        return activityRepository.checkExistedCommentOfUserInActitvity(userId, activityId);
+    }
 }
