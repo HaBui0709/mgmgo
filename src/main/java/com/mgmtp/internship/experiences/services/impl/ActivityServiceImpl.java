@@ -118,6 +118,11 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     @Override
+    public boolean checkIsActivityCreateByUserId(long activityId, long userId) {
+        return activityRepository.checkIsActivityCreateByUserId(activityId, userId);
+    }
+
+    @Override
     public boolean checkExistedCommentOfUserByInActivity(long userId, long activityId) {
         return activityRepository.checkExistedCommentOfUserInActitvity(userId, activityId);
     }

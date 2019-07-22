@@ -27,8 +27,8 @@ $(document).ready(function () {
         postRating(currentRating);
     }
 
-    function disableSave() {
-        $("#rate-save").text("...");
+    function disableSave(text = "...") {
+        $("#rate-save").text(text);
         $("#rate-save").prop("disabled", true);
     }
 
@@ -52,7 +52,6 @@ $(document).ready(function () {
     function hideModal() {
         $('#rateModal').modal('hide');
     }
-
 
     function getRequestURL() {
         return '/rating/activity/' + getActivityId();
@@ -117,7 +116,12 @@ $(document).ready(function () {
                 enableSave();
             }
         }).fail(function (data) {
-            setMessage("Could not load your old rating! Please try again later!", false);
+            disableSave("Save");
+            if (data.responseJSON.message) {
+                setMessage(data.responseJSON.message, false);
+            } else {
+                setMessage("Could not load your old rating! Please try again later!", false);
+            }
         });
     }
 
@@ -126,7 +130,9 @@ $(document).ready(function () {
         $.ajax({
             type: "POST",
             url: getRequestURL(),
-            data: {rating: currentRating},
+            data: {
+                rating: currentRating
+            },
             async: true,
             beforeSend: function (xhr) {
                 xhr.setRequestHeader($("meta[name=csrf-header]").attr("content"), $("meta[name=csrf-token]").attr("content"));
@@ -141,7 +147,11 @@ $(document).ready(function () {
             }
         }).fail(function (data) {
             enableSave();
-            setMessage("Something went wrong! Please try again.", false);
+            if (data.responseJSON.message) {
+                setMessage(data.responseJSON.message, false);
+            } else {
+                setMessage("Something went wrong! Please try again.", false);
+            }
         });
     }
 });

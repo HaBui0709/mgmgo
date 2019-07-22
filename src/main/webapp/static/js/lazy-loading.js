@@ -16,7 +16,7 @@ function seeMore() {
             $('.btn-loading').addClass('d-none');
             listWrapper.append(res);
             listWrapper.attr('current-page', currentPage);
-            if (listWrapper.attr('current-page') < listWrapper.attr('size-of-pages')) {
+            if (parseInt(listWrapper.attr('current-page')) < parseInt(listWrapper.attr('size-of-pages'))) {
                 $('#see-more').removeClass('d-none');
             }
         }

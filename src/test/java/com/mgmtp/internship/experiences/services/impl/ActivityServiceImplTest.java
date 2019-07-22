@@ -303,6 +303,25 @@ public class ActivityServiceImplTest {
     }
 
     @Test
+    public void shouldReturnTrueIfActivityIsCreateByUserId() {
+        Mockito.when(activityRepository.checkIsActivityCreateByUserId(ACTIVITY_ID, USER_ID)).thenReturn(true);
+
+        boolean actualResult = activityService.checkIsActivityCreateByUserId(ACTIVITY_ID, USER_ID);
+
+        Assert.assertEquals(true, actualResult);
+    }
+
+    @Test
+    public void shouldReturnFalseIfActivityIsNotCreateByUserId() {
+        long userIdCreateActivity = 2L;
+        Mockito.when(activityRepository.checkIsActivityCreateByUserId(ACTIVITY_ID, userIdCreateActivity)).thenReturn(false);
+
+        boolean actualResult = activityService.checkIsActivityCreateByUserId(ACTIVITY_ID, userIdCreateActivity);
+
+        Assert.assertEquals(false, actualResult);
+    }
+
+    @Test
     public void shouldReturnTrueIfHaveCommented(){
         Mockito.when(activityRepository.checkExistedCommentOfUserInActitvity(USER_ID, ACTIVITY_ID)).thenReturn(true);
 

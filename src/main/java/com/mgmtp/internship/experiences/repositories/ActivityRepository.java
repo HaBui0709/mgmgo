@@ -4,9 +4,7 @@ import com.mgmtp.internship.experiences.constants.EnumSort;
 import com.mgmtp.internship.experiences.dto.ActivityDTO;
 import com.mgmtp.internship.experiences.dto.ActivityDetailDTO;
 import com.mgmtp.internship.experiences.dto.CommentDTO;
-import org.jooq.DSLContext;
-import org.jooq.Field;
-import org.jooq.SortField;
+import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -215,6 +213,10 @@ public class ActivityRepository {
         return dslContext.insertInto(COMMENT, COMMENT.CONTENT, COMMENT.DATE_CREATE, COMMENT.ACTIVITY_ID, COMMENT.USER_ID)
                 .values(commentDTO.getContent(), commentDTO.getDateCreate(), activityId, userId)
                 .execute();
+    }
+
+    public boolean checkIsActivityCreateByUserId(long activityId, long userId) {
+        return dslContext.fetchExists(ACTIVITY, ACTIVITY.ID.eq(activityId).and(ACTIVITY.CREATED_BY_USER_ID.eq(userId)));
     }
 
     public boolean checkExistedCommentOfUserInActitvity(long userId, long activityId) {

@@ -37,13 +37,15 @@ public interface ActivityService {
 
     int updatedActiveDate(Long activityId);
 
-    public int countTotalRecordActivitybyUserId(long id);
+    int countTotalRecordActivitybyUserId(long id);
 
     int deleteActivity(long activityId);
 
     List<CommentDTO> getAllCommentById(long activityID);
 
     int addComment(CommentDTO commentDTO, long activityId, long userId);
+
+    boolean checkIsActivityCreateByUserId(long activityId, long userId);
 
     boolean checkExistedCommentOfUserByInActivity(long userId, long activityId);
 }

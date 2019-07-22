@@ -3,6 +3,7 @@ package com.mgmtp.internship.experiences.controllers.api;
 import com.mgmtp.internship.experiences.config.security.CustomLdapUserDetails;
 import com.mgmtp.internship.experiences.dto.UserProfileDTO;
 import com.mgmtp.internship.experiences.exceptions.ApiException;
+import com.mgmtp.internship.experiences.services.impl.ActivityServiceImpl;
 import com.mgmtp.internship.experiences.services.impl.RatingServiceImpl;
 import com.mgmtp.internship.experiences.services.impl.UserServiceImpl;
 import org.junit.Before;
@@ -40,6 +41,7 @@ public class RatingRestControllerTest {
     private static final int ACTIVITY_ID = 1;
     private static final String RATING_URL = "/rating/activity/1";
     private static final String RATING_PARAM = "rating";
+    private static final int RATING = 5;
     private static final UserProfileDTO USER_PROFILE_DTO = new UserProfileDTO(IMAGE_ID, DISPLAY_NAME, USER_REPUTATION_SCORE);
     private static final LdapUserDetails LDAP_USER_DETAILS = mock(LdapUserDetails.class);
     private static final CustomLdapUserDetails CUSTOM_USER_DETAILS = new CustomLdapUserDetails(USER_ID, USER_PROFILE_DTO, LDAP_USER_DETAILS);
@@ -47,6 +49,8 @@ public class RatingRestControllerTest {
 
     @Mock
     private UserServiceImpl userService;
+    @Mock
+    private ActivityServiceImpl activityService;
 
     @Mock
     private RatingServiceImpl ratingService;
@@ -60,14 +64,19 @@ public class RatingRestControllerTest {
     }
 
     @Test
-    public void shouldReturnUserRating() throws Exception {
+    public void shouldReturnUserRating() {
         int expectedRating = 5;
         Mockito.when(userService.getCurrentUser()).thenReturn(CUSTOM_USER_DETAILS);
+        Mockito.when(activityService.checkIsActivityCreateByUserId(ACTIVITY_ID, CUSTOM_USER_DETAILS.getId())).thenReturn(false);
         Mockito.when(ratingService.getRateByUserId(ACTIVITY_ID, CUSTOM_USER_DETAILS.getId())).thenReturn(expectedRating);
 
-        mockMvc.perform(MockMvcRequestBuilders.get(RATING_URL))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().string("{\"rating\":" + expectedRating + "}"));
+        try {
+            mockMvc.perform(MockMvcRequestBuilders.get(RATING_URL))
+                    .andExpect(MockMvcResultMatchers.status().isOk())
+                    .andExpect(MockMvcResultMatchers.content().string("{\"rating\":" + expectedRating + "}"));
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage());
+        }
     }
 
     @Test
@@ -84,11 +93,26 @@ public class RatingRestControllerTest {
     }
 
     @Test
+    public void shouldReturnErrorMessageOnGetUserRatingIfActivityCreateByCurrentUser() {
+        Mockito.when(userService.getCurrentUser()).thenReturn(CUSTOM_USER_DETAILS);
+        Mockito.when(activityService.checkIsActivityCreateByUserId(ACTIVITY_ID, CUSTOM_USER_DETAILS.getId())).thenReturn(true);
+
+        try {
+            mockMvc.perform(MockMvcRequestBuilders.get(RATING_URL))
+                    .andExpect(MockMvcResultMatchers.status().isForbidden())
+                    .andExpect(MockMvcResultMatchers.content().string("{\"status\":\"FAILED\",\"message\":\"You can not rate your own activity.\"}"));
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage());
+        }
+    }
+
+    @Test
     public void shouldReturnAverageRatingIfEditSuccess() {
         double expectedRating = 5.0;
         int updateSuccess = 1;
         int rating = 5;
         Mockito.when(userService.getCurrentUser()).thenReturn(CUSTOM_USER_DETAILS);
+        Mockito.when(activityService.checkIsActivityCreateByUserId(ACTIVITY_ID, CUSTOM_USER_DETAILS.getId())).thenReturn(false);
         Mockito.when(ratingService.editRateByUserId(ACTIVITY_ID, CUSTOM_USER_DETAILS.getId(), rating)).thenReturn(updateSuccess);
         Mockito.when(ratingService.getRate(ACTIVITY_ID)).thenReturn(expectedRating);
 
@@ -104,12 +128,11 @@ public class RatingRestControllerTest {
 
     @Test
     public void shouldReturnErrorOnUpdateRatingIfNotLogged() {
-        int rating = 4;
         Mockito.when(userService.getCurrentUser()).thenReturn(null);
 
         try {
             mockMvc.perform(MockMvcRequestBuilders.post(RATING_URL)
-                    .param(RATING_PARAM, String.valueOf(rating)))
+                    .param(RATING_PARAM, String.valueOf(RATING)))
                     .andExpect(MockMvcResultMatchers.status().isUnauthorized())
                     .andExpect(MockMvcResultMatchers.content().string("{\"status\":\"FAILED\",\"message\":\"Please login to perform this operation.\"}"));
         } catch (Exception e) {
@@ -120,15 +143,29 @@ public class RatingRestControllerTest {
     @Test
     public void shouldReturnServerErrorOnUpdateIfEditFail() {
         int updateFail = 0;
-        int rating = 5;
         Mockito.when(userService.getCurrentUser()).thenReturn(CUSTOM_USER_DETAILS);
-        Mockito.when(ratingService.editRateByUserId(ACTIVITY_ID, CUSTOM_USER_DETAILS.getId(), rating)).thenReturn(updateFail).thenThrow(ApiException.class);
+        Mockito.when(activityService.checkIsActivityCreateByUserId(ACTIVITY_ID, CUSTOM_USER_DETAILS.getId())).thenReturn(false);
+        Mockito.when(ratingService.editRateByUserId(ACTIVITY_ID, CUSTOM_USER_DETAILS.getId(), RATING)).thenReturn(updateFail).thenThrow(ApiException.class);
 
         try {
             mockMvc.perform(MockMvcRequestBuilders.post(RATING_URL)
-                    .param(RATING_PARAM, String.valueOf(rating)))
+                    .param(RATING_PARAM, String.valueOf(RATING)))
                     .andExpect(MockMvcResultMatchers.status().isBadRequest())
                     .andExpect(MockMvcResultMatchers.content().string("{\"status\":\"FAILED\",\"message\":\"Something went wrong! Please try again.\"}"));
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage());
+        }
+    }
+
+    @Test
+    public void shouldReturnErrorMessageOnUpdateRatingIfActivityCreateByCurrentUser() {
+        Mockito.when(userService.getCurrentUser()).thenReturn(CUSTOM_USER_DETAILS);
+        Mockito.when(activityService.checkIsActivityCreateByUserId(ACTIVITY_ID, CUSTOM_USER_DETAILS.getId())).thenReturn(true);
+
+        try {
+            mockMvc.perform(MockMvcRequestBuilders.get(RATING_URL))
+                    .andExpect(MockMvcResultMatchers.status().isForbidden())
+                    .andExpect(MockMvcResultMatchers.content().string("{\"status\":\"FAILED\",\"message\":\"You can not rate your own activity.\"}"));
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
         }

@@ -38,6 +38,9 @@ public class RatingRestController extends BaseRestController {
         if (user == null) {
             throw new ApiException(HttpStatus.UNAUTHORIZED, "Please login to perform this operation.");
         }
+        if (activityService.checkIsActivityCreateByUserId(activityId, user.getId())) {
+            throw new ApiException(HttpStatus.FORBIDDEN, "You can not rate your own activity.");
+        }
         JSONObject result = new JSONObject();
         result.put("rating", ratingService.getRateByUserId(activityId, user.getId()));
         return result;
@@ -52,6 +55,9 @@ public class RatingRestController extends BaseRestController {
         CustomLdapUserDetails user = userService.getCurrentUser();
         if (user == null) {
             throw new ApiException(HttpStatus.UNAUTHORIZED, "Please login to perform this operation.");
+        }
+        if (activityService.checkIsActivityCreateByUserId(activityId, user.getId())) {
+            throw new ApiException(HttpStatus.FORBIDDEN, "You can not rate your own activity.");
         }
         int rateOfUser = ratingService.getRateByUserId(activityId, user.getId());
         if (ratingService.editRateByUserId(activityId, user.getId(), rating) == 1) {
