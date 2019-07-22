@@ -53,6 +53,7 @@ public class CommentController {
         commentDTO.setDateCreate(DateTimeUtil.getCurrentDate());
         if (activityService.addComment(commentDTO, activityId, currentUser.getId()) != 0) {
             model.addAttribute("comments", activityService.getAllCommentById(activityId));
+            activityService.updatedActiveDate(activityId);
             return "activity/fragments/comment";
         }
         throw new ApiException(HttpStatus.BAD_REQUEST, "Something went wrong! Please try again.");
