@@ -5,6 +5,7 @@ import com.mgmtp.internship.experiences.dto.ActivityDTO;
 import com.mgmtp.internship.experiences.dto.ActivityDetailDTO;
 import com.mgmtp.internship.experiences.dto.CommentDTO;
 import com.mgmtp.internship.experiences.repositories.ActivityRepository;
+import com.mgmtp.internship.experiences.utils.ActivityTestUtil;
 import com.mgmtp.internship.experiences.utils.DateTimeUtil;
 import org.junit.Assert;
 import org.junit.Test;
@@ -24,19 +25,16 @@ import java.util.List;
  */
 @RunWith(MockitoJUnitRunner.class)
 public class ActivityServiceImplTest {
-    private static final long ACTIVITY_ID = 1L;
     private static final long USER_ID = 1L;
     private static final int ADD_SUCCESS = 1;
     private static final int ADD_FAIL = 0;
     private static final String EXIST_NAME = "new name";
-    private static final int CREATED_BY_USER_ID = 1;
-    private static final int UPDATED_BY_USER_ID = 1;
+    private static final long ACTIVITY_ID = 1L;
     private static final long IMAGE_ID = 1;
-    private static final double RATING = 2.5;
-    private static final ActivityDetailDTO EXPECTED_ACTIVITY_DETAIL_DTO = new ActivityDetailDTO(ACTIVITY_ID, "new", "Description", RATING, IMAGE_ID, CREATED_BY_USER_ID, UPDATED_BY_USER_ID);
-    private static final ActivityDetailDTO EXISTED_ACTIVITY_DETAIL_DTO = new ActivityDetailDTO(2, "new", "Descriptionabc", RATING, IMAGE_ID, CREATED_BY_USER_ID, UPDATED_BY_USER_ID);
+    private static final ActivityDetailDTO EXPECTED_ACTIVITY_DETAIL_DTO = ActivityTestUtil.prepareExpectedActivityDetailDTOWithNameForTest("name");
+    private static final ActivityDetailDTO EXISTED_ACTIVITY_DETAIL_DTO = ActivityTestUtil.prepareExpectedActivityDetailDTOWithNameForTest(EXIST_NAME);
     private static final String KEY_SEARCH = "abc";
-    private static final List<ActivityDTO> EXPECTED_LIST_ACTIVITY_DTO = Collections.singletonList(new ActivityDTO(1L, "name", IMAGE_ID));
+    private static final List<ActivityDTO> EXPECTED_LIST_ACTIVITY_DTO = Collections.singletonList(new ActivityDTO(1L, "name", IMAGE_ID, Collections.emptyList()));
     private static final List<CommentDTO> EXPECTED_LIST_COMMENT_DTO = Collections.singletonList(new CommentDTO(1L, 1L, "displayName", "content", DateTimeUtil.getCurrentDate()));
     private static final CommentDTO COMMENT_DTO = new CommentDTO(1L, 1L, "displayName", "content", DateTimeUtil.getCurrentDate());
     private static final int CURRENT_PAGE = 1;
@@ -87,7 +85,7 @@ public class ActivityServiceImplTest {
 
     @Test
     public void shouldReturn1IfInsertSuccess() {
-        final int INSERT_SUCCESS = 1;
+        final Long INSERT_SUCCESS = 1L;
         Mockito.when(activityRepository.create(EXPECTED_ACTIVITY_DETAIL_DTO)).thenReturn(INSERT_SUCCESS);
 
         Assert.assertEquals(INSERT_SUCCESS, activityService.create(EXPECTED_ACTIVITY_DETAIL_DTO));
@@ -95,7 +93,7 @@ public class ActivityServiceImplTest {
 
     @Test
     public void shouldReturn0IfInsertFailed() {
-        final int INSERT_SUCCESS = 0;
+        final Long INSERT_SUCCESS = 0L;
         Mockito.when(activityRepository.create(EXPECTED_ACTIVITY_DETAIL_DTO)).thenReturn(INSERT_SUCCESS);
 
         Assert.assertEquals(INSERT_SUCCESS, activityService.create(EXPECTED_ACTIVITY_DETAIL_DTO));
@@ -118,7 +116,7 @@ public class ActivityServiceImplTest {
     @Test
     public void shouldReturnExistedActivityIfNameExistWhenUpdate() {
         Mockito.when(activityRepository.findByName(EXIST_NAME)).thenReturn(EXISTED_ACTIVITY_DETAIL_DTO);
-        Assert.assertEquals(EXISTED_ACTIVITY_DETAIL_DTO, activityService.checkExistNameForUpdate(EXPECTED_ACTIVITY_DETAIL_DTO.getId(), EXIST_NAME));
+        Assert.assertEquals(EXISTED_ACTIVITY_DETAIL_DTO, activityService.checkExistNameForUpdate(2L, EXIST_NAME));
     }
 
     @Test

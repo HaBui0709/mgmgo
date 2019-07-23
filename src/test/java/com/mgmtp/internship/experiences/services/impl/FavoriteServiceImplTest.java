@@ -25,7 +25,7 @@ public class FavoriteServiceImplTest {
 
     private static final long ACTIVITY_ID = 1;
     private static final long USER_ID = 1;
-    private static final List<ActivityDTO> EXPECTED_LIST_FAVORITE_ACTIVITY_DTO = Collections.singletonList(new ActivityDTO(1L, "name", 1L));
+    private static final List<ActivityDTO> EXPECTED_LIST_FAVORITE_ACTIVITY_DTO = Collections.singletonList(new ActivityDTO(1L, "name", 1L, Collections.emptyList()));
     private static final int CURRENT_PAGE = 1;
 
     @Mock

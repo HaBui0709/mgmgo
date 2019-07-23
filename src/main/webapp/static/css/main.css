@@ -212,6 +212,9 @@ body {
     right: 0 !important;
 }
 
+.form-control, .btn {
+    font-size: inherit;
+}
 .floating-action-button {
     right: 1.3rem;
     bottom: 1.3rem;

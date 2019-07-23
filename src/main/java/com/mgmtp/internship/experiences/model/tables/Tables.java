@@ -6,11 +6,13 @@ package com.mgmtp.internship.experiences.model.tables;
 
 import com.mgmtp.internship.experiences.model.tables.tables.Activity;
 import com.mgmtp.internship.experiences.model.tables.tables.ActivityImage;
+import com.mgmtp.internship.experiences.model.tables.tables.ActivityTag;
 import com.mgmtp.internship.experiences.model.tables.tables.Comment;
 import com.mgmtp.internship.experiences.model.tables.tables.Favorite;
 import com.mgmtp.internship.experiences.model.tables.tables.Image;
 import com.mgmtp.internship.experiences.model.tables.tables.Rating;
 import com.mgmtp.internship.experiences.model.tables.tables.ReportActivity;
+import com.mgmtp.internship.experiences.model.tables.tables.Tag;
 import com.mgmtp.internship.experiences.model.tables.tables.User;
 
 import javax.annotation.Generated;
@@ -40,6 +42,11 @@ public class Tables {
     public static final ActivityImage ACTIVITY_IMAGE = com.mgmtp.internship.experiences.model.tables.tables.ActivityImage.ACTIVITY_IMAGE;
 
     /**
+     * activity tag table
+     */
+    public static final ActivityTag ACTIVITY_TAG = com.mgmtp.internship.experiences.model.tables.tables.ActivityTag.ACTIVITY_TAG;
+
+    /**
      * comment table
      */
     public static final Comment COMMENT = com.mgmtp.internship.experiences.model.tables.tables.Comment.COMMENT;
@@ -63,6 +70,11 @@ public class Tables {
      * report activity table
      */
     public static final ReportActivity REPORT_ACTIVITY = com.mgmtp.internship.experiences.model.tables.tables.ReportActivity.REPORT_ACTIVITY;
+
+    /**
+     * tag table
+     */
+    public static final Tag TAG = com.mgmtp.internship.experiences.model.tables.tables.Tag.TAG;
 
     /**
      * user table

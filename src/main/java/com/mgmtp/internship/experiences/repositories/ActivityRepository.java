@@ -6,22 +6,32 @@ import com.mgmtp.internship.experiences.dto.ActivityDetailDTO;
 import com.mgmtp.internship.experiences.dto.CommentDTO;
 import org.jooq.*;
 import org.jooq.impl.DSL;
+import org.simpleflatmapper.jdbc.JdbcMapper;
+import org.simpleflatmapper.jdbc.JdbcMapperFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.mgmtp.internship.experiences.constants.ApplicationConstant.FUNC_UNACCENT;
 import static com.mgmtp.internship.experiences.constants.ApplicationConstant.RECORD_OF_LIST;
 import static com.mgmtp.internship.experiences.model.tables.Tables.COMMENT;
 import static com.mgmtp.internship.experiences.model.tables.tables.Activity.ACTIVITY;
 import static com.mgmtp.internship.experiences.model.tables.tables.ActivityImage.ACTIVITY_IMAGE;
+import static com.mgmtp.internship.experiences.model.tables.tables.ActivityTag.ACTIVITY_TAG;
 import static com.mgmtp.internship.experiences.model.tables.tables.Image.IMAGE;
 import static com.mgmtp.internship.experiences.model.tables.tables.Rating.RATING;
+import static com.mgmtp.internship.experiences.model.tables.tables.Tag.TAG;
 import static com.mgmtp.internship.experiences.model.tables.tables.User.USER;
 import static org.jooq.impl.DSL.*;
 
@@ -33,29 +43,49 @@ import static org.jooq.impl.DSL.*;
 @Component
 public class ActivityRepository {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(ActivityRepository.class);
     private static final String IMAGE_ID_PROPERTY = "imageId";
+    private static final String TAGS_ID_PROPERTY = "tags_id";
+    private static final String TAGS_CONTENT_PROPERTY = "tags_content";
+    private static final String ID_KEY = "id";
 
     @Autowired
     private DSLContext dslContext;
 
     public ActivityDetailDTO findById(long activityId) {
-        return dslContext
-                .select(ACTIVITY.ID,
+        JdbcMapper mapper = JdbcMapperFactory.newInstance()
+                .addKeys(ID_KEY, TAGS_ID_PROPERTY)
+                .newMapper(ActivityDetailDTO.class);
+        try (ResultSet rs = dslContext
+                .select(
+                        ACTIVITY.ID,
                         ACTIVITY.NAME,
                         ACTIVITY.DESCRIPTION,
                         ACTIVITY.ADDRESS,
                         round(avg(RATING.VALUE), 1).as("rating"),
                         IMAGE.ID.as(IMAGE_ID_PROPERTY),
                         ACTIVITY.CREATED_BY_USER_ID,
-                        ACTIVITY.UPDATED_BY_USER_ID)
+                        ACTIVITY.UPDATED_BY_USER_ID,
+                        TAG.ID.as(TAGS_ID_PROPERTY),
+                        TAG.CONTENT.as(TAGS_CONTENT_PROPERTY))
                 .from(ACTIVITY)
+                .leftJoin(ACTIVITY_TAG)
+                .on(ACTIVITY_TAG.ACTIVITY_ID.eq(ACTIVITY.ID))
+                .leftJoin(TAG)
+                .on(TAG.ID.eq(ACTIVITY_TAG.TAG_ID))
                 .leftJoin(RATING)
                 .on(ACTIVITY.ID.eq(RATING.ACTIVITY_ID))
                 .leftJoin(ACTIVITY_IMAGE)
                 .on(ACTIVITY.ID.eq(ACTIVITY_IMAGE.ACTIVITY_ID))
                 .leftJoin(IMAGE).on(ACTIVITY_IMAGE.IMAGE_ID.eq(IMAGE.ID))
                 .where(ACTIVITY.ID.eq(activityId))
-                .groupBy(ACTIVITY.ID, IMAGE.ID).fetchOneInto(ActivityDetailDTO.class);
+                .groupBy(ACTIVITY.ID, IMAGE.ID, TAG.ID)
+                .fetchResultSet()) {
+            return (ActivityDetailDTO) mapper.stream(rs).findFirst().get();
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        }
+        return null;
     }
 
     public int update(ActivityDetailDTO activityDetailDTO) {
@@ -68,10 +98,18 @@ public class ActivityRepository {
                 .where(ACTIVITY.ID.eq(activityDetailDTO.getId())).execute();
     }
 
-    public int create(ActivityDetailDTO activityDetailDTO) {
-        return dslContext.insertInto(ACTIVITY, ACTIVITY.NAME, ACTIVITY.DESCRIPTION, ACTIVITY.CREATED_BY_USER_ID, ACTIVITY.UPDATED_BY_USER_ID, ACTIVITY.ADDRESS)
+    public Long create(ActivityDetailDTO activityDetailDTO) {
+        return dslContext
+                .insertInto(ACTIVITY,
+                        ACTIVITY.NAME,
+                        ACTIVITY.DESCRIPTION,
+                        ACTIVITY.CREATED_BY_USER_ID,
+                        ACTIVITY.UPDATED_BY_USER_ID,
+                        ACTIVITY.ADDRESS)
                 .values(activityDetailDTO.getName(), activityDetailDTO.getDescription(), activityDetailDTO.getCreatedByUserId(), activityDetailDTO.getCreatedByUserId(), activityDetailDTO.getAddress())
-                .execute();
+                .returning(ACTIVITY.ID)
+                .fetchOne()
+                .getId();
     }
 
     public long getIdActivity(String name) {
@@ -99,11 +137,20 @@ public class ActivityRepository {
 
     public List<ActivityDTO> search(String text, int currentPage, EnumSort sortType) {
         Field<String> keySearch = DSL.function(FUNC_UNACCENT, String.class, DSL.val(text.trim()));
-        return dslContext
+        JdbcMapper mapper = JdbcMapperFactory.newInstance()
+                .addKeys(ID_KEY, TAGS_ID_PROPERTY)
+                .newMapper(ActivityDTO.class);
+        try (ResultSet resultSet = dslContext
                 .select(ACTIVITY.ID,
                         ACTIVITY.NAME,
-                        IMAGE.ID.as(IMAGE_ID_PROPERTY))
+                        IMAGE.ID.as(IMAGE_ID_PROPERTY),
+                        TAG.ID.as(TAGS_ID_PROPERTY),
+                        TAG.CONTENT.as(TAGS_CONTENT_PROPERTY))
                 .from(ACTIVITY)
+                .leftJoin(ACTIVITY_TAG)
+                .on(ACTIVITY_TAG.ACTIVITY_ID.eq(ACTIVITY.ID))
+                .leftJoin(TAG)
+                .on(TAG.ID.eq(ACTIVITY_TAG.TAG_ID))
                 .leftJoin(ACTIVITY_IMAGE)
                 .on(ACTIVITY.ID.eq(ACTIVITY_IMAGE.ACTIVITY_ID))
                 .leftJoin(IMAGE).on(ACTIVITY_IMAGE.IMAGE_ID.eq(IMAGE.ID))
@@ -111,11 +158,17 @@ public class ActivityRepository {
                 .where(DSL.function(FUNC_UNACCENT, String.class, ACTIVITY.NAME).containsIgnoreCase(keySearch))
                 .or(DSL.function(FUNC_UNACCENT, String.class, ACTIVITY.DESCRIPTION).containsIgnoreCase(keySearch))
                 .or(DSL.function(FUNC_UNACCENT, String.class, ACTIVITY.ADDRESS).containsIgnoreCase(keySearch))
-                .groupBy(ACTIVITY.ID, IMAGE.ID)
+                .groupBy(ACTIVITY.ID, IMAGE.ID, TAG.ID)
                 .orderBy(hashMapSortType(sortType))
                 .offset((currentPage - 1) * RECORD_OF_LIST)
                 .limit(RECORD_OF_LIST)
-                .fetchInto(ActivityDTO.class);
+                .fetchResultSet()) {
+            Stream<ActivityDTO> stream = mapper.stream(resultSet);
+            return stream.collect(Collectors.toList());
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        }
+        return Collections.emptyList();
     }
 
     public int countTotalRecordSearch(String text) {
@@ -128,17 +181,36 @@ public class ActivityRepository {
     }
 
     public List<ActivityDTO> getActivities(int currentPage, EnumSort sortType) {
-        return dslContext.select(ACTIVITY.ID, ACTIVITY.NAME, IMAGE.ID.as(IMAGE_ID_PROPERTY))
+        JdbcMapper mapper = JdbcMapperFactory.newInstance()
+                .addKeys(ID_KEY, TAGS_ID_PROPERTY)
+                .newMapper(ActivityDTO.class);
+
+        try (ResultSet resultSet = dslContext
+                .select(ACTIVITY.ID,
+                        ACTIVITY.NAME,
+                        IMAGE.ID.as(IMAGE_ID_PROPERTY),
+                        TAG.ID.as(TAGS_ID_PROPERTY),
+                        TAG.CONTENT.as(TAGS_CONTENT_PROPERTY))
                 .from(ACTIVITY)
+                .leftJoin(ACTIVITY_TAG)
+                .on(ACTIVITY_TAG.ACTIVITY_ID.eq(ACTIVITY.ID))
+                .leftJoin(TAG)
+                .on(TAG.ID.eq(ACTIVITY_TAG.TAG_ID))
                 .leftJoin(ACTIVITY_IMAGE)
                 .on(ACTIVITY.ID.eq(ACTIVITY_IMAGE.ACTIVITY_ID))
                 .leftJoin(IMAGE).on(ACTIVITY_IMAGE.IMAGE_ID.eq(IMAGE.ID))
                 .leftJoin(RATING).on(ACTIVITY.ID.eq(RATING.ACTIVITY_ID))
-                .groupBy(ACTIVITY.ID, IMAGE.ID)
+                .groupBy(ACTIVITY.ID, IMAGE.ID, TAG.ID)
                 .orderBy(hashMapSortType(sortType))
                 .offset((currentPage - 1) * RECORD_OF_LIST)
                 .limit(RECORD_OF_LIST)
-                .fetchInto(ActivityDTO.class);
+                .fetchResultSet()) {
+            Stream<ActivityDTO> stream = mapper.stream(resultSet);
+            return stream.collect(Collectors.toList());
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        }
+        return Collections.emptyList();
     }
 
     public int countTotalRecordActivity() {

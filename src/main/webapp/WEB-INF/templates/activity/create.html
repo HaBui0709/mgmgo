@@ -7,6 +7,8 @@
     <title>mgm go</title>
     <link rel="stylesheet" type="text/css" th:href="@{/static/css/home/index.css}"/>
     <link rel="stylesheet" type="text/css" th:href="@{/static/css/activity/detail.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/static/css/auto-complete.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/static/css/tags.css}"/>
     <meta type="text" name="csrf-token" th:content="${_csrf!=null?_csrf.token:''}"/>
     <meta type="text" name="csrf-header" th:content="${_csrf!=null?_csrf.headerName:'X-CSRF-Token'}"/>
 </head>
@@ -40,7 +42,7 @@
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
             <div class="form-group">
                 <label for="title">Name</label>
-                <input type="text" name="name" class="form-control" id="title"
+                <input type="text" name="name" class="form-control" id="title" placeholder="Enter activity's name"
                        th:value="${activityDetailDTO.getName()}">
                 <div id="alertName" class="text-danger text-alert-mes"></div>
                 <div class="text-danger text-alert-mes" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
@@ -48,6 +50,7 @@
             <div class="form-group">
                 <label for="description">Description</label>
                 <textarea class="form-control" name="description" id="description" rows="3"
+                          placeholder="Enter activity's description"
                           th:text="${activityDetailDTO.description}"></textarea>
                 <div id="alertDes" class="text-danger text-alert-mes"></div>
                 <div class="text-danger text-alert-mes" th:if="${#fields.hasErrors('description')}"
@@ -57,12 +60,19 @@
                 <label for="address">Address</label>
                 <div class="input-group">
                     <input type="text" class="form-control border-right-0 pr-1" id="address"
+                           placeholder="Enter activity's address"
                            th:value="${activityDetailDTO.address}" th:field="*{address}">
                     <span class="input-group-append">
                         <button type="button" class="btn-toggle input-group-text bg-white pl-0" data-toggle="modal"
                                 data-target="#modalGetLocation" id="findLocation">
                         <img src="/static/icons/location-gps.png" class="address-icon" alt="mgm-go"></button>
                                 </span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Tags</label>
+                <div class="tag-box form-control" placeholder="Enter activity's tags">
+                    <div class="auto-complete tag-box-input" id="tag-ac"></div>
                 </div>
             </div>
             <button id="submitBtn" type="submit" class="btn btn-success">Create</button>
@@ -100,5 +110,7 @@
 </div>
 <th:block layout:fragment="custom-script">
     <script src="/static/js/activity.js"></script>
+    <script src="/static/js/auto-complete.js"></script>
+    <script src="/static/js/tags.js"></script>
 </th:block>
 </body>

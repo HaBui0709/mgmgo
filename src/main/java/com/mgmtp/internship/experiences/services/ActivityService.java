@@ -17,7 +17,7 @@ public interface ActivityService {
 
     int update(ActivityDetailDTO activityDetailDTO);
 
-    int create(ActivityDetailDTO activityDetailDTO);
+    Long create(ActivityDetailDTO activityDetailDTO);
 
     ActivityDetailDTO checkExistNameForCreate(String activityName);
 

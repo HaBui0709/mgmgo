@@ -31,7 +31,7 @@ import java.util.List;
 public class HomeControllerTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(HomeControllerTest.class);
-    private static final List<ActivityDTO> EXPECTED_ACTIVITIES = Collections.singletonList(new ActivityDTO(1L, "name", 1L));
+    private static final List<ActivityDTO> EXPECTED_ACTIVITIES = Collections.singletonList(new ActivityDTO(1L, "name", 1L, Collections.emptyList()));
     private static final String URL_SEE_MORE = "/more/1";
     private static final String VIEW_LIST_ACTIVITIES = "activity/fragments/list-activities";
     private static final String ACTIVITIES_ATTRIBUTE = "activities";

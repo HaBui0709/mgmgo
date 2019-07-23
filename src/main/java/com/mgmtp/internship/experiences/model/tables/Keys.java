@@ -6,19 +6,23 @@ package com.mgmtp.internship.experiences.model.tables;
 
 import com.mgmtp.internship.experiences.model.tables.tables.Activity;
 import com.mgmtp.internship.experiences.model.tables.tables.ActivityImage;
+import com.mgmtp.internship.experiences.model.tables.tables.ActivityTag;
 import com.mgmtp.internship.experiences.model.tables.tables.Comment;
 import com.mgmtp.internship.experiences.model.tables.tables.Favorite;
 import com.mgmtp.internship.experiences.model.tables.tables.Image;
 import com.mgmtp.internship.experiences.model.tables.tables.Rating;
 import com.mgmtp.internship.experiences.model.tables.tables.ReportActivity;
+import com.mgmtp.internship.experiences.model.tables.tables.Tag;
 import com.mgmtp.internship.experiences.model.tables.tables.User;
 import com.mgmtp.internship.experiences.model.tables.tables.records.ActivityImageRecord;
 import com.mgmtp.internship.experiences.model.tables.tables.records.ActivityRecord;
+import com.mgmtp.internship.experiences.model.tables.tables.records.ActivityTagRecord;
 import com.mgmtp.internship.experiences.model.tables.tables.records.CommentRecord;
 import com.mgmtp.internship.experiences.model.tables.tables.records.FavoriteRecord;
 import com.mgmtp.internship.experiences.model.tables.tables.records.ImageRecord;
 import com.mgmtp.internship.experiences.model.tables.tables.records.RatingRecord;
 import com.mgmtp.internship.experiences.model.tables.tables.records.ReportActivityRecord;
+import com.mgmtp.internship.experiences.model.tables.tables.records.TagRecord;
 import com.mgmtp.internship.experiences.model.tables.tables.records.UserRecord;
 
 import javax.annotation.Generated;
@@ -51,6 +55,7 @@ public class Keys {
     public static final Identity<CommentRecord, Long> IDENTITY_COMMENT = Identities0.IDENTITY_COMMENT;
     public static final Identity<ImageRecord, Long> IDENTITY_IMAGE = Identities0.IDENTITY_IMAGE;
     public static final Identity<RatingRecord, Long> IDENTITY_RATING = Identities0.IDENTITY_RATING;
+    public static final Identity<TagRecord, Long> IDENTITY_TAG = Identities0.IDENTITY_TAG;
     public static final Identity<UserRecord, Long> IDENTITY_USER = Identities0.IDENTITY_USER;
 
     // -------------------------------------------------------------------------
@@ -61,6 +66,7 @@ public class Keys {
     public static final UniqueKey<CommentRecord> PK_COMMENT = UniqueKeys0.PK_COMMENT;
     public static final UniqueKey<ImageRecord> PK_IMAGE = UniqueKeys0.PK_IMAGE;
     public static final UniqueKey<RatingRecord> PK_RATING = UniqueKeys0.PK_RATING;
+    public static final UniqueKey<TagRecord> PK_TAG = UniqueKeys0.PK_TAG;
     public static final UniqueKey<UserRecord> PK_USER = UniqueKeys0.PK_USER;
     public static final UniqueKey<UserRecord> USER_DISPLAY_NAME_KEY = UniqueKeys0.USER_DISPLAY_NAME_KEY;
 
@@ -72,6 +78,8 @@ public class Keys {
     public static final ForeignKey<ActivityRecord, UserRecord> ACTIVITY__FK_ACTIVITY_USER_UPDATED_BY = ForeignKeys0.ACTIVITY__FK_ACTIVITY_USER_UPDATED_BY;
     public static final ForeignKey<ActivityImageRecord, ActivityRecord> ACTIVITY_IMAGE__FK_ACTIVITY_IMAGE_ACTIVITY = ForeignKeys0.ACTIVITY_IMAGE__FK_ACTIVITY_IMAGE_ACTIVITY;
     public static final ForeignKey<ActivityImageRecord, ImageRecord> ACTIVITY_IMAGE__FK_ACTIVITY_IMAGE_IMAGE = ForeignKeys0.ACTIVITY_IMAGE__FK_ACTIVITY_IMAGE_IMAGE;
+    public static final ForeignKey<ActivityTagRecord, ActivityRecord> ACTIVITY_TAG__FK_ACTIVITY_TAG_ACTIVITY = ForeignKeys0.ACTIVITY_TAG__FK_ACTIVITY_TAG_ACTIVITY;
+    public static final ForeignKey<ActivityTagRecord, TagRecord> ACTIVITY_TAG__FK_ACTIVITY_TAG_TAG = ForeignKeys0.ACTIVITY_TAG__FK_ACTIVITY_TAG_TAG;
     public static final ForeignKey<CommentRecord, ActivityRecord> COMMENT__FK_ACTIVITY_COMMENT = ForeignKeys0.COMMENT__FK_ACTIVITY_COMMENT;
     public static final ForeignKey<CommentRecord, UserRecord> COMMENT__FK_USER_COMMENT = ForeignKeys0.COMMENT__FK_USER_COMMENT;
     public static final ForeignKey<FavoriteRecord, ActivityRecord> FAVORITE__FK_FAVORITE_ACTIVITY = ForeignKeys0.FAVORITE__FK_FAVORITE_ACTIVITY;
@@ -91,6 +99,7 @@ public class Keys {
         public static Identity<CommentRecord, Long> IDENTITY_COMMENT = Internal.createIdentity(Comment.COMMENT, Comment.COMMENT.ID);
         public static Identity<ImageRecord, Long> IDENTITY_IMAGE = Internal.createIdentity(Image.IMAGE, Image.IMAGE.ID);
         public static Identity<RatingRecord, Long> IDENTITY_RATING = Internal.createIdentity(Rating.RATING, Rating.RATING.ID);
+        public static Identity<TagRecord, Long> IDENTITY_TAG = Internal.createIdentity(Tag.TAG, Tag.TAG.ID);
         public static Identity<UserRecord, Long> IDENTITY_USER = Internal.createIdentity(User.USER, User.USER.ID);
     }
 
@@ -99,6 +108,7 @@ public class Keys {
         public static final UniqueKey<CommentRecord> PK_COMMENT = Internal.createUniqueKey(Comment.COMMENT, "pk_comment", Comment.COMMENT.ID);
         public static final UniqueKey<ImageRecord> PK_IMAGE = Internal.createUniqueKey(Image.IMAGE, "pk_image", Image.IMAGE.ID);
         public static final UniqueKey<RatingRecord> PK_RATING = Internal.createUniqueKey(Rating.RATING, "pk_rating", Rating.RATING.ID);
+        public static final UniqueKey<TagRecord> PK_TAG = Internal.createUniqueKey(Tag.TAG, "pk_tag", Tag.TAG.ID);
         public static final UniqueKey<UserRecord> PK_USER = Internal.createUniqueKey(User.USER, "pk_user", User.USER.ID);
         public static final UniqueKey<UserRecord> USER_DISPLAY_NAME_KEY = Internal.createUniqueKey(User.USER, "user_display_name_key", User.USER.DISPLAY_NAME);
     }
@@ -108,6 +118,8 @@ public class Keys {
         public static final ForeignKey<ActivityRecord, UserRecord> ACTIVITY__FK_ACTIVITY_USER_UPDATED_BY = Internal.createForeignKey(com.mgmtp.internship.experiences.model.tables.Keys.PK_USER, Activity.ACTIVITY, "activity__fk_activity_user_updated_by", Activity.ACTIVITY.UPDATED_BY_USER_ID);
         public static final ForeignKey<ActivityImageRecord, ActivityRecord> ACTIVITY_IMAGE__FK_ACTIVITY_IMAGE_ACTIVITY = Internal.createForeignKey(com.mgmtp.internship.experiences.model.tables.Keys.PK_ACTIVITY, ActivityImage.ACTIVITY_IMAGE, "activity_image__fk_activity_image_activity", ActivityImage.ACTIVITY_IMAGE.ACTIVITY_ID);
         public static final ForeignKey<ActivityImageRecord, ImageRecord> ACTIVITY_IMAGE__FK_ACTIVITY_IMAGE_IMAGE = Internal.createForeignKey(com.mgmtp.internship.experiences.model.tables.Keys.PK_IMAGE, ActivityImage.ACTIVITY_IMAGE, "activity_image__fk_activity_image_image", ActivityImage.ACTIVITY_IMAGE.IMAGE_ID);
+        public static final ForeignKey<ActivityTagRecord, ActivityRecord> ACTIVITY_TAG__FK_ACTIVITY_TAG_ACTIVITY = Internal.createForeignKey(com.mgmtp.internship.experiences.model.tables.Keys.PK_ACTIVITY, ActivityTag.ACTIVITY_TAG, "activity_tag__fk_activity_tag_activity", ActivityTag.ACTIVITY_TAG.ACTIVITY_ID);
+        public static final ForeignKey<ActivityTagRecord, TagRecord> ACTIVITY_TAG__FK_ACTIVITY_TAG_TAG = Internal.createForeignKey(com.mgmtp.internship.experiences.model.tables.Keys.PK_TAG, ActivityTag.ACTIVITY_TAG, "activity_tag__fk_activity_tag_tag", ActivityTag.ACTIVITY_TAG.TAG_ID);
         public static final ForeignKey<CommentRecord, ActivityRecord> COMMENT__FK_ACTIVITY_COMMENT = Internal.createForeignKey(com.mgmtp.internship.experiences.model.tables.Keys.PK_ACTIVITY, Comment.COMMENT, "comment__fk_activity_comment", Comment.COMMENT.ACTIVITY_ID);
         public static final ForeignKey<CommentRecord, UserRecord> COMMENT__FK_USER_COMMENT = Internal.createForeignKey(com.mgmtp.internship.experiences.model.tables.Keys.PK_USER, Comment.COMMENT, "comment__fk_user_comment", Comment.COMMENT.USER_ID);
         public static final ForeignKey<FavoriteRecord, ActivityRecord> FAVORITE__FK_FAVORITE_ACTIVITY = Internal.createForeignKey(com.mgmtp.internship.experiences.model.tables.Keys.PK_ACTIVITY, Favorite.FAVORITE, "favorite__fk_favorite_activity", Favorite.FAVORITE.ACTIVITY_ID);

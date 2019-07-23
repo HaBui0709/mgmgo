@@ -8,6 +8,7 @@ import com.mgmtp.internship.experiences.model.tables.tables.Activity;
 import com.mgmtp.internship.experiences.model.tables.tables.Comment;
 import com.mgmtp.internship.experiences.model.tables.tables.Image;
 import com.mgmtp.internship.experiences.model.tables.tables.Rating;
+import com.mgmtp.internship.experiences.model.tables.tables.Tag;
 import com.mgmtp.internship.experiences.model.tables.tables.User;
 
 import javax.annotation.Generated;
@@ -38,6 +39,7 @@ public class Indexes {
     public static final Index PK_COMMENT = Indexes0.PK_COMMENT;
     public static final Index PK_IMAGE = Indexes0.PK_IMAGE;
     public static final Index PK_RATING = Indexes0.PK_RATING;
+    public static final Index PK_TAG = Indexes0.PK_TAG;
     public static final Index PK_USER = Indexes0.PK_USER;
     public static final Index USER_DISPLAY_NAME_KEY = Indexes0.USER_DISPLAY_NAME_KEY;
 
@@ -50,6 +52,7 @@ public class Indexes {
         public static Index PK_COMMENT = Internal.createIndex("pk_comment", Comment.COMMENT, new OrderField[] { Comment.COMMENT.ID }, true);
         public static Index PK_IMAGE = Internal.createIndex("pk_image", Image.IMAGE, new OrderField[] { Image.IMAGE.ID }, true);
         public static Index PK_RATING = Internal.createIndex("pk_rating", Rating.RATING, new OrderField[] { Rating.RATING.ID }, true);
+        public static Index PK_TAG = Internal.createIndex("pk_tag", Tag.TAG, new OrderField[] { Tag.TAG.ID }, true);
         public static Index PK_USER = Internal.createIndex("pk_user", User.USER, new OrderField[] { User.USER.ID }, true);
         public static Index USER_DISPLAY_NAME_KEY = Internal.createIndex("user_display_name_key", User.USER, new OrderField[] { User.USER.DISPLAY_NAME }, true);
     }

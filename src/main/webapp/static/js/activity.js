@@ -43,7 +43,6 @@ $("#createForm").on("submit", function () {
 $(document).ready(function () {
     let title = $("#title");
     title.on('input', function () {
-        console.log(title.val());
         let nameEdit = title.val().replace(/\s+/g, ' ').trim(),
             alertNameMes = document.getElementById("alertName");
         if (nameEdit.length == 0 || nameEdit.toString().trim().length == 0 || nameEdit.toString().trim().length > 100) {
@@ -57,7 +56,6 @@ $(document).ready(function () {
 $(document).ready(function () {
     let title = $("#description");
     title.on('input', function () {
-        console.log(title.val());
         let desEdit = title.val(),
             alertDesMes = document.getElementById("alertDes");
         if (desEdit.length == 0 || desEdit.toString().trim().length == 0 || desEdit.toString().trim().length > 100000) {
@@ -68,6 +66,9 @@ $(document).ready(function () {
     })
 })
 
+$(document).ready(function () {
+    new TagBox(".tag-box", 3, false);
+});
 function setMessageWhenFailed(msg) {
     $("#spinner").removeClass("spinner-border").removeClass("text-success");
     $("#gps-return").removeClass("alert-danger").removeClass("alert-success").removeClass("d-none");

@@ -34,7 +34,7 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     @Override
-    public int create(ActivityDetailDTO activityDetailDTO) {
+    public Long create(ActivityDetailDTO activityDetailDTO) {
         return activityRepository.create(activityDetailDTO);
     }
 

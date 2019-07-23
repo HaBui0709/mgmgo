@@ -8,6 +8,7 @@
     <link rel="stylesheet" type="text/css" th:href="@{/static/css/activity/detail.css}"/>
     <link rel="stylesheet" type="text/css" th:href="@{/static/css/home/index.css}"/>
     <link rel="stylesheet" type="text/css" th:href="@{/static/css/editPicture/editPicture.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/static/css/tags.css}"/>
 
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta type="text" name="csrf-token" th:content="${_csrf!=null?_csrf.token:''}"/>
@@ -47,6 +48,13 @@
                  class="d-flex mt-3 mb-3"><img src="/static/icons/location.png" class="address-icon" alt="mgm-go"><span
                     class="ml-2" th:text="${activityDetailDTO.address}"></span></div>
             <pre th:text="${activityDetailDTO.description}" class="card-text"></pre>
+
+            <div class="tag-box tag-box-display-only">
+                <th:block th:each="tag: ${activityDetailDTO.getTags()}">
+                    <div class="tag-box-element" th:text="${tag.content}"></div>
+                </th:block>
+            </div>
+
             <div class="d-flex justify-content-end">
                 <button class="row px-0 mx-0 btn btn-light mr-2" data-toggle="modal" id="report-button"
                         data-target="#reportModal">

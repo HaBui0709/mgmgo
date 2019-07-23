@@ -6,6 +6,7 @@ import com.mgmtp.internship.experiences.dto.UserProfileDTO;
 import com.mgmtp.internship.experiences.services.impl.ActivityServiceImpl;
 import com.mgmtp.internship.experiences.services.impl.ReportServiceImpl;
 import com.mgmtp.internship.experiences.services.impl.UserServiceImpl;
+import com.mgmtp.internship.experiences.utils.ActivityTestUtil;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -38,13 +39,14 @@ public class ReportRestControllerTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(ReportRestControllerTest.class);
 
     private static final long USER_ID = 1L;
+    private static final int USER_REPUTATION_SCORE = 1;
     private static final long IMAGE_ID = 1L;
     private static final String DISPLAY_NAME = "name";
-    private static final int USER_REPUTATION_SCORE = 1;
+    private static final String ACTIVITY_NAME = "name";
     private static final int ACTIVITY_ID = 1;
     private static final String REPORT_URL = "/report/activity/1";
     private static final String CONTENT_TYPE = "application/json;charset=UTF-8";
-    private static final ActivityDetailDTO EXPECTED_ACTIVITY_DETAIL_DTO = new ActivityDetailDTO(ACTIVITY_ID, "name", "des","address" ,5, IMAGE_ID);
+    private static final ActivityDetailDTO EXPECTED_ACTIVITY_DETAIL_DTO = ActivityTestUtil.prepareExpectedActivityDetailDTOWithNameForTest(ACTIVITY_NAME);
     private static final UserProfileDTO USER_PROFILE_DTO = new UserProfileDTO(IMAGE_ID, DISPLAY_NAME, USER_REPUTATION_SCORE);
     private static final LdapUserDetails LDAP_USER_DETAILS = mock(LdapUserDetails.class);
     private static final CustomLdapUserDetails CUSTOM_USER_DETAILS = new CustomLdapUserDetails(USER_ID, USER_PROFILE_DTO, LDAP_USER_DETAILS);

@@ -1,11 +1,14 @@
 package com.mgmtp.internship.experiences.controllers.app;
 
 import com.mgmtp.internship.experiences.config.security.CustomLdapUserDetails;
+import com.mgmtp.internship.experiences.constants.ApplicationConstant;
 import com.mgmtp.internship.experiences.dto.ActivityDetailDTO;
 import com.mgmtp.internship.experiences.dto.UserProfileDTO;
 import com.mgmtp.internship.experiences.services.ActivityService;
 import com.mgmtp.internship.experiences.services.FavoriteService;
+import com.mgmtp.internship.experiences.services.TagService;
 import com.mgmtp.internship.experiences.services.UserService;
+import com.mgmtp.internship.experiences.utils.ActivityTestUtil;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -38,19 +41,19 @@ public class ActivityControllerTest {
     private static final String ACTIVITY_INFO_ATTRIBUTE = "activityDetailDTO";
     private static final long ID = 1l;
     private static final long IMAGE_ID = 1l;
-    private static final int CREATED_BY_USER_ID = 1;
-    private static final int UPDATED_BY_USER_ID = 1;
-    private static final double RATING = 2.5;
+
     private static final String DISPLAY_NAME = "name";
     private static final int USER_REPUTATION_SCORE = 1;
     private static final long ACTIVITY_ID = 1;
     private static final String UPDATE_URL = "/activity/update";
     private static final String CREATE_URL = "/activity/create";
+    private static final String CONTENT_PARAM = "content";
+
+    private static final ActivityDetailDTO EXPECTED_ACTIVITY_DETAIL_DTO = ActivityTestUtil.prepareExpectedActivityDetailDTOWithNameForTest("name");
+    private static final ActivityDetailDTO EXISTED_ACTIVITY_DETAIL_DTO = ActivityTestUtil.prepareExpectedActivityDetailDTOWithNameForTest("existedName");
     private static final String ERROR_ATTRIBUTE = "errorMessage";
     private static final String ERROR_PAGE = "error";
     private static final String DESC_PARAM = "description";
-    private static final ActivityDetailDTO EXPECTED_ACTIVITY_DETAIL_DTO = new ActivityDetailDTO(ACTIVITY_ID, "name", "des", RATING, IMAGE_ID, CREATED_BY_USER_ID, UPDATED_BY_USER_ID);
-    private static final ActivityDetailDTO EXISTED_ACTIVITY_DETAIL_DTO = new ActivityDetailDTO(1, "existedName", "des2", RATING, IMAGE_ID, CREATED_BY_USER_ID, UPDATED_BY_USER_ID);
     private static final UserProfileDTO userProfileDTO = new UserProfileDTO(IMAGE_ID, DISPLAY_NAME, USER_REPUTATION_SCORE);
     private static final LdapUserDetails ldapUserDetails = mock(LdapUserDetails.class);
     private static final CustomLdapUserDetails EXPECTED_CUSTOM_USER_DETAIL = new CustomLdapUserDetails(ID, userProfileDTO, ldapUserDetails);
@@ -61,6 +64,9 @@ public class ActivityControllerTest {
 
     @Mock
     private UserService userService;
+
+    @Mock
+    private TagService tagService;
 
     @Mock
     private FavoriteService favoriteService;
@@ -123,12 +129,15 @@ public class ActivityControllerTest {
         Mockito.when(userService.getCurrentUser()).thenReturn(EXPECTED_CUSTOM_USER_DETAIL);
         EXPECTED_ACTIVITY_DETAIL_DTO.setUpdatedByUserId(EXPECTED_CUSTOM_USER_DETAIL.getId());
         Mockito.when(activityService.update(EXPECTED_ACTIVITY_DETAIL_DTO)).thenReturn(updateSuccess);
+        Mockito.when(tagService.addListTagForActivity(Mockito.anyLong(), Mockito.anyList())).thenReturn(true);
 
         try {
             mockMvc.perform(post(UPDATE_URL)
                     .param("id", ACTIVITY_ID + "")
                     .param("name", EXPECTED_ACTIVITY_DETAIL_DTO.getName())
-                    .param(DESC_PARAM, EXPECTED_ACTIVITY_DETAIL_DTO.getDescription()))
+                    .param(DESC_PARAM, EXPECTED_ACTIVITY_DETAIL_DTO.getDescription())
+                    .param("tags[0].id", "1")
+                    .param("tags[0].content", "content"))
                     .andDo(MockMvcResultHandlers.print())
                     .andExpect(status().is3xxRedirection())
                     .andExpect(view().name("redirect:/activity/" + EXPECTED_ACTIVITY_DETAIL_DTO.getId()))
@@ -194,18 +203,22 @@ public class ActivityControllerTest {
 
     @Test
     public void shouldReturnHomePageIfCreateSuccess() {
-        int insertSuccess = 1;
+        Long insertSuccess = 1L;
         Mockito.when(userService.getCurrentUser()).thenReturn(EXPECTED_CUSTOM_USER_DETAIL);
         EXPECTED_ACTIVITY_DETAIL_DTO.setCreatedByUserId(EXPECTED_CUSTOM_USER_DETAIL.getId());
 
         Mockito.when(activityService.create(EXPECTED_ACTIVITY_DETAIL_DTO)).thenReturn(insertSuccess);
         Mockito.when(activityService.getIdActivity(EXPECTED_ACTIVITY_DETAIL_DTO.getName())).thenReturn(EXPECTED_ACTIVITY_DETAIL_DTO.getId());
+        Mockito.when(userService.calculateAndUpdateRepulationScore(EXPECTED_ACTIVITY_DETAIL_DTO.getCreatedByUserId(), ApplicationConstant.REPUTATION_SCORE_CREATE_ACTIVITY)).thenReturn(true);
+        Mockito.when(tagService.addListTagForActivity(Mockito.anyLong(), Mockito.anyList())).thenReturn(true);
 
         try {
             mockMvc.perform(post(CREATE_URL)
                     .param("id", ACTIVITY_ID + "")
                     .param("name", EXPECTED_ACTIVITY_DETAIL_DTO.getName())
-                    .param(DESC_PARAM, EXPECTED_ACTIVITY_DETAIL_DTO.getDescription()))
+                    .param(DESC_PARAM, EXPECTED_ACTIVITY_DETAIL_DTO.getDescription())
+                    .param("tags[0].id", "1")
+                    .param("tags[0].content", CONTENT_PARAM))
                     .andDo(MockMvcResultHandlers.print())
                     .andExpect(status().is3xxRedirection())
                     .andExpect(view().name("redirect:/activity/" + EXPECTED_ACTIVITY_DETAIL_DTO.getId()))
@@ -239,6 +252,35 @@ public class ActivityControllerTest {
     }
 
     @Test
+    public void shouldShowMessageErrorIfCreateWithMore3Tags() throws Exception {
+        Long insertSuccess = 1L;
+        Mockito.when(userService.getCurrentUser()).thenReturn(EXPECTED_CUSTOM_USER_DETAIL);
+        EXPECTED_ACTIVITY_DETAIL_DTO.setCreatedByUserId(EXPECTED_CUSTOM_USER_DETAIL.getId());
+
+        Mockito.when(activityService.create(EXPECTED_ACTIVITY_DETAIL_DTO)).thenReturn(insertSuccess);
+        Mockito.when(tagService.addListTagForActivity(Mockito.anyLong(), Mockito.anyList())).thenReturn(false);
+
+
+        mockMvc.perform(post(CREATE_URL)
+                .param("id", ACTIVITY_ID + "")
+                .param("name", EXPECTED_ACTIVITY_DETAIL_DTO.getName())
+                .param(DESC_PARAM, EXPECTED_ACTIVITY_DETAIL_DTO.getDescription())
+                .param("tags[0].id", "1")
+                .param("tags[0].content", CONTENT_PARAM)
+                .param("tags[1].id", "2")
+                .param("tags[1].content", CONTENT_PARAM)
+                .param("tags[2].id", "3")
+                .param("tags[2].content", CONTENT_PARAM)
+                .param("tags[3].id", "4")
+                .param("tags[3].content", CONTENT_PARAM))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().is3xxRedirection())
+                .andExpect(flash().attribute(ERROR_ATTRIBUTE, "Tags are not valid!"))
+                .andExpect(view().name("redirect:/activity/create"))
+                .andExpect(redirectedUrl(CREATE_URL));
+    }
+
+    @Test
     public void shouldShowMessageIfCreateFail() {
         Mockito.when(userService.getCurrentUser()).thenReturn(EXPECTED_CUSTOM_USER_DETAIL);
         Mockito.when(activityService.create(EXPECTED_ACTIVITY_DETAIL_DTO)).thenThrow(DataIntegrityViolationException.class);
@@ -258,5 +300,4 @@ public class ActivityControllerTest {
             LOGGER.error(e.getMessage());
         }
     }
-
 }

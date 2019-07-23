@@ -3,10 +3,11 @@ package com.mgmtp.internship.experiences.controllers.app;
 import com.mgmtp.internship.experiences.config.security.CustomLdapUserDetails;
 import com.mgmtp.internship.experiences.constants.ApplicationConstant;
 import com.mgmtp.internship.experiences.dto.ActivityDetailDTO;
-import com.mgmtp.internship.experiences.dto.UserProfileDTO;
 import com.mgmtp.internship.experiences.dto.CommentDTO;
+import com.mgmtp.internship.experiences.dto.UserProfileDTO;
 import com.mgmtp.internship.experiences.services.ActivityService;
 import com.mgmtp.internship.experiences.services.FavoriteService;
+import com.mgmtp.internship.experiences.services.TagService;
 import com.mgmtp.internship.experiences.services.UserService;
 import com.mgmtp.internship.experiences.utils.StringReplaceByRegexEditor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,10 @@ public class ActivityController {
     private static final String ACTIVITY_NOT_FOUND = "Activity Not Found";
     private static final String REDIRECT_UPDATE_URL = "redirect:/activity/update/";
     private static final String REDIRECT_CREATE_URL = "redirect:/activity/create";
+    private static final String REDIRECT_ACTIVITY_URL = "redirect:/activity/";
+
+    @Autowired
+    private TagService tagService;
 
     @Autowired
     private ActivityService activityService;
@@ -100,8 +105,15 @@ public class ActivityController {
             ActivityDetailDTO existedActivity = activityService.checkExistNameForCreate(activityDetailDTO.getName());
             if (activityService.checkExistNameForUpdate(activityDetailDTO.getId(), activityDetailDTO.getName()) == null) {
                 activityService.update(activityDetailDTO);
+
+                if (!tagService.addListTagForActivity(activityDetailDTO.getId(), activityDetailDTO.getTags())) {
+                    redirectAttributes.addFlashAttribute(ERROR_MESSAGE, "Tags are not valid!");
+                    redirectAttributes.addFlashAttribute(ACTIVITY_INFO_ATTRIBUTE, activityDetailDTO);
+                    return REDIRECT_UPDATE_URL + activityDetailDTO.getId();
+                }
+
                 redirectAttributes.addFlashAttribute("successCrud", "Update activity success!");
-                return "redirect:/activity/" + activityDetailDTO.getId();
+                return REDIRECT_ACTIVITY_URL + activityDetailDTO.getId();
             }
             redirectAttributes.addFlashAttribute(ERROR_MESSAGE, "This name already exists. Please choose a difference name from the activity below!");
             redirectAttributes.addFlashAttribute(ACTIVITY_INFO_ATTRIBUTE, activityDetailDTO);
@@ -142,10 +154,18 @@ public class ActivityController {
                 redirectAttributes.addFlashAttribute(ACTIVITY_INFO_ATTRIBUTE, activityDetailDTO);
                 return REDIRECT_CREATE_URL;
             }
-            activityService.create(activityDetailDTO);
+
+            Long activityId = activityService.create(activityDetailDTO);
             userService.calculateAndUpdateRepulationScore(activityDetailDTO.getCreatedByUserId(), ApplicationConstant.REPUTATION_SCORE_CREATE_ACTIVITY);
+
+            if (!tagService.addListTagForActivity(activityId, activityDetailDTO.getTags())) {
+                redirectAttributes.addFlashAttribute(ERROR_MESSAGE, "Tags are not valid!");
+                redirectAttributes.addFlashAttribute(ACTIVITY_INFO_ATTRIBUTE, activityDetailDTO);
+                return REDIRECT_CREATE_URL;
+            }
+
             redirectAttributes.addFlashAttribute("successCrud", "Create activity success!");
-            return "redirect:/activity/" + activityService.getIdActivity(activityDetailDTO.getName());
+            return REDIRECT_ACTIVITY_URL + activityService.getIdActivity(activityDetailDTO.getName());
 
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute(ERROR_MESSAGE, "Can't create Activity. Try again!");

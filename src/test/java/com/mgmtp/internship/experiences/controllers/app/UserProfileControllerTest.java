@@ -57,7 +57,7 @@ public class UserProfileControllerTest {
     private static final int CURRENT_PAGE = 1;
     private static final int PAGE_SIZE = LazyLoading.countPages(TOTAL_RECORD);
     private static final PageDTO PAGING_INFO_DTO = new PageDTO(CURRENT_PAGE, PAGE_SIZE, TOTAL_RECORD);
-    private static final List<ActivityDTO> EXPECTED_ACTIVITIES = Collections.singletonList(new ActivityDTO(1L, "name", 1L));
+    private static final List<ActivityDTO> EXPECTED_ACTIVITIES = Collections.singletonList(new ActivityDTO(1L, "name", 1L, Collections.emptyList()));
 
 
     private MockMvc mockMvc;

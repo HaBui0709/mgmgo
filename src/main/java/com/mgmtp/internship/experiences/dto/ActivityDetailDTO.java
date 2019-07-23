@@ -3,6 +3,7 @@ package com.mgmtp.internship.experiences.dto;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -31,28 +32,7 @@ public class ActivityDetailDTO {
     private Timestamp activeDate;
     private boolean isFavorite;
 
-    public ActivityDetailDTO() {
-
-    }
-
-    public ActivityDetailDTO(long id, String name, String description, double rating, Long imageId, long createdByUserId, long updatedByUserId) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.imageId = imageId;
-        this.rating = rating;
-        this.createdByUserId = createdByUserId;
-        this.updatedByUserId = updatedByUserId;
-    }
-
-    public ActivityDetailDTO(long id, String name, String description, String address, double rating, Long imageId) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.address = address;
-        this.imageId = imageId;
-        this.rating = rating;
-    }
+    private List<TagDTO> tags;
 
     public long getId() {
         return id;
@@ -137,6 +117,13 @@ public class ActivityDetailDTO {
         isFavorite = favorite;
     }
 
+    public List<TagDTO> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<TagDTO> tags) {
+        this.tags = tags;
+    }
 
     @Override
     public boolean equals(Object o) {

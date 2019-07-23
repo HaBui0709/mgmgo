@@ -1,5 +1,7 @@
 package com.mgmtp.internship.experiences.dto;
 
+import java.util.List;
+
 /**
  * Activity DTO.
  *
@@ -9,14 +11,16 @@ public class ActivityDTO {
     private long id;
     private String name;
     private Long imageId;
+    private List<TagDTO> tags;
 
     public ActivityDTO() {
     }
 
-    public ActivityDTO(long id, String name, Long imageId) {
+    public ActivityDTO(long id, String name, Long imageId, List<TagDTO> tags) {
         this.id = id;
         this.name = name;
         this.imageId = imageId;
+        this.tags = tags;
     }
 
     public long getId() {
@@ -41,5 +45,13 @@ public class ActivityDTO {
 
     public void setImageId(Long imageId) {
         this.imageId = imageId;
+    }
+
+    public List<TagDTO> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<TagDTO> tags) {
+        this.tags = tags;
     }
 }

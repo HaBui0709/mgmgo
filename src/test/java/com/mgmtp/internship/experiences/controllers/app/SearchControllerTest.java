@@ -34,7 +34,7 @@ public class SearchControllerTest {
     private static final String URL = "/search/";
     private static final String URL_VIEW = "search";
     private static final String KEY_SEARCH = "abc";
-    private static final List<ActivityDTO> EXPECTED_ACTIVITY_DTO = Collections.singletonList(new ActivityDTO(1L, "name", null));
+    private static final List<ActivityDTO> EXPECTED_ACTIVITY_DTO = Collections.singletonList(new ActivityDTO(1L, "name", null, Collections.emptyList()));
     private static final int CURRENT_PAGE = 1;
     private static final int TOTAL_RECORD = 10;
     private static final int PAGE_SIZE = LazyLoading.countPages(TOTAL_RECORD);

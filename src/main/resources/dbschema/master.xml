@@ -12,6 +12,10 @@
     <include file="R1.0/create_activity_image_table.xml" relativeToChangelogFile="true"/>
     <include file="R1.0/create_rating_table.xml" relativeToChangelogFile="true"/>
     <include file="R1.0/create_extension_unaccent.xml" relativeToChangelogFile="true"/>
+    <include file="R2.0/create_tag_table.xml" relativeToChangelogFile="true"/>
+    <include file="R2.0/create_activity_tag_table.xml" relativeToChangelogFile="true"/>
+    <include file="R1.0/create_report_activity_table.xml" relativeToChangelogFile="true"/>
+    <include file="R1.0/create_comment_table.xml" relativeToChangelogFile="true"/>
     <include file="R1.0/create_report_activity_table.xml" relativeToChangelogFile="true"/>
     <include file="R1.0/create_comment_table.xml" relativeToChangelogFile="true"/>
     <include file="R1.0/create_favorite_table.xml" relativeToChangelogFile="true"/>
