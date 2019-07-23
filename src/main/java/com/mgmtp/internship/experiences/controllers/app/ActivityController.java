@@ -103,13 +103,13 @@ public class ActivityController {
                 redirectAttributes.addFlashAttribute("successCrud", "Update activity success!");
                 return "redirect:/activity/" + activityDetailDTO.getId();
             }
-            redirectAttributes.addFlashAttribute(ERROR_VIEW, "This name already exists. Please choose a difference name from the activity below!");
+            redirectAttributes.addFlashAttribute(ERROR_MESSAGE, "This name already exists. Please choose a difference name from the activity below!");
             redirectAttributes.addFlashAttribute(ACTIVITY_INFO_ATTRIBUTE, activityDetailDTO);
             redirectAttributes.addFlashAttribute("existedActivity", existedActivity);
             return REDIRECT_UPDATE_URL + activityDetailDTO.getId();
 
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute(ERROR_VIEW, "Can't update Activity. Try again!");
+            redirectAttributes.addFlashAttribute(ERROR_MESSAGE, "Can't update Activity. Try again!");
             redirectAttributes.addFlashAttribute(ACTIVITY_INFO_ATTRIBUTE, activityDetailDTO);
             return REDIRECT_UPDATE_URL + activityDetailDTO.getId();
         }
@@ -138,7 +138,7 @@ public class ActivityController {
             ActivityDetailDTO existedActivity = activityService.checkExistNameForCreate(activityDetailDTO.getName());
             if (existedActivity != null) {
                 redirectAttributes.addFlashAttribute("existedActivity", existedActivity);
-                redirectAttributes.addFlashAttribute(ERROR_VIEW, "This name already exists. Please check existed activity before create the new one!");
+                redirectAttributes.addFlashAttribute(ERROR_MESSAGE, "This name already exists. Please check existed activity before create the new one!");
                 redirectAttributes.addFlashAttribute(ACTIVITY_INFO_ATTRIBUTE, activityDetailDTO);
                 return REDIRECT_CREATE_URL;
             }
@@ -148,7 +148,7 @@ public class ActivityController {
             return "redirect:/activity/" + activityService.getIdActivity(activityDetailDTO.getName());
 
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute(ERROR_VIEW, "Can't create Activity. Try again!");
+            redirectAttributes.addFlashAttribute(ERROR_MESSAGE, "Can't create Activity. Try again!");
             redirectAttributes.addFlashAttribute(ACTIVITY_INFO_ATTRIBUTE, activityDetailDTO);
             return REDIRECT_CREATE_URL;
         }

@@ -13,8 +13,8 @@
 <body>
 <div layout:fragment="main-content">
     <h3>Edit activity</h3>
-    <div th:if="${error != null}">
-        <div class="alert-danger alert" th:text="${error}"></div>
+    <div th:if="${errorMessage != null}">
+        <div class="alert-danger alert" th:text="${errorMessage}"></div>
     </div>
     <div th:if="${existedActivity != null}">
         <a class="activity-item" target="_blank" th:href="@{/activity/{id}(id=${existedActivity.id})}"

@@ -46,7 +46,8 @@ public class ActivityControllerTest {
     private static final long ACTIVITY_ID = 1;
     private static final String UPDATE_URL = "/activity/update";
     private static final String CREATE_URL = "/activity/create";
-    private static final String ERROR_ATTRIBUTE = "error";
+    private static final String ERROR_ATTRIBUTE = "errorMessage";
+    private static final String ERROR_PAGE = "error";
     private static final String DESC_PARAM = "description";
     private static final ActivityDetailDTO EXPECTED_ACTIVITY_DETAIL_DTO = new ActivityDetailDTO(ACTIVITY_ID, "name", "des", RATING, IMAGE_ID, CREATED_BY_USER_ID, UPDATED_BY_USER_ID);
     private static final ActivityDetailDTO EXISTED_ACTIVITY_DETAIL_DTO = new ActivityDetailDTO(1, "existedName", "des2", RATING, IMAGE_ID, CREATED_BY_USER_ID, UPDATED_BY_USER_ID);
@@ -92,12 +93,11 @@ public class ActivityControllerTest {
     @Test
     public void shouldShowErrorPageIfWrongActivityId() {
         Mockito.when(activityService.findById(ACTIVITY_ID)).thenReturn(null);
-        final String errorPageName = "error";
         try {
             mockMvc.perform(get("/activity/1"))
                     .andExpect(status().isOk())
-                    .andExpect(model().attribute("errorMessage", "Activity Not Found"))
-                    .andExpect(view().name(errorPageName));
+                    .andExpect(model().attribute(ERROR_ATTRIBUTE, "Activity Not Found"))
+                    .andExpect(view().name(ERROR_PAGE));
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
         }
