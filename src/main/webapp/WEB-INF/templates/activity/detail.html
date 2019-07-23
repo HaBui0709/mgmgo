@@ -104,8 +104,14 @@
 
                     <div id="message-log-report" class="justify-content-center">
                         <ul>
-                            <li>This activity will be deleted if it has 5 reports.</li>
-                            <li>You need at least 20 reputation to use report feature.</li>
+                            <li>This activity will be deleted if it has <span
+                                    th:text="${T(com.mgmtp.internship.experiences.constants.ApplicationConstant).MAX_NUMBER_REPORT}"></span>
+                                reports.
+                            </li>
+                            <li>You need at least <span
+                                    th:text="${T(com.mgmtp.internship.experiences.constants.ApplicationConstant).REQUIRED_REPUTATION_REPORT}"></span>
+                                reputation to use report feature.
+                            </li>
                             <li>You can only report once and can not undo!</li>
                         </ul>
                     </div>
@@ -121,22 +127,22 @@
     <form method="post" id="commentForm" th:object="${commentDTO}">
         <h5 class="mb-3">Comment</h5>
         <div class="comment-form-input">
-                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-                <div class="mr-1">
-                    <img id="user-thumbnail" class="img-thumbnail" width="35" height="35"
-                         th:src="${#authentication.principal.userProfileDTO.imageId!=null}?@{/api/image/}+${#authentication.principal.userProfileDTO.imageId}:@{/static/images/default_profile_picture.png}"
-                         th:alt="${#authentication.principal.userProfileDTO.displayName}">
-                </div>
-                <div  class="pl-2 pt-1 pb-1 pr-2 mb-2 w-100">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+            <div class="mr-1">
+                <img id="user-thumbnail" class="img-thumbnail" width="35" height="35"
+                     th:src="${#authentication.principal.userProfileDTO.imageId!=null}?@{/api/image/}+${#authentication.principal.userProfileDTO.imageId}:@{/static/images/default_profile_picture.png}"
+                     th:alt="${#authentication.principal.userProfileDTO.displayName}">
+            </div>
+            <div class="pl-2 pt-1 pb-1 pr-2 mb-2 w-100">
                     <textarea class="form-control textarea-comment"
                               th:field="*{content}"
                               id="comment__content"
                               placeholder="Comment for activities"></textarea>
-                    <div class="mb-2">
-                        <div id="alertComment" class="text-danger text-alert-mes mb-2"></div>
-                        <button class="btn btn-success" type="button" id="send__comment__btn">Comment</button>
-                    </div>
+                <div class="mb-2">
+                    <div id="alertComment" class="text-danger text-alert-mes mb-2"></div>
+                    <button class="btn btn-success" type="button" id="send__comment__btn">Comment</button>
                 </div>
+            </div>
         </div>
     </form>
     <div class="mb-3"></div>

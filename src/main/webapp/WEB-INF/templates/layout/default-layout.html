@@ -17,10 +17,18 @@
 
         <!-- Message when create successfull default-layout-->
         <th:block th:if="${successCrud != null}">
-            <div id="message-success-crud" class="alert-success alert create-message-success" th:text="${successCrud}"></div>
+            <div id="message-success-crud" class="alert-success alert create-message-success"
+                 th:text="${successCrud}"></div>
         </th:block>
 
         <div id="message-success"></div>
+
+        <div th:if="${#httpServletRequest.requestURI != ('/activity/create') && !(#httpServletRequest.requestURI.matches('/login.*'))}">
+            <a class="floating-action-button d-sm-none d-flex position-fixed" th:href="@{/activity/create}">
+                <i class="fa fa-plus fa-2x">
+                </i>
+            </a>
+        </div>
 
         <!-- footer -->
         <footer th:replace="fragments/footer :: footer" class="footer"></footer>
