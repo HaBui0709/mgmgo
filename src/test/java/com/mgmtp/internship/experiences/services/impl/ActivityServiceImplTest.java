@@ -299,7 +299,6 @@ public class ActivityServiceImplTest {
 
         Assert.assertEquals(ADD_FAIL, actualResult);
     }
-
     @Test
     public void shouldReturnTrueIfActivityIsCreateByUserId() {
         Mockito.when(activityRepository.checkIsActivityCreateByUserId(ACTIVITY_ID, USER_ID)).thenReturn(true);
@@ -321,7 +320,7 @@ public class ActivityServiceImplTest {
 
     @Test
     public void shouldReturnTrueIfHaveCommented(){
-        Mockito.when(activityRepository.checkExistedCommentOfUserInActitvity(USER_ID, ACTIVITY_ID)).thenReturn(true);
+        Mockito.when(activityRepository.checkExistedCommentOfUserInActivity(USER_ID, ACTIVITY_ID)).thenReturn(true);
 
         Boolean actualResult = activityService.checkExistedCommentOfUserByInActivity(USER_ID, ACTIVITY_ID);
 
@@ -330,10 +329,37 @@ public class ActivityServiceImplTest {
 
     @Test
     public void shouldReturnFalseIfHaveNotCommented(){
-        Mockito.when(activityRepository.checkExistedCommentOfUserInActitvity(USER_ID, ACTIVITY_ID)).thenReturn(false);
+        Mockito.when(activityRepository.checkExistedCommentOfUserInActivity(USER_ID, ACTIVITY_ID)).thenReturn(false);
 
         Boolean actualResult = activityService.checkExistedCommentOfUserByInActivity(USER_ID, ACTIVITY_ID);
 
         Assert.assertEquals(false, actualResult);
+    }
+
+    @Test
+    public void shouldReturnCommentsOfPage() {
+        Mockito.when(activityRepository.getComments(CURRENT_PAGE, ACTIVITY_ID)).thenReturn(EXPECTED_LIST_COMMENT_DTO);
+
+        List<CommentDTO> actualComments = activityService.getComments(CURRENT_PAGE, ACTIVITY_ID);
+
+        Assert.assertEquals(EXPECTED_LIST_COMMENT_DTO, actualComments);
+    }
+
+    @Test
+    public void shouldReturnEmptyListCommentsIfPageIncorrect() {
+        List<CommentDTO> expectedComments = Collections.emptyList();
+
+        List<CommentDTO> actualComments = activityService.getComments(CURRENT_PAGE, ACTIVITY_ID);
+
+        Assert.assertEquals(expectedComments, actualComments);
+    }
+
+    @Test
+    public void shouldReturnTotalRecordOfComments() {
+        Mockito.when(activityRepository.countTotalRecordCommentById(ACTIVITY_ID)).thenReturn(EXPECTED_RECORD);
+
+        int actualPageSize = activityService.countTotalRecordCommentById(ACTIVITY_ID);
+
+        Assert.assertEquals(EXPECTED_RECORD, actualPageSize);
     }
 }

@@ -22,7 +22,6 @@ function seeMore() {
         }
     })
 }
-
 function rebuildLink(link, currentPage) {
     let index = link.indexOf("?");
     if (index < 0)

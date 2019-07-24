@@ -4,6 +4,7 @@ import com.mgmtp.internship.experiences.config.security.CustomLdapUserDetails;
 import com.mgmtp.internship.experiences.constants.ApplicationConstant;
 import com.mgmtp.internship.experiences.dto.ActivityDetailDTO;
 import com.mgmtp.internship.experiences.dto.CommentDTO;
+import com.mgmtp.internship.experiences.dto.PageDTO;
 import com.mgmtp.internship.experiences.dto.UserProfileDTO;
 import com.mgmtp.internship.experiences.services.ActivityService;
 import com.mgmtp.internship.experiences.services.FavoriteService;
@@ -61,8 +62,9 @@ public class ActivityController {
             UserProfileDTO userProfileDTO = userService.findUserProfileById(activityDetailDTO.getCreatedByUserId());
             model.addAttribute(ACTIVITY_INFO_ATTRIBUTE, activityDetailDTO);
             model.addAttribute(USER_CREATED_INFO_ATTRIBUTE, userProfileDTO);
-            model.addAttribute("comments", activityService.getAllCommentById(activityId));
+            model.addAttribute("pagingInfo", new PageDTO(activityService.countTotalRecordCommentById(activityId)));
             model.addAttribute(COMMENT_INFO_ATTRIBUTE, new CommentDTO());
+            model.addAttribute("comments", activityService.getComments(1, activityId));
             return "activity/detail";
         }
         model.addAttribute(ERROR_MESSAGE, ACTIVITY_NOT_FOUND);

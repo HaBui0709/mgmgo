@@ -291,7 +291,28 @@ public class ActivityRepository {
         return dslContext.fetchExists(ACTIVITY, ACTIVITY.ID.eq(activityId).and(ACTIVITY.CREATED_BY_USER_ID.eq(userId)));
     }
 
-    public boolean checkExistedCommentOfUserInActitvity(long userId, long activityId) {
+    public boolean checkExistedCommentOfUserInActivity(long userId, long activityId) {
         return dslContext.fetchExists(COMMENT, COMMENT.ACTIVITY_ID.eq(activityId).and(COMMENT.USER_ID.eq(userId)));
+    }
+
+    public List<CommentDTO> getComments(int currentPage, long activityId) {
+
+        return dslContext.select(COMMENT.ID, USER.IMAGE_ID, USER.DISPLAY_NAME, COMMENT.CONTENT, COMMENT.DATE_CREATE)
+                .from(COMMENT)
+                .join(USER)
+                .on(COMMENT.USER_ID.eq(USER.ID))
+                .where(COMMENT.ACTIVITY_ID.eq(activityId))
+                .orderBy(COMMENT.DATE_CREATE.desc(), COMMENT.ID.desc())
+                .offset((currentPage - 1) * RECORD_OF_LIST)
+                .limit(RECORD_OF_LIST)
+                .fetch()
+                .map(record -> new CommentDTO(record.get(COMMENT.ID), record.get(USER.IMAGE_ID), record.get(USER.DISPLAY_NAME), record.get(COMMENT.CONTENT), record.get(COMMENT.DATE_CREATE)));
+    }
+
+    public int countTotalRecordCommentById(long activityId) {
+        return dslContext.selectCount()
+                .from(COMMENT)
+                .where(COMMENT.ACTIVITY_ID.eq(activityId))
+                .fetchAny(0, Integer.class);
     }
 }

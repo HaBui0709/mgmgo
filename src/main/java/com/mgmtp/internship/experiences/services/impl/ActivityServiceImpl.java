@@ -124,6 +124,15 @@ public class ActivityServiceImpl implements ActivityService {
 
     @Override
     public boolean checkExistedCommentOfUserByInActivity(long userId, long activityId) {
-        return activityRepository.checkExistedCommentOfUserInActitvity(userId, activityId);
+        return activityRepository.checkExistedCommentOfUserInActivity(userId, activityId);
+    }
+    @Override
+    public List<CommentDTO> getComments(int currentPage, long activityId) {
+        return activityRepository.getComments(currentPage, activityId);
+    }
+
+    @Override
+    public int countTotalRecordCommentById(long activityId) {
+        return activityRepository.countTotalRecordCommentById(activityId);
     }
 }

@@ -48,4 +48,8 @@ public interface ActivityService {
     boolean checkIsActivityCreateByUserId(long activityId, long userId);
 
     boolean checkExistedCommentOfUserByInActivity(long userId, long activityId);
+
+    List<CommentDTO> getComments(int currentPage, long activityId);
+
+    int countTotalRecordCommentById(long activityId);
 }

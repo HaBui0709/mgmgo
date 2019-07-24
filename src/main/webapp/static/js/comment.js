@@ -1,5 +1,4 @@
 $(document).ready(function () {
-
     $("#comment__content").on('input', function () {
         commentValidate();
     });
@@ -25,6 +24,8 @@ function commentValidate() {
 }
 
 function postComment() {
+    let listWrapper = $('.lazy-loading');
+    listWrapper.attr('current-page', 1);
     $.ajax({
         type: "POST",
         url: "/comment/activity/" + $("#activity-id").val(),
@@ -35,7 +36,15 @@ function postComment() {
         }
     }).done(function (data) {
         resetCommentInput();
-        renderNewCommentList(data);
+        rerenderNewCommentList(data);
+        if (parseInt(listWrapper.attr('current-page')) < parseInt(listWrapper.attr('size-of-pages'))) {
+            $('#see-more').removeClass('d-none');
+        }
+
+        $('#see-more').click(function () {
+            seeMore();
+        })
+
     }).fail(function (data) {
         let alertCommentMes = document.getElementById("alertComment");
         alertCommentMes.innerHTML = "Somethings are wrong";
@@ -46,7 +55,6 @@ function resetCommentInput() {
     $('#comment__content').val("");
 }
 
-function renderNewCommentList(data) {
-    $("#comment-list").html(data);
-
+function rerenderNewCommentList(data) {
+    $("#all-comment").html(data);
 }
