@@ -29,9 +29,10 @@
             <div>
                 <p class="activity-name activity-summary mb-0 font-weight-bold " th:text="${existedActivity.name}"></p>
                 <div th:if="${existedActivity.address != null && existedActivity.address != ''}"
-                     class="d-flex text-dark"><img src="/static/icons/location.png" class="address-icon"
-                                                   alt="mgm-go"><span
-                        class="ml-2" th:text="${existedActivity.address}"></span></div>
+                     class="d-flex text-dark">
+                    <i class="fas fa-map-marker-alt fa-lg mt-1 text-danger" aria-hidden="true"></i>
+                    <span class="ml-2" th:text="${existedActivity.address}"></span>
+                </div>
             </div>
         </a>
     </div>

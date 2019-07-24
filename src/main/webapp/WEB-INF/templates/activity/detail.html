@@ -32,7 +32,7 @@
                         <i class="far fa-edit dropdown-icon-color mr-2" aria-hidden="true"></i> Edit
                     </a>
                     <button class="dropdown-item" type="button" data-toggle="modal" id="report-button" data-target="#reportModal">
-                        <i class="fa fa-flag dropdown-icon-color mr-2" aria-hidden="true"></i> Report
+                        <i class="far fa-flag dropdown-icon-color mr-2" aria-hidden="true"></i> Report
                     </button>
                 </div>
             </div>
@@ -65,7 +65,7 @@
             <pre th:text="${activityDetailDTO.description}" class="card-text mb-0"></pre>
             <div class="tag-box tag-box-display-only">
                 <th:block th:each="tag: ${activityDetailDTO.getTags()}">
-                    <div class="tag-box-element mb-3 mt-1" th:text="${tag.content}"></div>
+                    <div class="tag-box-element mb-2 mt-2" th:text="${tag.content}"></div>
                 </th:block>
             </div>
             <h5 class="mt-3">Comments</h5>
