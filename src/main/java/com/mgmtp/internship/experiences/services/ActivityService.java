@@ -23,13 +23,13 @@ public interface ActivityService {
 
     ActivityDetailDTO checkExistNameForUpdate(long activityId, String activityName);
 
-    List<ActivityDTO> search(String text, int currentPage, EnumSort sortType);
+    List<ActivityDTO> search(String text, int currentPage, EnumSort sortType, List<String> filterTags);
 
-    int countTotalRecordSearch(String text);
+    int countTotalRecordSearch(String text, List<String> filterTags);
 
-    List<ActivityDTO> getActivities(int currentPage, EnumSort sortType);
+    List<ActivityDTO> getActivities(int currentPage, EnumSort sortType, List<String> filterTags);
 
-    int countTotalRecordActivity();
+    int countTotalRecordActivity(List<String> filterTags);
 
     List<ActivityDTO> getListActivityByUserId(long id, int currentPage);
 

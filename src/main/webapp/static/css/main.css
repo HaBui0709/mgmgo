@@ -210,7 +210,7 @@ body {
     right: 0 !important;
 }
 
-.form-control, .btn {
+.form-control, .btn, .custom-select {
     font-size: inherit;
 }
 

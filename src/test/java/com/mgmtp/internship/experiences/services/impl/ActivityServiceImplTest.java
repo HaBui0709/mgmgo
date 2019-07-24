@@ -39,6 +39,7 @@ public class ActivityServiceImplTest {
     private static final CommentDTO COMMENT_DTO = new CommentDTO(1L, 1L, "displayName", "content", DateTimeUtil.getCurrentDate());
     private static final int CURRENT_PAGE = 1;
     private static final String SORT_TYPE = "NEWEST_FIRST";
+    private static final List<String> FILTER_TAGS = Collections.emptyList();
     private static final int EXPECTED_RECORD = 3;
 
 
@@ -128,18 +129,18 @@ public class ActivityServiceImplTest {
 
     @Test
     public void shouldReturnListActivitiesWhenKeySearchCorrect() {
-        Mockito.when(activityRepository.search(KEY_SEARCH, CURRENT_PAGE, EnumSort.valueOf(SORT_TYPE))).thenReturn(EXPECTED_LIST_ACTIVITY_DTO);
+        Mockito.when(activityRepository.search(KEY_SEARCH, CURRENT_PAGE, EnumSort.valueOf(SORT_TYPE), FILTER_TAGS)).thenReturn(EXPECTED_LIST_ACTIVITY_DTO);
 
-        List<ActivityDTO> actualListActivityDTO = activityService.search(KEY_SEARCH, CURRENT_PAGE, EnumSort.valueOf(SORT_TYPE));
+        List<ActivityDTO> actualListActivityDTO = activityService.search(KEY_SEARCH, CURRENT_PAGE, EnumSort.valueOf(SORT_TYPE), FILTER_TAGS);
 
         Assert.assertEquals(EXPECTED_LIST_ACTIVITY_DTO, actualListActivityDTO);
     }
 
     @Test
     public void shouldReturnNullWhenKeySearchIncorrect() {
-        Mockito.when(activityRepository.search(KEY_SEARCH, CURRENT_PAGE, EnumSort.valueOf(SORT_TYPE))).thenReturn(null);
+        Mockito.when(activityRepository.search(KEY_SEARCH, CURRENT_PAGE, EnumSort.valueOf(SORT_TYPE), FILTER_TAGS)).thenReturn(null);
 
-        List<ActivityDTO> actualListActivityDTO = activityService.search(KEY_SEARCH, CURRENT_PAGE, EnumSort.valueOf(SORT_TYPE));
+        List<ActivityDTO> actualListActivityDTO = activityService.search(KEY_SEARCH, CURRENT_PAGE, EnumSort.valueOf(SORT_TYPE), FILTER_TAGS);
 
         Assert.assertEquals(null, actualListActivityDTO);
     }
@@ -147,9 +148,9 @@ public class ActivityServiceImplTest {
     @Test
     public void shouldReturnTotalRecordActivitiesIfKeySearchCorrect() {
         int expectedRecord = 3;
-        Mockito.when(activityRepository.countTotalRecordSearch(KEY_SEARCH)).thenReturn(expectedRecord);
+        Mockito.when(activityRepository.countTotalRecordSearch(KEY_SEARCH, FILTER_TAGS)).thenReturn(expectedRecord);
 
-        int actualRecord = activityService.countTotalRecordSearch(KEY_SEARCH);
+        int actualRecord = activityService.countTotalRecordSearch(KEY_SEARCH, FILTER_TAGS);
 
         Assert.assertEquals(expectedRecord, actualRecord);
     }
@@ -157,18 +158,18 @@ public class ActivityServiceImplTest {
     @Test
     public void shouldReturnZeroRecordActivitiesIfKeySearchIncorrect() {
         int expectedRecord = 0;
-        Mockito.when(activityRepository.countTotalRecordSearch(KEY_SEARCH)).thenReturn(expectedRecord);
+        Mockito.when(activityRepository.countTotalRecordSearch(KEY_SEARCH, FILTER_TAGS)).thenReturn(expectedRecord);
 
-        int actualRecord = activityService.countTotalRecordSearch(KEY_SEARCH);
+        int actualRecord = activityService.countTotalRecordSearch(KEY_SEARCH, FILTER_TAGS);
 
         Assert.assertEquals(expectedRecord, actualRecord);
     }
 
     @Test
     public void shouldReturnActivitiesOfPage() {
-        Mockito.when(activityRepository.getActivities(CURRENT_PAGE, EnumSort.valueOf(SORT_TYPE))).thenReturn(EXPECTED_LIST_ACTIVITY_DTO);
+        Mockito.when(activityRepository.getActivities(CURRENT_PAGE, EnumSort.valueOf(SORT_TYPE), FILTER_TAGS)).thenReturn(EXPECTED_LIST_ACTIVITY_DTO);
 
-        List<ActivityDTO> actualActivities = activityService.getActivities(CURRENT_PAGE, EnumSort.valueOf(SORT_TYPE));
+        List<ActivityDTO> actualActivities = activityService.getActivities(CURRENT_PAGE, EnumSort.valueOf(SORT_TYPE), FILTER_TAGS);
 
         Assert.assertEquals(EXPECTED_LIST_ACTIVITY_DTO, actualActivities);
     }
@@ -177,16 +178,16 @@ public class ActivityServiceImplTest {
     public void shouldReturnEmptyListActivitiesIfPageIncorrect() {
         List<ActivityDTO> expectedActivities = Collections.emptyList();
 
-        List<ActivityDTO> actualActivities = activityService.getActivities(-1, EnumSort.valueOf(SORT_TYPE));
+        List<ActivityDTO> actualActivities = activityService.getActivities(-1, EnumSort.valueOf(SORT_TYPE), FILTER_TAGS);
 
         Assert.assertEquals(expectedActivities, actualActivities);
     }
 
     @Test
     public void shouldReturnTotalRecordOfActivities() {
-        Mockito.when(activityRepository.countTotalRecordActivity()).thenReturn(EXPECTED_RECORD);
+        Mockito.when(activityRepository.countTotalRecordActivity(FILTER_TAGS)).thenReturn(EXPECTED_RECORD);
 
-        int actualPageSize = activityService.countTotalRecordActivity();
+        int actualPageSize = activityService.countTotalRecordActivity(FILTER_TAGS);
 
         Assert.assertEquals(EXPECTED_RECORD, actualPageSize);
     }
@@ -194,9 +195,9 @@ public class ActivityServiceImplTest {
     @Test
     public void shouldReturnZeroRecordIfHaveNotActivity() {
         int expectedRecord = 0;
-        Mockito.when(activityRepository.countTotalRecordActivity()).thenReturn(expectedRecord);
+        Mockito.when(activityRepository.countTotalRecordActivity(FILTER_TAGS)).thenReturn(expectedRecord);
 
-        int actualPageSize = activityService.countTotalRecordActivity();
+        int actualPageSize = activityService.countTotalRecordActivity(FILTER_TAGS);
 
         Assert.assertEquals(expectedRecord, actualPageSize);
     }

@@ -104,8 +104,8 @@ public class ActivityController {
         try {
             CustomLdapUserDetails user = userService.getCurrentUser();
             activityDetailDTO.setUpdatedByUserId(user.getId());
-            ActivityDetailDTO existedActivity = activityService.checkExistNameForCreate(activityDetailDTO.getName());
-            if (activityService.checkExistNameForUpdate(activityDetailDTO.getId(), activityDetailDTO.getName()) == null) {
+            ActivityDetailDTO existedActivity = activityService.checkExistNameForUpdate(activityDetailDTO.getId(), activityDetailDTO.getName());
+            if (existedActivity == null) {
                 activityService.update(activityDetailDTO);
 
                 if (!tagService.addListTagForActivity(activityDetailDTO.getId(), activityDetailDTO.getTags())) {

@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
+import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -47,14 +48,21 @@ public class ActivityRepository {
     private static final String IMAGE_ID_PROPERTY = "imageId";
     private static final String TAGS_ID_PROPERTY = "tags_id";
     private static final String TAGS_CONTENT_PROPERTY = "tags_content";
-    private static final String ID_KEY = "id";
+    private static final String ID_PROPERTY = "id";
+    private static final String NAME_PROPERTY = "name";
+    private static final String ADDRESS_PROPERTY = "address";
+    private static final String RATING_AVG_PROPERTY = "avg_rating";
+    private static final String RATING_COUNT_PROPERTY = "count_rating";
+    private static final String CREATE_DATE_PROPERTY = "create_date";
+    private static final String ACTIVE_DATE_PROPERTY = "active_date";
+    private static final String UPDATE_DATE_PROPERTY = "update_date";
 
     @Autowired
     private DSLContext dslContext;
 
     public ActivityDetailDTO findById(long activityId) {
         JdbcMapper mapper = JdbcMapperFactory.newInstance()
-                .addKeys(ID_KEY, TAGS_ID_PROPERTY)
+                .addKeys(ID_PROPERTY, TAGS_ID_PROPERTY)
                 .newMapper(ActivityDetailDTO.class);
         try (ResultSet rs = dslContext
                 .select(
@@ -135,64 +143,98 @@ public class ActivityRepository {
                 .fetchOneInto(ActivityDetailDTO.class);
     }
 
-    public List<ActivityDTO> search(String text, int currentPage, EnumSort sortType) {
+    public List<ActivityDTO> search(String text, int currentPage, EnumSort sortType, List<String> filterTags) {
         Field<String> keySearch = DSL.function(FUNC_UNACCENT, String.class, DSL.val(text.trim()));
-        JdbcMapper mapper = JdbcMapperFactory.newInstance()
-                .addKeys(ID_KEY, TAGS_ID_PROPERTY)
-                .newMapper(ActivityDTO.class);
-        try (ResultSet resultSet = dslContext
-                .select(ACTIVITY.ID,
-                        ACTIVITY.NAME,
-                        IMAGE.ID.as(IMAGE_ID_PROPERTY),
-                        TAG.ID.as(TAGS_ID_PROPERTY),
-                        TAG.CONTENT.as(TAGS_CONTENT_PROPERTY),
-                        ACTIVITY.ADDRESS)
+        return getActivityDTOList(
+                where -> where.and(DSL.function(FUNC_UNACCENT, String.class, ACTIVITY.NAME).containsIgnoreCase(keySearch)
+                        .or(DSL.function(FUNC_UNACCENT, String.class, ACTIVITY.DESCRIPTION).containsIgnoreCase(keySearch))
+                        .or(DSL.function(FUNC_UNACCENT, String.class, ACTIVITY.ADDRESS).containsIgnoreCase(keySearch)))
+                , currentPage, sortType, filterTags);
+    }
+
+    public int countTotalRecordSearch(String text, List<String> filterTags) {
+        Field<String> keySearch = DSL.function(FUNC_UNACCENT, String.class, DSL.val(text.trim()));
+        Table table = dslContext
+                .select(
+                        ACTIVITY.ID.as(ID_PROPERTY)
+                )
                 .from(ACTIVITY)
                 .leftJoin(ACTIVITY_TAG)
                 .on(ACTIVITY_TAG.ACTIVITY_ID.eq(ACTIVITY.ID))
                 .leftJoin(TAG)
                 .on(TAG.ID.eq(ACTIVITY_TAG.TAG_ID))
-                .leftJoin(ACTIVITY_IMAGE)
-                .on(ACTIVITY.ID.eq(ACTIVITY_IMAGE.ACTIVITY_ID))
-                .leftJoin(IMAGE).on(ACTIVITY_IMAGE.IMAGE_ID.eq(IMAGE.ID))
-                .leftJoin(RATING).on(ACTIVITY.ID.eq(RATING.ACTIVITY_ID))
-                .where(DSL.function(FUNC_UNACCENT, String.class, ACTIVITY.NAME).containsIgnoreCase(keySearch))
-                .or(DSL.function(FUNC_UNACCENT, String.class, ACTIVITY.DESCRIPTION).containsIgnoreCase(keySearch))
-                .or(DSL.function(FUNC_UNACCENT, String.class, ACTIVITY.ADDRESS).containsIgnoreCase(keySearch))
-                .groupBy(ACTIVITY.ID, IMAGE.ID, TAG.ID)
-                .orderBy(hashMapSortType(sortType))
-                .offset((currentPage - 1) * RECORD_OF_LIST)
-                .limit(RECORD_OF_LIST)
-                .fetchResultSet()) {
-            Stream<ActivityDTO> stream = mapper.stream(resultSet);
-            return stream.collect(Collectors.toList());
-        } catch (SQLException e) {
-            LOGGER.error(e.getMessage());
-        }
-        return Collections.emptyList();
-    }
+                .where(getFilterCondition(filterTags))
+                .and(function(FUNC_UNACCENT, String.class, ACTIVITY.NAME).containsIgnoreCase(keySearch)
+                        .or(function(FUNC_UNACCENT, String.class, ACTIVITY.DESCRIPTION).containsIgnoreCase(keySearch))
+                        .or(function(FUNC_UNACCENT, String.class, ACTIVITY.ADDRESS).containsIgnoreCase(keySearch)))
+                .groupBy(ACTIVITY.ID)
+                .asTable();
 
-    public int countTotalRecordSearch(String text) {
-        Field<String> keySearch = DSL.function(FUNC_UNACCENT, String.class, DSL.val(text.trim()));
         return dslContext.selectCount()
-                .from(ACTIVITY)
-                .where(DSL.function(FUNC_UNACCENT, String.class, ACTIVITY.NAME).containsIgnoreCase(keySearch))
-                .or(DSL.function(FUNC_UNACCENT, String.class, ACTIVITY.DESCRIPTION).containsIgnoreCase(keySearch))
+                .from(table)
                 .fetchAny(0, Integer.class);
     }
 
-    public List<ActivityDTO> getActivities(int currentPage, EnumSort sortType) {
+    public List<ActivityDTO> getActivities(int currentPage, EnumSort sortType, List<String> filterTags) {
+        return getActivityDTOList(null, currentPage, sortType, filterTags);
+    }
+
+    private List<ActivityDTO> getActivityDTOList(UnaryOperator<SelectConditionStep> where, int currentPage, EnumSort sortType, List<String> filter) {
         JdbcMapper mapper = JdbcMapperFactory.newInstance()
-                .addKeys(ID_KEY, TAGS_ID_PROPERTY)
+                .ignorePropertyNotFound()
+                .addKeys(ID_PROPERTY, TAGS_ID_PROPERTY)
                 .newMapper(ActivityDTO.class);
 
-        try (ResultSet resultSet = dslContext
-                .select(ACTIVITY.ID,
-                        ACTIVITY.NAME,
-                        IMAGE.ID.as(IMAGE_ID_PROPERTY),
+        try {
+            ResultSet resultSet = queryActivityResultSet(where, currentPage, sortType, filter);
+            Stream<ActivityDTO> stream = mapper.stream(resultSet);
+            return stream.collect(Collectors.toList());
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        }
+        return Collections.emptyList();
+    }
+
+    private ResultSet queryActivityResultSet(UnaryOperator<SelectConditionStep> where, int currentPage, EnumSort sortType, List<String> filter) {
+        Table table = querySortedActivityTable(
+                where != null ?
+                        where.apply(queryActivityDetailsJoin(filter)) :
+                        queryActivityDetailsJoin(filter)
+                , currentPage, sortType);
+
+        return dslContext
+                .select(table.asterisk(),
                         TAG.ID.as(TAGS_ID_PROPERTY),
-                        TAG.CONTENT.as(TAGS_CONTENT_PROPERTY),
-                        ACTIVITY.ADDRESS)
+                        TAG.CONTENT.as(TAGS_CONTENT_PROPERTY))
+                .from(table)
+                .leftJoin(ACTIVITY_TAG)
+                .on(table.field("id", Long.class).eq(ACTIVITY_TAG.ACTIVITY_ID))
+                .leftJoin(TAG)
+                .on(TAG.ID.eq(ACTIVITY_TAG.TAG_ID))
+                .orderBy(hashMapSortType(sortType))
+                .fetchResultSet();
+    }
+
+    private Table querySortedActivityTable(SelectConditionStep where, int currentPage, EnumSort sortType) {
+        return where.groupBy(ACTIVITY.ID, IMAGE.ID)
+                .orderBy(hashMapSortType(sortType))
+                .offset((currentPage - 1) * RECORD_OF_LIST)
+                .limit(RECORD_OF_LIST).asTable();
+    }
+
+    private SelectConditionStep queryActivityDetailsJoin(List<String> filterTags) {
+        return dslContext
+                .select(
+                        ACTIVITY.ID.as(ID_PROPERTY),
+                        ACTIVITY.NAME.as(NAME_PROPERTY),
+                        ACTIVITY.ADDRESS.as(ADDRESS_PROPERTY),
+                        IMAGE.ID.as(IMAGE_ID_PROPERTY),
+                        DSL.round(DSL.avg(RATING.VALUE), 1).as(RATING_AVG_PROPERTY),
+                        DSL.count(RATING.VALUE).as(RATING_COUNT_PROPERTY),
+                        ACTIVITY.ACTIVE_DATE.as(ACTIVE_DATE_PROPERTY),
+                        ACTIVITY.UPDATED_DATE.as(UPDATE_DATE_PROPERTY),
+                        ACTIVITY.CREATED_DATE.as(CREATE_DATE_PROPERTY)
+                )
                 .from(ACTIVITY)
                 .leftJoin(ACTIVITY_TAG)
                 .on(ACTIVITY_TAG.ACTIVITY_ID.eq(ACTIVITY.ID))
@@ -202,33 +244,40 @@ public class ActivityRepository {
                 .on(ACTIVITY.ID.eq(ACTIVITY_IMAGE.ACTIVITY_ID))
                 .leftJoin(IMAGE).on(ACTIVITY_IMAGE.IMAGE_ID.eq(IMAGE.ID))
                 .leftJoin(RATING).on(ACTIVITY.ID.eq(RATING.ACTIVITY_ID))
-                .groupBy(ACTIVITY.ID, IMAGE.ID, TAG.ID)
-                .orderBy(hashMapSortType(sortType))
-                .offset((currentPage - 1) * RECORD_OF_LIST)
-                .limit(RECORD_OF_LIST)
-                .fetchResultSet()) {
-            Stream<ActivityDTO> stream = mapper.stream(resultSet);
-            return stream.collect(Collectors.toList());
-        } catch (SQLException e) {
-            LOGGER.error(e.getMessage());
-        }
-        return Collections.emptyList();
+                .where(getFilterCondition(filterTags));
     }
 
-    public int countTotalRecordActivity() {
-        return dslContext.selectCount()
+    private Condition getFilterCondition(List<String> filterTags) {
+        return (filterTags == null || filterTags.isEmpty()) ? DSL.condition("true") : TAG.CONTENT.in(filterTags);
+    }
+
+    public int countTotalRecordActivity(List<String> filterTags) {
+        Table table = dslContext
+                .select(
+                        ACTIVITY.ID.as(ID_PROPERTY)
+                )
                 .from(ACTIVITY)
+                .leftJoin(ACTIVITY_TAG)
+                .on(ACTIVITY_TAG.ACTIVITY_ID.eq(ACTIVITY.ID))
+                .leftJoin(TAG)
+                .on(TAG.ID.eq(ACTIVITY_TAG.TAG_ID))
+                .where(getFilterCondition(filterTags))
+                .groupBy(ACTIVITY.ID)
+                .asTable();
+
+        return dslContext.selectCount()
+                .from(table)
                 .fetchAny(0, Integer.class);
     }
 
     private SortField[] hashMapSortType(EnumSort sortType) {
         EnumMap<EnumSort, List<SortField>> enumMapSort = new EnumMap<>(EnumSort.class);
 
-        enumMapSort.put(EnumSort.NEWEST_FIRST, Collections.singletonList(DSL.field(ACTIVITY.CREATED_DATE).desc().nullsLast()));
-        enumMapSort.put(EnumSort.ACTIVE_FIRST, Arrays.asList(DSL.field(ACTIVITY.ACTIVE_DATE).desc().nullsLast(),
-                DSL.field(ACTIVITY.UPDATED_DATE).desc().nullsLast()));
-        enumMapSort.put(EnumSort.RATING_FIRST, Arrays.asList(DSL.field(round(avg(RATING.VALUE), 1)).desc().nullsLast(),
-                DSL.field(count(RATING.ID)).desc().nullsLast()));
+        enumMapSort.put(EnumSort.NEWEST_FIRST, Collections.singletonList(DSL.field(CREATE_DATE_PROPERTY).desc().nullsLast()));
+        enumMapSort.put(EnumSort.ACTIVE_FIRST, Arrays.asList(DSL.field(ACTIVE_DATE_PROPERTY).desc().nullsLast(),
+                DSL.field(UPDATE_DATE_PROPERTY).desc().nullsLast()));
+        enumMapSort.put(EnumSort.RATING_FIRST, Arrays.asList(DSL.field(RATING_AVG_PROPERTY).desc().nullsLast(),
+                DSL.field(RATING_COUNT_PROPERTY).desc().nullsLast()));
 
         return enumMapSort.get(sortType).toArray(new SortField[]{});
     }

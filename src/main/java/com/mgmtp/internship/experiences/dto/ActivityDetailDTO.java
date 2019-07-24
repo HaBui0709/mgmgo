@@ -23,8 +23,8 @@ public class ActivityDetailDTO {
     @Size(max = 100000, message = "You can not write more than 10000 characters for description")
     private String description;
     private String address;
-    private Long imageId;
     private double rating;
+    private Long imageId;
     private long createdByUserId;
     private long updatedByUserId;
     private Timestamp createdDate;

@@ -6,22 +6,15 @@
 <head>
     <title>mgm go</title>
     <link rel="stylesheet" type="text/css" th:href="@{/static/css/home/index.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/static/css/auto-complete.css}"/>
     <link rel="stylesheet" type="text/css" th:href="@{/static/css/tags.css}"/>
-
 </head>
 <body>
 <div layout:fragment="main-content">
     <h5 class="display-4 d-none d-lg-block">Welcome to mgm go!</h5>
     <hr class="my-4 display-4 d-none d-lg-block">
     <p>You can find events, places and anything in here.</p>
-    <form  th:action="@{/}" method="get" id="sort" name="sort">
-        <select name="sortType" id="sortType" class="custom-select custom-select-sm col-6 col-lg-2">
-            <option th:selected="${sortType=='NEWEST_FIRST'}" value="NEWEST_FIRST">Newest first</option>
-            <option th:selected="${sortType=='ACTIVE_FIRST'}" value="ACTIVE_FIRST">Most active first</option>
-            <option th:selected="${sortType=='RATING_FIRST'}"value="RATING_FIRST">Best rating first</option>
-        </select>
-    </form>
-    </br>
+    <div th:replace="activity/fragments/list-action-bar"></div>
     <div class="lazy-loading activities"
          th:attr="current-page=${pagingInfo.currentPage},size-of-pages=${pagingInfo.sizeOfPages},link=@{/more/?sortType={sortType}(sortType=${sortType})}">
         <th:block th:replace="activity/fragments/list-activities"></th:block>
@@ -36,7 +29,9 @@
 </div>
 <th:block layout:fragment="custom-script">
     <script type="text/javascript" src="/static/js/lazy-loading.js"></script>
-    <script type="text/javascript" src="/static/js/sort.js"></script>
+    <script src="/static/js/auto-complete.js"></script>
+    <script src="/static/js/tags.js"></script>
+    <script type="text/javascript" src="/static/js/list-action.js"></script>
 </th:block>
 </body>
 </html>

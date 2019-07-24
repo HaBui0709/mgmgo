@@ -95,6 +95,39 @@
     border-width: 5px;
 }
 
+.list-action-bar-item {
+    display: inline;
+    margin-right: 5px;
+}
+
+.filter-show-btn {
+    border: 1px solid #ced4da;
+    background-color: #fff;
+    border-radius: .25rem;
+    color: #495057;
+    font-weight: 400;
+    padding: .25rem .75rem .25rem .75rem;
+    line-height: 1.5;
+}
+
+.filter-show-btn:focus {
+    outline: none;
+}
+
+.filter-show-btn-on {
+    color: #007bff;
+}
+
+.filter-collapse {
+    border-bottom: 1px solid #ced4da;
+    padding: 8px 0px;
+    color: #495057;
+}
+
+.sort-select {
+    width: auto;
+    vertical-align: inherit;
+}
 .activity-item-location {
     font-size: 85%;
     align-items: center;

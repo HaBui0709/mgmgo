@@ -211,6 +211,7 @@ public class ActivityControllerTest {
         Mockito.when(userService.calculateAndUpdateRepulationScore(EXPECTED_ACTIVITY_DETAIL_DTO.getCreatedByUserId(), ApplicationConstant.REPUTATION_SCORE_CREATE_ACTIVITY)).thenReturn(true);
         Mockito.when(tagService.addListTagForActivity(Mockito.anyLong(), Mockito.anyList())).thenReturn(true);
 
+
         try {
             mockMvc.perform(post(CREATE_URL)
                     .param("id", ACTIVITY_ID + "")

@@ -8,4 +8,4 @@ $(document).ready(function () {
             $("#message-success-crud").remove();
         }, 4000)
     }
-})
+});

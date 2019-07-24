@@ -53,29 +53,29 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     @Override
-    public List<ActivityDTO> search(String text, int currentPage, EnumSort sortType) {
+    public List<ActivityDTO> search(String text, int currentPage, EnumSort sortType, List<String> filterTags) {
         if (currentPage < 1) {
             return Collections.emptyList();
         }
-        return activityRepository.search(text, currentPage, sortType);
+        return activityRepository.search(text, currentPage, sortType, filterTags);
     }
 
     @Override
-    public int countTotalRecordSearch(String text) {
-        return activityRepository.countTotalRecordSearch(text);
+    public int countTotalRecordSearch(String text, List<String> filterTags) {
+        return activityRepository.countTotalRecordSearch(text, filterTags);
     }
 
     @Override
-    public List<ActivityDTO> getActivities(int currentPage, EnumSort sortType) {
+    public List<ActivityDTO> getActivities(int currentPage, EnumSort sortType, List<String> filterTags) {
         if (currentPage < 1) {
             return Collections.emptyList();
         }
-        return activityRepository.getActivities(currentPage, sortType);
+        return activityRepository.getActivities(currentPage, sortType, filterTags);
     }
 
     @Override
-    public int countTotalRecordActivity() {
-        return activityRepository.countTotalRecordActivity();
+    public int countTotalRecordActivity(List<String> filterTags) {
+        return activityRepository.countTotalRecordActivity(filterTags);
     }
 
     @Override
