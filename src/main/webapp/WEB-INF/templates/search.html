@@ -18,7 +18,7 @@
     <h6><span th:text="${pagingInfo.totalRecord}">1</span> result(s) <strong class="text-primary"
                                                                              th:text="${#strings.isEmpty(keySearch)} ? '' :  '&quot;' + ${keySearch} + '&quot;'"></strong>
         for activities </h6>
-    <form  th:action="@{/search}" method="get" id="sort" name="sort">
+    <form th:if="${not #lists.isEmpty(activities)}" th:action="@{/search}" method="get" id="sort" name="sort">
         <select name="sortType" id="sortType" class="custom-select custom-select-sm col-6 col-lg-2">
             <option th:selected="${sortType=='NEWEST_FIRST'}" value="NEWEST_FIRST">Newest first</option>
             <option th:selected="${sortType=='ACTIVE_FIRST'}" value="ACTIVE_FIRST">Most active first</option>
