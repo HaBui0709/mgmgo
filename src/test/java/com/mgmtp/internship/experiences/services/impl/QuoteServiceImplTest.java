@@ -31,7 +31,7 @@ public class QuoteServiceImplTest {
     public void shouldReturnQuotesDTO() {
         QuoteDTO expectedQuoteDTO = new QuoteDTO("abcccc", "def");
         QuoteDTO[] quoteDTOS = new QuoteDTO[]{expectedQuoteDTO};
-        Mockito.when(restTemplate.getForObject(QuoteServiceImpl.RANDOM_QUOTE_URL, QuoteDTO[].class))
+        Mockito.when(restTemplate.getForObject(Mockito.anyString(), Mockito.any()))
                 .thenReturn(quoteDTOS);
 
         QuoteDTO actualQuoteDTO = quoteServiceIml.getQuote();
@@ -42,7 +42,7 @@ public class QuoteServiceImplTest {
     @Test
     public void shouldReturnNullIfQuoteEmpty() {
         QuoteDTO expectedQuoteDTO = null;
-        Mockito.when(restTemplate.getForObject(QuoteServiceImpl.RANDOM_QUOTE_URL, QuoteDTO[].class))
+        Mockito.when(restTemplate.getForObject(Mockito.anyString(), Mockito.any()))
                 .thenReturn(null);
 
         QuoteDTO actualQuoteDTO = quoteServiceIml.getQuote();
@@ -53,7 +53,7 @@ public class QuoteServiceImplTest {
     @Test(expected = RestClientException.class)
     public void shouldThrowExceptionIfRequestTimeout() {
         Mockito.doThrow(RestClientException.class)
-                .when(restTemplate).getForObject(QuoteServiceImpl.RANDOM_QUOTE_URL, QuoteDTO[].class);
+                .when(restTemplate).getForObject(Mockito.anyString(), Mockito.any());
 
         quoteServiceIml.getQuote();
     }

@@ -12,6 +12,7 @@ public class ActivityDTO {
     private String name;
     private Long imageId;
     private List<TagDTO> tags;
+    private String address;
 
     public ActivityDTO() {
     }
@@ -21,6 +22,14 @@ public class ActivityDTO {
         this.name = name;
         this.imageId = imageId;
         this.tags = tags;
+    }
+
+    public ActivityDTO(long id, String name, Long imageId, List<TagDTO> tags, String address) {
+        this.id = id;
+        this.name = name;
+        this.imageId = imageId;
+        this.tags = tags;
+        this.address = address;
     }
 
     public long getId() {
@@ -53,5 +62,13 @@ public class ActivityDTO {
 
     public void setTags(List<TagDTO> tags) {
         this.tags = tags;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 }

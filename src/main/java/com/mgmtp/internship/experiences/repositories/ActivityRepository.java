@@ -145,7 +145,8 @@ public class ActivityRepository {
                         ACTIVITY.NAME,
                         IMAGE.ID.as(IMAGE_ID_PROPERTY),
                         TAG.ID.as(TAGS_ID_PROPERTY),
-                        TAG.CONTENT.as(TAGS_CONTENT_PROPERTY))
+                        TAG.CONTENT.as(TAGS_CONTENT_PROPERTY),
+                        ACTIVITY.ADDRESS)
                 .from(ACTIVITY)
                 .leftJoin(ACTIVITY_TAG)
                 .on(ACTIVITY_TAG.ACTIVITY_ID.eq(ACTIVITY.ID))
@@ -190,7 +191,8 @@ public class ActivityRepository {
                         ACTIVITY.NAME,
                         IMAGE.ID.as(IMAGE_ID_PROPERTY),
                         TAG.ID.as(TAGS_ID_PROPERTY),
-                        TAG.CONTENT.as(TAGS_CONTENT_PROPERTY))
+                        TAG.CONTENT.as(TAGS_CONTENT_PROPERTY),
+                        ACTIVITY.ADDRESS)
                 .from(ACTIVITY)
                 .leftJoin(ACTIVITY_TAG)
                 .on(ACTIVITY_TAG.ACTIVITY_ID.eq(ACTIVITY.ID))
@@ -239,7 +241,7 @@ public class ActivityRepository {
 
     public List<ActivityDTO> getListActivityByUserId(long id, int currentPage) {
         return dslContext
-                .select(ACTIVITY.ID, ACTIVITY.NAME, ACTIVITY_IMAGE.IMAGE_ID)
+                .select(ACTIVITY.ID, ACTIVITY.NAME, ACTIVITY_IMAGE.IMAGE_ID, ACTIVITY.ADDRESS)
                 .from(ACTIVITY)
                 .leftJoin(USER)
                 .on(ACTIVITY.CREATED_BY_USER_ID.eq(USER.ID))

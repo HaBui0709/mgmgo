@@ -34,7 +34,7 @@ public class ActivityServiceImplTest {
     private static final ActivityDetailDTO EXPECTED_ACTIVITY_DETAIL_DTO = ActivityTestUtil.prepareExpectedActivityDetailDTOWithNameForTest("name");
     private static final ActivityDetailDTO EXISTED_ACTIVITY_DETAIL_DTO = ActivityTestUtil.prepareExpectedActivityDetailDTOWithNameForTest(EXIST_NAME);
     private static final String KEY_SEARCH = "abc";
-    private static final List<ActivityDTO> EXPECTED_LIST_ACTIVITY_DTO = Collections.singletonList(new ActivityDTO(1L, "name", IMAGE_ID, Collections.emptyList()));
+    private static final List<ActivityDTO> EXPECTED_LIST_ACTIVITY_DTO = Collections.singletonList(new ActivityDTO(1L, "name", IMAGE_ID, Collections.emptyList(), null));
     private static final List<CommentDTO> EXPECTED_LIST_COMMENT_DTO = Collections.singletonList(new CommentDTO(1L, 1L, "displayName", "content", DateTimeUtil.getCurrentDate()));
     private static final CommentDTO COMMENT_DTO = new CommentDTO(1L, 1L, "displayName", "content", DateTimeUtil.getCurrentDate());
     private static final int CURRENT_PAGE = 1;
@@ -299,6 +299,7 @@ public class ActivityServiceImplTest {
 
         Assert.assertEquals(ADD_FAIL, actualResult);
     }
+
     @Test
     public void shouldReturnTrueIfActivityIsCreateByUserId() {
         Mockito.when(activityRepository.checkIsActivityCreateByUserId(ACTIVITY_ID, USER_ID)).thenReturn(true);
