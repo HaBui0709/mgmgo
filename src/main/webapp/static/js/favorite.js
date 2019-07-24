@@ -25,7 +25,7 @@ function updateFavorite() {
 
 function checkIsFavorite() {
     let isFavorite = true;
-    if ($('#favorite').hasClass('none-favorite'))
+    if ($('#favorite').hasClass('far'))
         isFavorite = false;
     return isFavorite;
 }
@@ -43,8 +43,10 @@ function addMessage(msg, isSuccess) {
 
 function changeBtnFavorite() {
     if (checkIsFavorite()) {
-        $('#favorite').addClass('none-favorite');
+        $('#favorite').removeClass('fa');
+        $('#favorite').addClass('far').addClass('text-secondary');
     } else {
-        $('#favorite').removeClass('none-favorite');
+        $('#favorite').removeClass('far').removeClass('text-secondary');
+        $('#favorite').addClass('fa');
     }
 }

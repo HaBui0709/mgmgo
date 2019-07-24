@@ -58,15 +58,14 @@
             </div>
             <div class="form-group">
                 <label for="address">Address</label>
-                <div class="input-group">
-                    <input type="text" class="form-control border-right-0 pr-1" id="address"
+                <div class="position-relative">
+                    <input type="text" class="form-control pr-1" id="address"
                            placeholder="Enter activity's address"
                            th:value="${activityDetailDTO.address}" th:field="*{address}">
-                    <span class="input-group-append">
-                        <button type="button" class="btn-toggle input-group-text bg-white pl-0" data-toggle="modal"
-                                data-target="#modalGetLocation" id="findLocation">
-                        <img src="/static/icons/location-gps.png" class="address-icon" alt="mgm-go"></button>
-                                </span>
+                    <button type="button" class="border-findlocate-btn btn-toggle input-group-text bg-white mr-1" data-toggle="modal"
+                            data-target="#modalGetLocation" id="findLocation">
+                        <i class="fas fa-search-location"></i>
+                    </button>
                 </div>
             </div>
             <div class="form-group">
