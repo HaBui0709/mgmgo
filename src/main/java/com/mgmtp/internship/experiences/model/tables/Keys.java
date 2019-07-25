@@ -52,6 +52,7 @@ public class Keys {
     // -------------------------------------------------------------------------
 
     public static final Identity<ActivityRecord, Long> IDENTITY_ACTIVITY = Identities0.IDENTITY_ACTIVITY;
+    public static final Identity<ActivityImageRecord, Long> IDENTITY_ACTIVITY_IMAGE = Identities0.IDENTITY_ACTIVITY_IMAGE;
     public static final Identity<CommentRecord, Long> IDENTITY_COMMENT = Identities0.IDENTITY_COMMENT;
     public static final Identity<ImageRecord, Long> IDENTITY_IMAGE = Identities0.IDENTITY_IMAGE;
     public static final Identity<RatingRecord, Long> IDENTITY_RATING = Identities0.IDENTITY_RATING;
@@ -96,6 +97,7 @@ public class Keys {
 
     private static class Identities0 {
         public static Identity<ActivityRecord, Long> IDENTITY_ACTIVITY = Internal.createIdentity(Activity.ACTIVITY, Activity.ACTIVITY.ID);
+        public static Identity<ActivityImageRecord, Long> IDENTITY_ACTIVITY_IMAGE = Internal.createIdentity(ActivityImage.ACTIVITY_IMAGE, ActivityImage.ACTIVITY_IMAGE.ID);
         public static Identity<CommentRecord, Long> IDENTITY_COMMENT = Internal.createIdentity(Comment.COMMENT, Comment.COMMENT.ID);
         public static Identity<ImageRecord, Long> IDENTITY_IMAGE = Internal.createIdentity(Image.IMAGE, Image.IMAGE.ID);
         public static Identity<RatingRecord, Long> IDENTITY_RATING = Internal.createIdentity(Rating.RATING, Rating.RATING.ID);

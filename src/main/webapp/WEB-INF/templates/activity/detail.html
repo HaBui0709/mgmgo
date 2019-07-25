@@ -15,49 +15,51 @@
     <meta type="text" name="csrf-header" th:content="${_csrf!=null?_csrf.headerName:'X-CSRF-Token'}"/>
 </head>
 <body>
-<div layout:fragment="main-content">
-    <div class="card" id="activity-detail">
-        <th:block th:replace="activity/fragments/upload-picture"></th:block>
-        <div class="d-inline-flex">
-            <div class="pr-3">
-                <h4 th:text="${activityDetailDTO.getName()}" id="detail-title" class="my-0"></h4>
-            </div>
-            <div class="btn-group right-0 position-absolute">
-                <button type="button" class="btn border-0 btn-dropdown-shadow pt-1 pr-1" data-toggle="dropdown"
-                        aria-haspopup="true" aria-expanded="false">
-                    <i class="fa fa-ellipsis-v fa-lg text-secondary" aria-hidden="true"></i>
-                </button>
-                <div class="dropdown-menu dropdown-menu-right">
-                    <a class="dropdown-item" th:href="@{/activity/update/{activityId}(activityId=${activityId})}">
-                        <i class="far fa-edit dropdown-icon-color mr-2" aria-hidden="true"></i> Edit
-                    </a>
-                    <button class="dropdown-item" type="button" data-toggle="modal" id="report-button"
-                            data-target="#reportModal">
-                        <i class="far fa-flag dropdown-icon-color mr-2" aria-hidden="true"></i> Report
+<div layout:fragment="main-content" class="content-wrapper container p-0">
+    <th:block th:replace="activity/fragments/upload-picture"></th:block>
+    <div class="container">
+        <div class="card" id="activity-detail">
+            <div class="d-inline-flex">
+                <div class="pr-3">
+                    <h4 th:text="${activityDetailDTO.getName()}" id="detail-title" class="my-0"></h4>
+                </div>
+                <div class="btn-group right-0 position-absolute">
+                    <button type="button" class="btn border-0 btn-dropdown-shadow pt-1 pr-1" data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-ellipsis-v fa-lg text-secondary" aria-hidden="true"></i>
                     </button>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <a class="dropdown-item" th:href="@{/activity/update/{activityId}(activityId=${activityId})}">
+                            <i class="far fa-edit dropdown-icon-color mr-2" aria-hidden="true"></i> Edit
+                        </a>
+                        <button class="dropdown-item" type="button" data-toggle="modal" id="report-button"
+                                data-target="#reportModal">
+                            <i class="far fa-flag dropdown-icon-color mr-2" aria-hidden="true"></i> Report
+                        </button>
+                    </div>
                 </div>
             </div>
-        </div>
-        <p class="display-name mt-1 mb-0"> Recommended by
-            <span th:class="${userCreatedInfo.getLevelName()}"
-                  th:text="${userCreatedInfo.getDisplayName()}"></span>
-        </p>
-        <div id="detail-header" class="d-flex py-1">
-            <div id="activity-rating">
-                <button class="row px-0 mx-0" data-toggle="modal" id="rate-button" data-target="#rateModal">
-                    <div id="rating-star">
-                        <i class="fa fa-star" id="star-filled"></i>
-                        <i class="far fa-star" id="star-empty"></i>
-                        <i class="fa fa-star" id="star-removed"
-                           th:style="'height: '+${activityDetailDTO.getRating()>0?(15+(1-(activityDetailDTO.getRating()/5))*65):100}+'%;'"></i>
-                    </div>
-                    <div id="rating-score" th:text="${activityDetailDTO.getRating()}"
-                         th:class="'px-1'+${activityDetailDTO.getRating()>0?'':' d-none'}"></div>
+            <p class="display-name mt-1 mb-0"> Recommended by
+                <span th:class="${userCreatedInfo.getLevelName()}"
+                      th:text="${userCreatedInfo.getDisplayName()}"></span>
+            </p>
+            <div id="detail-header" class="d-flex py-1">
+                <div id="activity-rating">
+                    <button class="row px-0 mx-0" data-toggle="modal" id="rate-button" data-target="#rateModal">
+                        <div id="rating-star">
+                            <i class="fa fa-star" id="star-filled"></i>
+                            <i class="far fa-star" id="star-empty"></i>
+                            <i class="fa fa-star" id="star-removed"
+                               th:style="'height: '+${activityDetailDTO.getRating()>0?(15+(1-(activityDetailDTO.getRating()/5))*65):100}+'%;'"></i>
+                        </div>
+                        <div id="rating-score" th:text="${activityDetailDTO.getRating()}"
+                             th:class="'px-1'+${activityDetailDTO.getRating()>0?'':' d-none'}"></div>
+                    </button>
+                </div>
+                <button id="favorite"
+                        th:class="${activityDetailDTO.isFavorite()}? 'fa fa-heart mr-2 mt-0':'far fa-heart mr-2 mt-0 text-secondary'">
                 </button>
             </div>
-            <button id="favorite"
-                    th:class="${activityDetailDTO.isFavorite()}? 'fa fa-heart mr-2 mt-0':'far fa-heart mr-2 mt-0 text-secondary'">
-            </button>
         </div>
         <div th:if="${activityDetailDTO.address != null && activityDetailDTO.address.trim().length() != 0}"
              class="d-flex my-1"><i class="fas fa-map-marker-alt fa-lg mt-1 text-danger" aria-hidden="true"></i><span
@@ -159,7 +161,7 @@
     <div id="favorite-return" class="alert create-message-success"></div>
 </div>
 <th:block layout:fragment="custom-script">
-    <script src="/static/js/image.js?n=1"></script>
+    <script src="/static/js/image.js"></script>
     <script type="text/javascript" src="/static/js/rate.js"></script>
     <script type="text/javascript" src="/static/js/comment.js"></script>
     <script type="text/javascript" src="/static/js/favorite.js"></script>

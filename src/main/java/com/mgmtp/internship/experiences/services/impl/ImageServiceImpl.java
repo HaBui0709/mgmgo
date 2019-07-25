@@ -1,5 +1,6 @@
 package com.mgmtp.internship.experiences.services.impl;
 
+import com.mgmtp.internship.experiences.constants.ApplicationConstant;
 import com.mgmtp.internship.experiences.dto.ImageDTO;
 import com.mgmtp.internship.experiences.repositories.ImageRepository;
 import com.mgmtp.internship.experiences.repositories.UserRepository;
@@ -13,6 +14,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 
 /**
@@ -26,6 +28,7 @@ public class ImageServiceImpl implements ImageService {
 
     @Autowired
     ImageRepository imageRepository;
+
     @Autowired
     UserRepository userRepository;
 
@@ -35,14 +38,14 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
-    public Long updateActivityImage(long activityId, byte[] imageData) {
-        return imageRepository.updateActivityImage(activityId, imageData);
+    public Long updateActivityImage(long activityId, long oldImageId, byte[] imageData) {
+        try {
+            return imageRepository.updateActivityImage(activityId, oldImageId, imageData);
+        } catch (RuntimeException e) {
+            return 0L;
+        }
     }
 
-    @Override
-    public boolean checkExistedImageOfActivity(Long activityId) {
-        return imageRepository.checkExistedImageOfActitvity(activityId);
-    }
 
     public Long insertImage(byte[] imageData) {
         return imageRepository.insert(imageData);
@@ -67,5 +70,26 @@ public class ImageServiceImpl implements ImageService {
             throw new IOException("File is not an image");
         }
         return img.getWidth() <= 150 && img.getHeight() <= 150;
+    }
+
+    @Override
+    public List<Long> getListImages(Long activityId) {
+        return imageRepository.getListImages(activityId);
+    }
+
+    @Override
+    public Long addActivityImage(long activity, byte[] imageData) {
+        return imageRepository.addActivityImage(activity, imageData);
+    }
+
+    @Override
+    public Long getSizeOfListImages(Long activityId) {
+        return Long.valueOf(getListImages(activityId).size());
+    }
+
+    @Override
+    public Long checkMaximumImagesOfActivity(Long activityId) {
+        Long len = getSizeOfListImages(activityId);
+        return len < ApplicationConstant.MAX_NUMBER_UPLOAD_IMAGES ? len : -1;
     }
 }

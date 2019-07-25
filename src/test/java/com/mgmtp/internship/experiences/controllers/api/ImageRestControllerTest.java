@@ -141,8 +141,7 @@ public class ImageRestControllerTest {
     public void shouldThrowApiExceptionIfAddImageFailed() throws IOException {
         long activityId = 1;
         MockMultipartFile photo = new MockMultipartFile("data", "data.jpg", "image/jpg", new byte[]{0x4f, 0x3f});
-        Mockito.when(userService.getCurrentUser()).thenReturn(USER_DETAILS);
-        Mockito.when(imageService.updateActivityImage(activityId, photo.getBytes())).thenReturn(null);
+        Mockito.when(imageService.checkMaximumImagesOfActivity(activityId)).thenReturn(-1L);
         imageRestController.addImage(activityId, photo);
     }
 }

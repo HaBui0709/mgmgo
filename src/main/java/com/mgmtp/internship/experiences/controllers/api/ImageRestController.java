@@ -75,23 +75,43 @@ public class ImageRestController extends BaseRestController {
     }
 
     @PostMapping("/activity/{activity_id}")
-    @ResponseBody
-    public Object addImage(@PathVariable("activity_id") long activityId, @RequestParam("image_file") MultipartFile photo) throws IOException {
+    public Object addImage(@PathVariable("activity_id") long activityId,
+                           @RequestParam("image_file") MultipartFile photo) throws IOException {
         byte[] imageData = photo.getBytes();
-        Long userId = userService.getCurrentUser().getId();
-        boolean checkExistedImageOfActivity = imageService.checkExistedImageOfActivity(activityId);
-        Long imageId = imageService.updateActivityImage(activityId, imageData);
+        Long imageId;
+
+        if (imageService.checkMaximumImagesOfActivity(activityId) != -1) {
+            imageId = imageService.addActivityImage(activityId, imageData);
+        } else {
+            throw new ApiException(BAD_REQUEST, "Reach maximum number of images.");
+        }
+
         if (imageId == null) {
             throw new ApiException(BAD_REQUEST, "Server error.");
-        }
-        if (!checkExistedImageOfActivity) {
+        } else {
+            Long userId = userService.getCurrentUser().getId();
             userService.calculateAndUpdateRepulationScore(userId, ApplicationConstant.REPUTATION_SCORE_UPLOAD_FIRST_PICTURE);
         }
+
         JSONObject jsonObject = new JSONObject();
-        String url = "api/image/" + imageId;
-        jsonObject.put("imageFromRestAPI", url);
+        jsonObject.put("imageId", imageId);
+
         return jsonObject;
     }
 
+    @PutMapping("/activity/{activity_id}")
+    public Object updateImage(@PathVariable("activity_id") long activityId,
+                              @RequestParam("image_file") MultipartFile photo,
+                              @RequestParam("image_id") Long imageId) throws IOException {
 
+        byte[] imageData = photo.getBytes();
+        Long newImageId = imageService.updateActivityImage(activityId, imageId, imageData);
+        if (newImageId == 0) {
+            throw new ApiException(BAD_REQUEST, "Server error.");
+        }
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("imageId", newImageId);
+        return jsonObject;
+    }
 }

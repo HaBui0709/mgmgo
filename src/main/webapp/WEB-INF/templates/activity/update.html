@@ -23,7 +23,7 @@
            id="activity-link">
             <div class="activity-img--wrapper col-lg-2 col-4 mr-1 pl-0">
                 <img id="image-on-home-page"
-                     th:src="${existedActivity.imageId!=null}?@{/api/image/}+${existedActivity.imageId}:@{/static/images/no-img.png}"
+                     th:src="${existedActivity.images!=null && !existedActivity.images.isEmpty()}?@{/api/image/}+${existedActivity.images.get(0)}:@{/static/images/no-img.png}"
                      alt=""/>
             </div>
             <div>

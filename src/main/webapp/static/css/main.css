@@ -166,7 +166,6 @@ body {
     background-color: transparent;
 }
 
-
 #user_dropdown {
     display: flex;
     align-items: center;
@@ -238,4 +237,25 @@ body {
 .floating-action-button:hover .fa-plus, .fa-plus:hover {
     color: #1d76bb;
     opacity: 0.9;
+}
+
+@keyframes placeHolderShimmer {
+    0% {
+        background-position: -468px 0;
+    }
+    100% {
+        background-position: 468px 0;
+    }
+}
+
+.animated-background {
+    animation-duration: 1.25s;
+    animation-fill-mode: forwards;
+    animation-iteration-count: infinite;
+    animation-name: placeHolderShimmer;
+    animation-timing-function: linear;
+    background: #f6f6f6;
+    background: linear-gradient(to right, #f6f6f6 8%, #f0f0f0 18%, #f6f6f6 33%);
+    background-size: 800px 104px;
+    position: relative;
 }

@@ -25,6 +25,8 @@ public class ApplicationConstant {
 
     public static final int RECORD_OF_LIST = 10;
 
+    public static final int MAX_NUMBER_UPLOAD_IMAGES = 5;
+
     public static String getLevelReputation(long score) {
         for (int i = 1; i < REPUTATION_LEVEL_SCORES.length; i++) {
             if (score <= REPUTATION_LEVEL_SCORES[i]) {

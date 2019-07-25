@@ -9,6 +9,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -25,7 +26,7 @@ public class FavoriteServiceImplTest {
 
     private static final long ACTIVITY_ID = 1;
     private static final long USER_ID = 1;
-    private static final List<ActivityDTO> EXPECTED_LIST_FAVORITE_ACTIVITY_DTO = Collections.singletonList(new ActivityDTO(1L, "name", 1L, Collections.emptyList(), null));
+    private static final List<ActivityDTO> EXPECTED_LIST_FAVORITE_ACTIVITY_DTO = Collections.singletonList(new ActivityDTO(1L, "name", new ArrayList<>(), Collections.emptyList()));
     private static final int CURRENT_PAGE = 1;
 
     @Mock

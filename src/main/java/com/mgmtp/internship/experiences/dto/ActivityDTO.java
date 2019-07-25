@@ -10,24 +10,24 @@ import java.util.List;
 public class ActivityDTO {
     private long id;
     private String name;
-    private Long imageId;
+    private List<Long> images;
     private List<TagDTO> tags;
     private String address;
 
     public ActivityDTO() {
     }
 
-    public ActivityDTO(long id, String name, Long imageId, List<TagDTO> tags) {
+    public ActivityDTO(long id, String name, List<Long> images, List<TagDTO> tags) {
         this.id = id;
         this.name = name;
-        this.imageId = imageId;
+        this.images = images;
         this.tags = tags;
     }
 
-    public ActivityDTO(long id, String name, Long imageId, List<TagDTO> tags, String address) {
+    public ActivityDTO(long id, String name, List<Long> images, List<TagDTO> tags, String address) {
         this.id = id;
         this.name = name;
-        this.imageId = imageId;
+        this.images = images;
         this.tags = tags;
         this.address = address;
     }
@@ -48,12 +48,12 @@ public class ActivityDTO {
         this.name = name;
     }
 
-    public Long getImageId() {
-        return imageId;
+    public List<Long> getImages() {
+        return images;
     }
 
-    public void setImageId(Long imageId) {
-        this.imageId = imageId;
+    public void setImages(List<Long> images) {
+        this.images = images;
     }
 
     public List<TagDTO> getTags() {

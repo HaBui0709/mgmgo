@@ -26,11 +26,14 @@ import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 import org.thymeleaf.templatemode.TemplateMode;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @EnableWebMvc
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
+    private static final long MAX_UPLOAD_SIZE = 10485760;
+    private static final int CONNECTION_TIMEOUT = 15000;
 
     @Bean
     public SpringResourceTemplateResolver templateResolver() {
@@ -75,9 +78,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Bean
     public HttpComponentsClientHttpRequestFactory httpRequestFactory() {
         HttpComponentsClientHttpRequestFactory httpRequestFactory = new HttpComponentsClientHttpRequestFactory();
-        httpRequestFactory.setConnectionRequestTimeout(15000);
-        httpRequestFactory.setConnectTimeout(15000);
-        httpRequestFactory.setReadTimeout(15000);
+        httpRequestFactory.setConnectionRequestTimeout(CONNECTION_TIMEOUT);
+        httpRequestFactory.setConnectTimeout(CONNECTION_TIMEOUT);
+        httpRequestFactory.setReadTimeout(CONNECTION_TIMEOUT);
         return httpRequestFactory;
     }
 
@@ -120,8 +123,21 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Bean
     public MultipartResolver multipartResolver() {
         CommonsMultipartResolver multipartResolver
-                = new CommonsMultipartResolver();
-        multipartResolver.setMaxUploadSize(10485760);
+                = new CommonsMultipartResolverMine();
+        multipartResolver.setMaxUploadSize(MAX_UPLOAD_SIZE);
         return multipartResolver;
+    }
+
+    public static class CommonsMultipartResolverMine extends CommonsMultipartResolver {
+
+        @Override
+        public boolean isMultipart(HttpServletRequest request) {
+            final String header = request.getHeader("Content-Type");
+            if(header == null){
+                return false;
+            }
+            return header.contains("multipart/form-data");
+        }
+
     }
 }

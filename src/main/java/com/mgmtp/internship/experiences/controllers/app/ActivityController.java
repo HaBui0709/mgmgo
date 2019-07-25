@@ -40,6 +40,8 @@ public class ActivityController {
     private static final String REDIRECT_UPDATE_URL = "redirect:/activity/update/";
     private static final String REDIRECT_CREATE_URL = "redirect:/activity/create";
     private static final String REDIRECT_ACTIVITY_URL = "redirect:/activity/";
+    private static final String MAX_NUMBER_UPLOAD_IMAGES = "maxNumberUploadImages";
+
 
     @Autowired
     private TagService tagService;
@@ -65,6 +67,8 @@ public class ActivityController {
             model.addAttribute("pagingInfo", new PageDTO(activityService.countTotalRecordCommentById(activityId)));
             model.addAttribute(COMMENT_INFO_ATTRIBUTE, new CommentDTO());
             model.addAttribute("comments", activityService.getComments(1, activityId));
+            model.addAttribute(MAX_NUMBER_UPLOAD_IMAGES, ApplicationConstant.MAX_NUMBER_UPLOAD_IMAGES);
+
             return "activity/detail";
         }
         model.addAttribute(ERROR_MESSAGE, ACTIVITY_NOT_FOUND);

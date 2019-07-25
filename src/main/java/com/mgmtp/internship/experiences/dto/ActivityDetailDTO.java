@@ -23,8 +23,8 @@ public class ActivityDetailDTO {
     @Size(max = 100000, message = "You can not write more than 10000 characters for description")
     private String description;
     private String address;
+    private List<Long> images;
     private double rating;
-    private Long imageId;
     private long createdByUserId;
     private long updatedByUserId;
     private Timestamp createdDate;
@@ -58,12 +58,12 @@ public class ActivityDetailDTO {
         this.description = description;
     }
 
-    public Long getImageId() {
-        return imageId;
+    public List<Long> getImages() {
+        return images;
     }
 
-    public void setImageId(Long imageId) {
-        this.imageId = imageId;
+    public void setImages(List<Long> images) {
+        this.images = images;
     }
 
     public double getRating() {

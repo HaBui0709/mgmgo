@@ -5,6 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 
 /**
@@ -23,7 +24,13 @@ public interface ImageService {
 
     boolean validateProfilePicture(InputStream inputStream) throws IOException;
 
-    Long updateActivityImage(long activityId, byte[] imageData);
+    Long updateActivityImage(long activityId, long oldImageId, byte[] imageData);
 
-    boolean checkExistedImageOfActivity(Long activityId);
+    List<Long> getListImages(Long activityId);
+
+    Long addActivityImage(long activity, byte[] imageData);
+
+    Long getSizeOfListImages(Long activityId);
+
+    Long checkMaximumImagesOfActivity(Long activityId);
 }
