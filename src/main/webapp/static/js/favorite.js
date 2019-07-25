@@ -3,7 +3,7 @@ $(document).ready(function () {
         updateFavorite();
     })
 });
-let timeout;
+
 function updateFavorite() {
     $.ajax({
         type: 'GET',
@@ -28,17 +28,6 @@ function checkIsFavorite() {
     if ($('#favorite').hasClass('far'))
         isFavorite = false;
     return isFavorite;
-}
-
-function addMessage(msg, isSuccess) {
-    let favoriteMsg = $("#favorite-return");
-    favoriteMsg.removeClass("alert-danger").removeClass("alert-success").removeClass('d-none');
-    favoriteMsg.addClass("alert-" + (isSuccess ? "success" : "danger"));
-    favoriteMsg.html(msg);
-    clearTimeout(timeout);
-    timeout = setTimeout(function () {
-        favoriteMsg.addClass('d-none');
-    }, 4000)
 }
 
 function changeBtnFavorite() {

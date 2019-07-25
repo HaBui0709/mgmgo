@@ -16,12 +16,10 @@
         <div layout:fragment="main-content" class="content-wrapper container py-2"></div>
 
         <!-- Message when create successfull default-layout-->
-        <th:block th:if="${successCrud != null}">
-            <div id="message-success-crud" class="alert-success alert create-message-success"
+        <div id="message-center">
+            <div th:if="${successCrud != null}" id="success-crud" class="alert-success alert message-center-info"
                  th:text="${successCrud}"></div>
-        </th:block>
-
-        <div id="message-success"></div>
+        </div>
 
         <div th:if="${#httpServletRequest.requestURI != ('/activity/create') && !(#httpServletRequest.requestURI.matches('/login.*'))}">
             <a class="floating-action-button d-sm-none d-flex position-fixed" th:href="@{/activity/create}">

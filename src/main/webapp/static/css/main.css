@@ -116,39 +116,39 @@ body {
     border-radius: 50%;
 }
 
-.create-message-success {
-    bottom: 15px;
-    right: 15px;
+#message-center {
+    bottom: 10px;
+    left: 20px;
     position: fixed;
     z-index: 3;
 }
 
 @media only screen and (max-width: 700px) {
-    [class*="create-message-success"] {
+    [id*="message-center"] {
         width: 70%;
     }
 }
 
 @media only screen and (min-width: 700px) {
-    [class*="create-message-success"] {
-        width: 60%;
+    [id*="message-center"] {
+        width: 40%;
     }
 }
 
 @media only screen and (min-width: 900px) {
-    [class*="create-message-success"] {
-        width: 50%;
+    [id*="message-center"] {
+        width: 40%;
     }
 }
 
 @media only screen and (min-width: 1200px) {
-    [class*="create-message-success"] {
+    [id*="message-center"] {
         width: 30%;
     }
 }
 
 @media only screen and (min-width: 1800px) {
-    [class*="create-message-success"] {
+    [id*="message-center"] {
         width: 15%;
     }
 }
@@ -257,5 +257,9 @@ body {
     background: #f6f6f6;
     background: linear-gradient(to right, #f6f6f6 8%, #f0f0f0 18%, #f6f6f6 33%);
     background-size: 800px 104px;
+    position: relative;
+}
+
+.message-center-info {
     position: relative;
 }
