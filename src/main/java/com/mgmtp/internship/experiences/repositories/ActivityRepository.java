@@ -46,19 +46,19 @@ import static org.jooq.impl.DSL.*;
 public class ActivityRepository {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ActivityRepository.class);
-    private static final String IMAGE_ID_PROPERTY = "images_id";
-    private static final String TAGS_ID_PROPERTY = "tags_id";
-    private static final String TAGS_CONTENT_PROPERTY = "tags_content";
-    private static final String ID_PROPERTY = "id";
-    private static final String NAME_PROPERTY = "name";
-    private static final String ADDRESS_PROPERTY = "address";
-    private static final String RATING_AVG_PROPERTY = "avg_rating";
-    private static final String RATING_COUNT_PROPERTY = "count_rating";
-    private static final String CREATE_DATE_PROPERTY = "create_date";
-    private static final String ACTIVE_DATE_PROPERTY = "active_date";
-    private static final String UPDATE_DATE_PROPERTY = "update_date";
+    public static final String IMAGE_ID_PROPERTY = "images_id";
+    public static final String TAGS_ID_PROPERTY = "tags_id";
+    public static final String TAGS_CONTENT_PROPERTY = "tags_content";
+    public static final String ID_PROPERTY = "id";
+    public static final String NAME_PROPERTY = "name";
+    public static final String ADDRESS_PROPERTY = "address";
+    public static final String RATING_AVG_PROPERTY = "avg_rating";
+    public static final String RATING_COUNT_PROPERTY = "count_rating";
+    public static final String CREATE_DATE_PROPERTY = "create_date";
+    public static final String ACTIVE_DATE_PROPERTY = "active_date";
+    public static final String UPDATE_DATE_PROPERTY = "update_date";
 
-    private static final String FIRST_ACTIVITY_IMAGE_TABLE = "firstActivityImageTbl";
+    public static final String FIRST_ACTIVITY_IMAGE_TABLE = "firstActivityImageTbl";
 
     @Autowired
     private DSLContext dslContext;
@@ -221,7 +221,7 @@ public class ActivityRepository {
                 .fetchResultSet();
     }
 
-    private Table getFirstActivityImageTbl() {
+    public Table getFirstActivityImageTbl() {
         ActivityImage activityImageTbl = ACTIVITY_IMAGE.as("ActivityImageTbl");
         ActivityImage minIdActivityImageTbl = ACTIVITY_IMAGE.as("MinIdActivityImageTbl");
 
@@ -309,19 +309,57 @@ public class ActivityRepository {
                 .where(ACTIVITY.ID.eq(activityId)).execute();
     }
 
-    public List<ActivityDTO> getListActivityByUserId(long id, int currentPage) {
-        return dslContext
-                .select(ACTIVITY.ID, ACTIVITY.NAME, ACTIVITY_IMAGE.IMAGE_ID, ACTIVITY.ADDRESS)
+    public List<ActivityDTO> getListActivityByUserId(long userId, int currentPage) {
+        JdbcMapper mapper = JdbcMapperFactory.newInstance()
+                .ignorePropertyNotFound()
+                .addKeys(ID_PROPERTY, TAGS_ID_PROPERTY)
+                .addKeys(ID_PROPERTY, IMAGE_ID_PROPERTY)
+                .newMapper(ActivityDTO.class);
+
+        try {
+            ResultSet resultSet = getActivityByUserIdResultSet(userId, currentPage);
+            Stream<ActivityDTO> stream = mapper.stream(resultSet);
+            return stream.collect(Collectors.toList());
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        }
+        return Collections.emptyList();
+
+    }
+
+    private ResultSet getActivityByUserIdResultSet(long userId, int currentPage) {
+        Table activityImage = getFirstActivityImageTbl();
+
+        Table table = dslContext
+                .select(
+                        ACTIVITY.ID.as(ID_PROPERTY),
+                        ACTIVITY.NAME.as(NAME_PROPERTY),
+                        ACTIVITY.ADDRESS.as(ADDRESS_PROPERTY),
+                        activityImage.field(ActivityImage.ACTIVITY_IMAGE.IMAGE_ID).as(IMAGE_ID_PROPERTY)
+                )
                 .from(ACTIVITY)
-                .leftJoin(USER)
-                .on(ACTIVITY.CREATED_BY_USER_ID.eq(USER.ID))
-                .leftJoin(ACTIVITY_IMAGE)
-                .on(ACTIVITY.ID.eq(ACTIVITY_IMAGE.ACTIVITY_ID))
-                .where(USER.ID.eq(id))
-                .orderBy(ACTIVITY.CREATED_DATE.desc())
+                .leftJoin(ACTIVITY_TAG)
+                .on(ACTIVITY_TAG.ACTIVITY_ID.eq(ACTIVITY.ID))
+                .leftJoin(TAG)
+                .on(TAG.ID.eq(ACTIVITY_TAG.TAG_ID))
+                .leftJoin(activityImage)
+                .on(ACTIVITY.ID.eq(activityImage.field(ActivityImage.ACTIVITY_IMAGE.ACTIVITY_ID)))
+                .where(ACTIVITY.CREATED_BY_USER_ID.eq(DSL.val(userId)))
+                .groupBy(ACTIVITY.ID, ActivityImage.ACTIVITY_IMAGE.as(FIRST_ACTIVITY_IMAGE_TABLE).IMAGE_ID)
+                .orderBy(ACTIVITY.ID.desc())
                 .offset((currentPage - 1) * RECORD_OF_LIST)
-                .limit(RECORD_OF_LIST)
-                .fetchInto(ActivityDTO.class);
+                .limit(RECORD_OF_LIST).asTable();
+        return dslContext
+                .select(table.asterisk(),
+                        TAG.ID.as(TAGS_ID_PROPERTY),
+                        TAG.CONTENT.as(TAGS_CONTENT_PROPERTY))
+                .from(table)
+                .leftJoin(ACTIVITY_TAG)
+                .on(table.field("id", Long.class).eq(ACTIVITY_TAG.ACTIVITY_ID))
+                .leftJoin(TAG)
+                .on(TAG.ID.eq(ACTIVITY_TAG.TAG_ID))
+                .orderBy(DSL.field(ID_PROPERTY).desc())
+                .fetchResultSet();
     }
 
     public int countTotalRecordActivitybyUserId(long id) {

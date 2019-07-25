@@ -12,6 +12,7 @@
     <meta type="text" name="csrf-token" th:content="${_csrf!=null?_csrf.token:''}"/>
     <meta type="text" name="csrf-header" th:content="${_csrf!=null?_csrf.headerName:'X-CSRF-Token'}"/>
     <link rel="stylesheet" href="../../../static/css/user/profile.css">
+    <link rel="stylesheet" type="text/css" th:href="@{/static/css/tags.css}"/>
 </head>
 <body>
 <div layout:fragment="main-content">
