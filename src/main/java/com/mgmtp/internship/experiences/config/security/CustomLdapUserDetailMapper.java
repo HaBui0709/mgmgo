@@ -23,6 +23,7 @@ public class CustomLdapUserDetailMapper extends LdapUserDetailsMapper {
 
     @Override
     public UserDetails mapUserFromContext(DirContextOperations ctx, String username, Collection<? extends GrantedAuthority> authorities) {
+        username = username.toLowerCase();
         UserDetails details = super.mapUserFromContext(ctx, username, authorities);
         if (!userService.checkUsernameAvailable(username)) {
             userService.insertUser(username);

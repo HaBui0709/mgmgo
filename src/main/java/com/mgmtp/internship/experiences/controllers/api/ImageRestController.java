@@ -51,6 +51,20 @@ public class ImageRestController extends BaseRestController {
                 .body(imageDTO.getImage());
     }
 
+    @GetMapping(value = "/{id}/thumbnail", produces = MediaType.IMAGE_JPEG_VALUE)
+    @ResponseBody
+    public ResponseEntity<byte[]> getThumbnailImageById(@PathVariable("id") long id) {
+        ImageDTO imageDTO = imageService.findThumbnailImageById(id);
+
+        if (imageDTO == null) {
+            throw new ApiException(NOT_FOUND, "Image not found.");
+        }
+
+        return ResponseEntity.ok()
+                .cacheControl(CacheControl.maxAge(3600 * 24 * 30, TimeUnit.SECONDS))
+                .body(imageDTO.getImage());
+    }
+
     @PostMapping(value = "/user")
     public Object addUserImage(@RequestParam("photo") MultipartFile photo) throws IOException {
         byte[] imageData = photo.getBytes();

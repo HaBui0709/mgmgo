@@ -36,7 +36,7 @@ $(document).ready(function () {
         var params = query.split("&");
         params.forEach((param) => {
             if (param.startsWith(FILTER_TAG_PARAM)) {
-                tagBox.addTag({id: null, content: param.substr(FILTER_TAG_PARAM.length)});
+                tagBox.addTag({id: null, content: decodeURIComponent(param.substr(FILTER_TAG_PARAM.length).replace(/\+/g,"%20"))});
             }
         });
     }

@@ -5,6 +5,7 @@ import com.mgmtp.internship.experiences.dto.ImageDTO;
 import com.mgmtp.internship.experiences.repositories.ImageRepository;
 import com.mgmtp.internship.experiences.repositories.UserRepository;
 import com.mgmtp.internship.experiences.services.ImageService;
+import org.imgscalr.Scalr;
 import org.jooq.exception.DataAccessException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,6 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -35,6 +38,26 @@ public class ImageServiceImpl implements ImageService {
     @Override
     public ImageDTO findImageById(long imageId) {
         return imageRepository.findImageById(imageId);
+    }
+
+    @Override
+    public ImageDTO findThumbnailImageById(long imageId) {
+        ImageDTO imageDTO = imageRepository.findImageById(imageId);
+
+        ByteArrayInputStream bis = new ByteArrayInputStream(imageDTO.getImage());
+        try {
+            BufferedImage srcImg = ImageIO.read(bis);
+            BufferedImage dstImg = Scalr.resize(srcImg, Scalr.Method.QUALITY, 300);
+
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            ImageIO.write(dstImg, "png", out);
+            ImageIO.setUseCache(false);
+            imageDTO.setImage(out.toByteArray());
+
+            return imageDTO;
+        } catch (IllegalArgumentException | IOException e) {
+            return null;
+        }
     }
 
     @Override

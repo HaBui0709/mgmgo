@@ -22,7 +22,7 @@
                     <img th:class="${iter.index != 0}?@{thumbnail-image animated-background}:@{thumbnail-image animated-background image-active}"
                          th:order-image="${iter.index+1}"
                          th:image-id="${item}"
-                         th:src="@{/api/image/}+${item}"/>
+                         th:src="@{/api/image/}+${item}+@{/thumbnail}"/>
                     <label class="icon-update"
                            title="Update image."
                            data-toggle="modal" data-target="#exampleModalCenter">

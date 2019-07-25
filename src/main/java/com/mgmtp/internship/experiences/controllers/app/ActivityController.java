@@ -2,10 +2,7 @@ package com.mgmtp.internship.experiences.controllers.app;
 
 import com.mgmtp.internship.experiences.config.security.CustomLdapUserDetails;
 import com.mgmtp.internship.experiences.constants.ApplicationConstant;
-import com.mgmtp.internship.experiences.dto.ActivityDetailDTO;
-import com.mgmtp.internship.experiences.dto.CommentDTO;
-import com.mgmtp.internship.experiences.dto.PageDTO;
-import com.mgmtp.internship.experiences.dto.UserProfileDTO;
+import com.mgmtp.internship.experiences.dto.*;
 import com.mgmtp.internship.experiences.services.ActivityService;
 import com.mgmtp.internship.experiences.services.FavoriteService;
 import com.mgmtp.internship.experiences.services.TagService;
@@ -108,7 +105,7 @@ public class ActivityController {
         try {
             CustomLdapUserDetails user = userService.getCurrentUser();
             activityDetailDTO.setUpdatedByUserId(user.getId());
-            ActivityDetailDTO existedActivity = activityService.checkExistNameForUpdate(activityDetailDTO.getId(), activityDetailDTO.getName());
+            ActivityDTO existedActivity = activityService.checkExistNameForUpdate(activityDetailDTO.getId(), activityDetailDTO.getName());
             if (existedActivity == null) {
                 activityService.update(activityDetailDTO);
 
@@ -153,7 +150,7 @@ public class ActivityController {
         try {
             CustomLdapUserDetails user = userService.getCurrentUser();
             activityDetailDTO.setCreatedByUserId(user.getId());
-            ActivityDetailDTO existedActivity = activityService.checkExistNameForCreate(activityDetailDTO.getName());
+            ActivityDTO existedActivity = activityService.checkExistNameForCreate(activityDetailDTO.getName());
             if (existedActivity != null) {
                 redirectAttributes.addFlashAttribute("existedActivity", existedActivity);
                 redirectAttributes.addFlashAttribute(ERROR_MESSAGE, "This name already exists. Please check existed activity before create the new one!");

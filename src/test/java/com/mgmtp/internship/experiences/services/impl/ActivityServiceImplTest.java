@@ -33,7 +33,7 @@ public class ActivityServiceImplTest {
     private static final long ACTIVITY_ID = 1L;
     private static final List<Long> IMAGES = new ArrayList<>();
     private static final ActivityDetailDTO EXPECTED_ACTIVITY_DETAIL_DTO = ActivityTestUtil.prepareExpectedActivityDetailDTOWithNameForTest("name");
-    private static final ActivityDetailDTO EXISTED_ACTIVITY_DETAIL_DTO = ActivityTestUtil.prepareExpectedActivityDetailDTOWithNameForTest(EXIST_NAME);
+    private static final ActivityDTO EXISTED_ACTIVITY_DTO = ActivityTestUtil.prepareExpectedActivityDTOWithNameForTest(EXIST_NAME);
     private static final String KEY_SEARCH = "abc";
     private static final List<ActivityDTO> EXPECTED_LIST_ACTIVITY_DTO = Collections.singletonList(new ActivityDTO(1L, "name", IMAGES, Collections.emptyList()));
     private static final List<CommentDTO> EXPECTED_LIST_COMMENT_DTO = Collections.singletonList(new CommentDTO(1L, 1L, "displayName", "content", DateTimeUtil.getCurrentDate()));
@@ -103,9 +103,9 @@ public class ActivityServiceImplTest {
 
     @Test
     public void shouldReturnExistedActivityIfNameExistWhenCreate() {
-        Mockito.when(activityRepository.findByName(EXIST_NAME)).thenReturn(EXISTED_ACTIVITY_DETAIL_DTO);
+        Mockito.when(activityRepository.findByName(EXIST_NAME)).thenReturn(EXISTED_ACTIVITY_DTO);
 
-        Assert.assertEquals(EXISTED_ACTIVITY_DETAIL_DTO, activityService.checkExistNameForCreate(EXIST_NAME));
+        Assert.assertEquals(EXISTED_ACTIVITY_DTO, activityService.checkExistNameForCreate(EXIST_NAME));
     }
 
     @Test
@@ -117,8 +117,8 @@ public class ActivityServiceImplTest {
 
     @Test
     public void shouldReturnExistedActivityIfNameExistWhenUpdate() {
-        Mockito.when(activityRepository.findByName(EXIST_NAME)).thenReturn(EXISTED_ACTIVITY_DETAIL_DTO);
-        Assert.assertEquals(EXISTED_ACTIVITY_DETAIL_DTO, activityService.checkExistNameForUpdate(2L, EXIST_NAME));
+        Mockito.when(activityRepository.findByName(EXIST_NAME)).thenReturn(EXISTED_ACTIVITY_DTO);
+        Assert.assertEquals(EXISTED_ACTIVITY_DTO, activityService.checkExistNameForUpdate(2L, EXIST_NAME));
     }
 
     @Test

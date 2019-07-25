@@ -71,7 +71,7 @@ function initPage() {
             }).done(function (result) {
                 $("#exampleModalCenter").modal("hide");
 
-                let imageUrl = getImageUrl(result.imageId);
+                let imageUrl = getImageUrl(result.imageId, true);
                 if (method === 'PUT') {
                     updateThumbnails(result, imageUrl);
                 } else {
@@ -79,7 +79,7 @@ function initPage() {
                 }
             }).fail(function (error) {
                 setMessage("Something went wrong! Please try again.", false);
-            })
+            });
             return false;
         }
     );
@@ -96,12 +96,12 @@ function iconUpdateClickHandler() {
 }
 
 function btnUpdateClickHandler() {
-    updateAttribute($image, $imageOnDetailPage);
+    updateAttribute($image, $imageOnDetailPage, null, false);
     reset();
 }
 
 function thumbnailImageClickHandler() {
-    updateAttribute($imageOnDetailPage, $(this));
+    updateAttribute($imageOnDetailPage, $(this), null, false);
     $('.image-active').removeClass(imageActiveClass);
     $(this).addClass(imageActiveClass);
 }
@@ -114,14 +114,14 @@ function reset() {
     disableSaveImage();
 }
 
-function updateAttribute(targetElement, sourceElement = null, newAttr = null) {
+function updateAttribute(targetElement, sourceElement = null, newAttr = null, isThumbnail = true) {
     const myAttr = {...attrDefault};
     if (sourceElement) {
-        myAttr[srcAttr] = sourceElement.attr(srcAttr);
+        myAttr[srcAttr] = getImageUrl(sourceElement.attr(imageIdAttr), isThumbnail);
         myAttr[imageIdAttr] = sourceElement.attr(imageIdAttr);
         myAttr[orderImageAttr] = sourceElement.attr(orderImageAttr);
     } else if (newAttr) {
-        myAttr[srcAttr] = newAttr.imageUrl
+        myAttr[srcAttr] = getImageUrl(newAttr.imageId, isThumbnail);
         myAttr[imageIdAttr] = newAttr.imageId;
         myAttr[orderImageAttr] = newAttr.orderImage;
     }
@@ -188,8 +188,13 @@ function getRequestImageURL() {
     return '/api/image/activity/' + getActivityId();
 }
 
-function getImageUrl(imageId) {
-    return "/api/image/" + imageId;
+function getImageUrl(imageId, isThumbnail) {
+    if (isThumbnail) {
+        return "/api/image/" + imageId + "/thumbnail";
+    }
+    else {
+        return "/api/image/" + imageId;
+    }
 }
 
 function getImageId() {
@@ -214,7 +219,7 @@ function updateThumbnails({imageId}, imageUrl) {
 
     if ($('.image-active').attr(orderImageAttr) === orderImage) {
         updateAttribute($('.image-active'), null, newAttr);
-        updateAttribute($imageOnDetailPage, null, newAttr);
+        updateAttribute($imageOnDetailPage, null, newAttr, false);
     } else {
         let $updateThumbnail = $('.thumbnail-image').filter((index, item) => $(item).attr(orderImageAttr) === orderImage);
         updateAttribute($updateThumbnail, null, newAttr);
@@ -227,7 +232,7 @@ function addNewThumbnail({imageId}, imageUrl) {
 
     $btnUpload.before(newThumbnail);
     if (orderImage === 1) {
-        updateAttribute($imageOnDetailPage, newThumbnail.children());
+        updateAttribute($imageOnDetailPage, newThumbnail.children(), false);
         newThumbnail.children().addClass(imageActiveClass);
         $btnUpdate.removeClass(displayNoneClass);
     } else if (orderImage === +$('#max-number-upload-images').val()) {

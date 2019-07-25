@@ -4,6 +4,7 @@ import com.mgmtp.internship.experiences.constants.EnumSort;
 import com.mgmtp.internship.experiences.dto.ActivityDTO;
 import com.mgmtp.internship.experiences.dto.ActivityDetailDTO;
 import com.mgmtp.internship.experiences.dto.CommentDTO;
+import com.mgmtp.internship.experiences.model.tables.tables.Activity;
 
 import java.util.List;
 
@@ -19,9 +20,9 @@ public interface ActivityService {
 
     Long create(ActivityDetailDTO activityDetailDTO);
 
-    ActivityDetailDTO checkExistNameForCreate(String activityName);
+    ActivityDTO checkExistNameForCreate(String activityName);
 
-    ActivityDetailDTO checkExistNameForUpdate(long activityId, String activityName);
+    ActivityDTO checkExistNameForUpdate(long activityId, String activityName);
 
     List<ActivityDTO> search(String text, int currentPage, EnumSort sortType, List<String> filterTags);
 

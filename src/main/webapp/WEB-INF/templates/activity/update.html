@@ -19,19 +19,20 @@
         <div class="alert-danger alert" th:text="${errorMessage}"></div>
     </div>
     <div th:if="${existedActivity != null}">
-        <a class="activity-item" target="_blank" th:href="@{/activity/{id}(id=${existedActivity.id})}"
-           id="activity-link">
-            <div class="activity-img--wrapper col-lg-2 col-4 mr-1 pl-0">
+        <a class="activity-item mt-1" target="_blank" th:href="@{/activity/{id}(id=${existedActivity.id})}"
+           id="activity-link"
+           th:title="${existedActivity.name}">
+            <div class="activity-img--wrapper col-lg-2 col-4 col-sm-3 mr-1 pl-0 mt-1">
                 <img id="image-on-home-page"
-                     th:src="${existedActivity.images!=null && !existedActivity.images.isEmpty()}?@{/api/image/}+${existedActivity.images.get(0)}:@{/static/images/no-img.png}"
-                     alt=""/>
+                     th:src="${existedActivity.images.size()!=0}?@{/api/image/}+${existedActivity.images.get(0)}+@{/thumbnail}:@{/static/images/no-img.png}"
+                     th:alt="${existedActivity.name}"/>
             </div>
-            <div>
-                <p class="activity-name activity-summary mb-0 font-weight-bold " th:text="${existedActivity.name}"></p>
+            <div class="col-lg-10 col-8 pl-0 pl-md-2">
+                <p class="activity-name" th:text="${existedActivity.name}"></p>
                 <div th:if="${existedActivity.address != null && existedActivity.address != ''}"
-                     class="d-flex text-dark">
-                    <i class="fas fa-map-marker-alt fa-lg mt-1 text-danger" aria-hidden="true"></i>
-                    <span class="ml-2" th:text="${existedActivity.address}"></span>
+                     class="d-flex text-dark activity-item-location font-weight-light">
+                    <i class="fas fa-map-marker-alt fa-lg mt-1 text-danger mr-2 address-icon" aria-hidden="true"></i>
+                    <span th:text="${existedActivity.address}"></span>
                 </div>
             </div>
         </a>
@@ -63,7 +64,8 @@
                     <input type="text" class="form-control pr-1" id="address"
                            placeholder="Enter activity's address"
                            th:value="${activityDetailDTO.address}" th:field="*{address}">
-                    <button type="button" class="border-findlocate-btn btn-toggle input-group-text bg-white mr-1" data-toggle="modal"
+                    <button type="button" class="border-findlocate-btn btn-toggle input-group-text bg-white mr-1"
+                            data-toggle="modal"
                             data-target="#modalGetLocation" id="findLocation">
                         <i class="fas fa-search-location"></i>
                     </button>

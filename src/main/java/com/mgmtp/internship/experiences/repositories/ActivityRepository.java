@@ -17,10 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.EnumMap;
-import java.util.List;
+import java.util.*;
 import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -46,18 +43,19 @@ import static org.jooq.impl.DSL.*;
 public class ActivityRepository {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ActivityRepository.class);
+
+    private static final String RATING_AVG_PROPERTY = "avg_rating";
+    private static final String RATING_COUNT_PROPERTY = "count_rating";
+    private static final String CREATE_DATE_PROPERTY = "create_date";
+    private static final String ACTIVE_DATE_PROPERTY = "active_date";
+    private static final String UPDATE_DATE_PROPERTY = "update_date";
+
     public static final String IMAGE_ID_PROPERTY = "images_id";
     public static final String TAGS_ID_PROPERTY = "tags_id";
     public static final String TAGS_CONTENT_PROPERTY = "tags_content";
     public static final String ID_PROPERTY = "id";
     public static final String NAME_PROPERTY = "name";
     public static final String ADDRESS_PROPERTY = "address";
-    public static final String RATING_AVG_PROPERTY = "avg_rating";
-    public static final String RATING_COUNT_PROPERTY = "count_rating";
-    public static final String CREATE_DATE_PROPERTY = "create_date";
-    public static final String ACTIVE_DATE_PROPERTY = "active_date";
-    public static final String UPDATE_DATE_PROPERTY = "update_date";
-
     public static final String FIRST_ACTIVITY_IMAGE_TABLE = "firstActivityImageTbl";
 
     @Autowired
@@ -93,7 +91,7 @@ public class ActivityRepository {
                 .groupBy(ACTIVITY.ID, ACTIVITY_IMAGE.IMAGE_ID, TAG.ID, ACTIVITY_IMAGE.ID)
                 .orderBy(ACTIVITY_IMAGE.ID)
                 .fetchResultSet()) {
-            return (ActivityDetailDTO) mapper.stream(rs).findFirst().get();
+            return (ActivityDetailDTO) mapper.stream(rs).findFirst().orElse(null);
         } catch (SQLException e) {
             LOGGER.error(e.getMessage());
         }
@@ -130,21 +128,31 @@ public class ActivityRepository {
                 .where(ACTIVITY.NAME.eq(name)).fetchOneInto(Integer.class);
     }
 
-    public ActivityDetailDTO findByName(String activityName) {
+    public ActivityDTO findByName(String activityName) {
         Field<String> keyName = DSL.function(FUNC_UNACCENT, String.class, DSL.val(activityName));
-        return dslContext
-                .select(ACTIVITY.ID,
+
+        JdbcMapper mapper = JdbcMapperFactory.newInstance()
+                .addKeys(ID_PROPERTY, TAGS_ID_PROPERTY)
+                .addKeys(ID_PROPERTY, IMAGE_ID_PROPERTY)
+                .newMapper(ActivityDTO.class);
+        try (ResultSet rs = dslContext
+                .select(
+                        ACTIVITY.ID,
                         ACTIVITY.NAME,
-                        ACTIVITY.DESCRIPTION,
-                        IMAGE.ID.as(IMAGE_ID_PROPERTY),
-                        ACTIVITY.ADDRESS)
+                        ACTIVITY.ADDRESS,
+                        ACTIVITY_IMAGE.IMAGE_ID.as(IMAGE_ID_PROPERTY))
                 .from(ACTIVITY)
                 .leftJoin(ACTIVITY_IMAGE)
                 .on(ACTIVITY.ID.eq(ACTIVITY_IMAGE.ACTIVITY_ID))
-                .leftJoin(IMAGE)
-                .on(ACTIVITY_IMAGE.IMAGE_ID.eq(IMAGE.ID))
-                .where(DSL.function(FUNC_UNACCENT, String.class, ACTIVITY.NAME).likeIgnoreCase(keyName))
-                .fetchAnyInto(ActivityDetailDTO.class);
+                .where(DSL.function(FUNC_UNACCENT, String.class, ACTIVITY.NAME).equalIgnoreCase(keyName))
+                .groupBy(ACTIVITY.ID, ACTIVITY_IMAGE.IMAGE_ID, ACTIVITY_IMAGE.ID)
+                .orderBy(ACTIVITY_IMAGE.ID)
+                .fetchResultSet()) {
+            return (ActivityDTO)mapper.stream(rs).findFirst().orElse(null);
+        } catch (SQLException e) {
+            LOGGER.error(e.getMessage());
+        }
+        return null;
     }
 
     public List<ActivityDTO> search(String text, int currentPage, EnumSort sortType, List<String> filterTags) {
@@ -242,7 +250,7 @@ public class ActivityRepository {
                 .limit(RECORD_OF_LIST).asTable();
     }
 
-    private SelectConditionStep queryActivityDetailsJoin(List<String> filterTags){
+    private SelectConditionStep queryActivityDetailsJoin(List<String> filterTags) {
         Table activityImage = getFirstActivityImageTbl();
 
         return dslContext

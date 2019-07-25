@@ -1,6 +1,9 @@
 package com.mgmtp.internship.experiences.utils;
 
+import com.mgmtp.internship.experiences.dto.ActivityDTO;
 import com.mgmtp.internship.experiences.dto.ActivityDetailDTO;
+
+import java.util.Collections;
 
 public class ActivityTestUtil {
     private static final long ACTIVITY_ID = 1L;
@@ -25,5 +28,14 @@ public class ActivityTestUtil {
         activityDetailDTO.setCreatedByUserId(CREATED_BY_USER_ID);
         activityDetailDTO.setUpdatedByUserId(UPDATED_BY_USER_ID);
         return activityDetailDTO;
+    }
+
+    public static ActivityDTO prepareExpectedActivityDTOWithNameForTest(String activityName) {
+        ActivityDTO activityDTO = new ActivityDTO();
+        activityDTO.setId(ACTIVITY_ID);
+        activityDTO.setName(activityName);
+        activityDTO.setAddress(ACTIVITY_ADDR);
+        activityDTO.setTags(Collections.emptyList());
+        return activityDTO;
     }
 }

@@ -17,6 +17,8 @@ public interface ImageService {
 
     ImageDTO findImageById(long imageId);
 
+    ImageDTO findThumbnailImageById(long imageId);
+
     Long insertImage(byte[] imageData);
 
     @Transactional

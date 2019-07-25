@@ -2,6 +2,7 @@ package com.mgmtp.internship.experiences.controllers.app;
 
 import com.mgmtp.internship.experiences.config.security.CustomLdapUserDetails;
 import com.mgmtp.internship.experiences.constants.ApplicationConstant;
+import com.mgmtp.internship.experiences.dto.ActivityDTO;
 import com.mgmtp.internship.experiences.dto.ActivityDetailDTO;
 import com.mgmtp.internship.experiences.dto.UserProfileDTO;
 import com.mgmtp.internship.experiences.services.ActivityService;
@@ -50,7 +51,7 @@ public class ActivityControllerTest {
     private static final String CONTENT_PARAM = "content";
 
     private static final ActivityDetailDTO EXPECTED_ACTIVITY_DETAIL_DTO = ActivityTestUtil.prepareExpectedActivityDetailDTOWithNameForTest("name");
-    private static final ActivityDetailDTO EXISTED_ACTIVITY_DETAIL_DTO = ActivityTestUtil.prepareExpectedActivityDetailDTOWithNameForTest("existedName");
+    private static final ActivityDTO EXISTED_ACTIVITY_DTO = ActivityTestUtil.prepareExpectedActivityDTOWithNameForTest("existedName");
     private static final String ERROR_ATTRIBUTE = "errorMessage";
     private static final String ERROR_PAGE = "error";
     private static final String DESC_PARAM = "description";
@@ -151,7 +152,7 @@ public class ActivityControllerTest {
     public void shouldShowMessageErrorIfUpdateExistName() {
         Mockito.when(userService.getCurrentUser()).thenReturn(EXPECTED_CUSTOM_USER_DETAIL);
         EXPECTED_ACTIVITY_DETAIL_DTO.setCreatedByUserId(EXPECTED_CUSTOM_USER_DETAIL.getId());
-        Mockito.when(activityService.checkExistNameForUpdate(EXPECTED_ACTIVITY_DETAIL_DTO.getId(), EXPECTED_ACTIVITY_DETAIL_DTO.getName())).thenReturn(EXISTED_ACTIVITY_DETAIL_DTO);
+        Mockito.when(activityService.checkExistNameForUpdate(EXPECTED_ACTIVITY_DETAIL_DTO.getId(), EXPECTED_ACTIVITY_DETAIL_DTO.getName())).thenReturn(EXISTED_ACTIVITY_DTO);
 
         try {
             mockMvc.perform(post(UPDATE_URL)
@@ -233,7 +234,7 @@ public class ActivityControllerTest {
     public void shouldShowMessageErrorIfCreateExistName() {
         Mockito.when(userService.getCurrentUser()).thenReturn(EXPECTED_CUSTOM_USER_DETAIL);
         EXPECTED_ACTIVITY_DETAIL_DTO.setCreatedByUserId(EXPECTED_CUSTOM_USER_DETAIL.getId());
-        Mockito.when(activityService.checkExistNameForCreate(EXPECTED_ACTIVITY_DETAIL_DTO.getName())).thenReturn(EXISTED_ACTIVITY_DETAIL_DTO);
+        Mockito.when(activityService.checkExistNameForCreate(EXPECTED_ACTIVITY_DETAIL_DTO.getName())).thenReturn(EXISTED_ACTIVITY_DTO);
 
         try {
             mockMvc.perform(post(CREATE_URL)
